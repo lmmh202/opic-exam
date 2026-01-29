@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Play, Pause, ChevronRight, Mic } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { toast } from "sonner";
 
 export default function ExamPage() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function ExamPage() {
     isRecording: isStoreRecording,
     setIsRecording,
   } = useExamStore();
+
   const { startRecording, stopRecording, visualizerData } = useAudioRecorder({
     onStop: async (blob) => {
       await saveAudio(questionsData[currentQuestionIndex].id, blob);
@@ -32,6 +34,7 @@ export default function ExamPage() {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [playCount, setPlayCount] = useState(0);
+  const [recordingDuration, setRecordingDuration] = useState(0);
   const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const currentQuestion = questionsData[currentQuestionIndex];
@@ -45,6 +48,17 @@ export default function ExamPage() {
     return () => clearInterval(timer);
   }, [decrementTime]);
 
+  // Recording Timer
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isStoreRecording) {
+      interval = setInterval(() => {
+        setRecordingDuration((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isStoreRecording]);
+
   // Handle Question Change
   useEffect(() => {
     if (!currentQuestion) {
@@ -52,12 +66,6 @@ export default function ExamPage() {
       router.push("/results");
       return;
     }
-
-    // Auto-prepare TTS but don't play yet?
-    // Wait, OPIc usually plays automatically once?
-    // User requested "max 2 times".
-    // Let's assume auto-play counts as 1 if we did it, but we are currently NOT auto-playing in previous code (we removed it).
-    // So user initiates play.
 
     const u = new SpeechSynthesisUtterance(currentQuestion.text);
     u.lang = "en-US";
@@ -90,27 +98,39 @@ export default function ExamPage() {
 
   const handleNext = async () => {
     if (isStoreRecording) {
+      if (currentQuestionIndex > 0 && recordingDuration < 60) {
+        toast.error("You must record for at least 1 minute.");
+        return;
+      }
       stopRecording();
       setIsRecording(false);
-      // Wait a bit for onStop to save? onStop is async in hook?
-      // Our hook calls onStop synchronously after mediaRecorder stop event.
-      // We might need a small delay or better promise handling.
-      // But for now, let's assume it's fast enough or handled.
+    } else {
+      if (currentQuestionIndex > 0 && recordingDuration < 60) {
+        toast.error("Please complete the recording. (Min 1 minute)");
+        return;
+      }
     }
 
     if (isLastQuestion) {
       router.push("/results");
     } else {
       setPlayCount(0); // Reset for next question
+      setRecordingDuration(0);
       nextQuestion();
     }
   };
 
   const handleToggleRecord = async () => {
     if (isStoreRecording) {
+      // Trying to stop
+      if (currentQuestionIndex > 0 && recordingDuration < 60) {
+        toast.error("You must record for at least 1 minute.");
+        return;
+      }
       stopRecording();
       setIsRecording(false);
     } else {
+      // Start
       await startRecording();
       setIsRecording(true);
     }
@@ -209,15 +229,28 @@ export default function ExamPage() {
             </div>
 
             <div className="flex gap-4">
-              <Button
-                size="lg"
-                variant={isStoreRecording ? "destructive" : "default"}
-                className={`h-16 px-8 rounded-full text-lg shadow-xl transition-all ${isStoreRecording ? "animate-pulse" : ""}`}
-                onClick={handleToggleRecord}
-              >
-                <Mic className="mr-2 w-6 h-6" />
-                {isStoreRecording ? "Stop Recording" : "Start Recording"}
-              </Button>
+              <div className="flex flex-col items-center gap-2">
+                <Button
+                  size="lg"
+                  variant={isStoreRecording ? "destructive" : "default"}
+                  className={`h-16 px-8 rounded-full text-lg shadow-xl transition-all ${isStoreRecording ? "animate-pulse" : ""}`}
+                  onClick={handleToggleRecord}
+                >
+                  <Mic className="mr-2 w-6 h-6" />
+                  {isStoreRecording ? "Stop Recording" : "Start Recording"}
+                </Button>
+                {isStoreRecording && (
+                  <span
+                    className={`text-sm font-medium ${recordingDuration < 60 && currentQuestionIndex > 0 ? "text-red-500" : "text-green-600"}`}
+                  >
+                    {Math.floor(recordingDuration / 60)}:
+                    {(recordingDuration % 60).toString().padStart(2, "0")}
+                    {currentQuestionIndex > 0 &&
+                      recordingDuration < 60 &&
+                      " (Min 1:00)"}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </CardContent>
@@ -227,7 +260,11 @@ export default function ExamPage() {
       <div className="w-full max-w-4xl flex justify-end">
         <Button
           onClick={handleNext}
-          disabled={isStoreRecording}
+          disabled={
+            isStoreRecording &&
+            currentQuestionIndex > 0 &&
+            recordingDuration < 60
+          }
           size="lg"
           className="text-lg px-8"
         >
