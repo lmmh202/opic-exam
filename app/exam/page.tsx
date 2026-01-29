@@ -31,6 +31,7 @@ export default function ExamPage() {
   });
 
   const [isPlaying, setIsPlaying] = useState(false);
+  const [playCount, setPlayCount] = useState(0);
   const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const currentQuestion = questionsData[currentQuestionIndex];
@@ -52,13 +53,17 @@ export default function ExamPage() {
       return;
     }
 
-    // Prepare TTS
+    // Auto-prepare TTS but don't play yet?
+    // Wait, OPIc usually plays automatically once?
+    // User requested "max 2 times".
+    // Let's assume auto-play counts as 1 if we did it, but we are currently NOT auto-playing in previous code (we removed it).
+    // So user initiates play.
+
     const u = new SpeechSynthesisUtterance(currentQuestion.text);
     u.lang = "en-US";
     u.rate = 1.0;
     u.onend = () => {
       setIsPlaying(false);
-      // Auto-start recording logic was here but removed
     };
     speechRef.current = u;
 
@@ -73,9 +78,12 @@ export default function ExamPage() {
       window.speechSynthesis.cancel();
       setIsPlaying(false);
     } else {
+      if (playCount >= 2) return; // Prevent playing if limit reached
+
       if (speechRef.current) {
         window.speechSynthesis.speak(speechRef.current);
         setIsPlaying(true);
+        setPlayCount((prev) => prev + 1);
       }
     }
   };
@@ -93,6 +101,7 @@ export default function ExamPage() {
     if (isLastQuestion) {
       router.push("/results");
     } else {
+      setPlayCount(0); // Reset for next question
       nextQuestion();
     }
   };
@@ -143,6 +152,7 @@ export default function ExamPage() {
                 onClick={togglePlayQuestion}
                 variant={isPlaying ? "outline" : "default"}
                 className="rounded-full w-14 h-14"
+                disabled={!isPlaying && playCount >= 2}
               >
                 {isPlaying ? (
                   <Pause className="fill-current" />
@@ -151,7 +161,14 @@ export default function ExamPage() {
                 )}
               </Button>
               <span className="text-sm text-slate-500">
-                {isPlaying ? "Eva is speaking..." : "Click to listen"}
+                {isPlaying
+                  ? "Eva is speaking..."
+                  : playCount >= 2
+                    ? "No replays left"
+                    : "Click to listen"}
+                <span className="block text-xs text-slate-400 mt-1">
+                  ({playCount}/2 played)
+                </span>
               </span>
             </div>
           </div>
