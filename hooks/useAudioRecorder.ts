@@ -104,7 +104,7 @@ export const useAudioRecorder = ({
       cancelAnimationFrame(animationFrameRef.current);
     }
 
-    if (audioContextRef.current) {
+    if (audioContextRef.current && audioContextRef.current.state !== "closed") {
       audioContextRef.current.close();
     }
 
@@ -117,7 +117,12 @@ export const useAudioRecorder = ({
     return () => {
       if (animationFrameRef.current)
         cancelAnimationFrame(animationFrameRef.current);
-      if (audioContextRef.current) audioContextRef.current.close();
+      if (
+        audioContextRef.current &&
+        audioContextRef.current.state !== "closed"
+      ) {
+        audioContextRef.current.close();
+      }
       // Ensure stream tracks are stopped if unmounted while recording
       if (mediaRecorderRef.current && mediaRecorderRef.current.stream) {
         mediaRecorderRef.current.stream
