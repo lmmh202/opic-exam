@@ -18,13 +18,20 @@ import {
   Play,
   Pause,
   RotateCcw,
+  Clock,
 } from "lucide-react";
 import { useExamStore } from "@/lib/store";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
+import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
 
 export default function Home() {
   const router = useRouter();
-  const resetExam = useExamStore((state) => state.resetExam);
+  const { resetExam, setSkipSettings, skipEnabled, minRecordingDuration } =
+    useExamStore();
+  const [localSkipEnabled, setLocalSkipEnabled] = useState(skipEnabled);
+  const [localDuration, setLocalDuration] = useState(minRecordingDuration);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -42,6 +49,7 @@ export default function Home() {
     });
 
   const handleStartExam = () => {
+    setSkipSettings(localSkipEnabled, localDuration);
     resetExam();
     router.push("/exam");
   };
@@ -213,6 +221,51 @@ export default function Home() {
                   ? "Click play to verify your voice."
                   : "Click the mic to start testing."}
             </p>
+          </div>
+
+          {/* Skip Settings Section */}
+          <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
+            <h3 className="font-semibold text-slate-800 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-blue-600" />
+              Recording Settings
+            </h3>
+
+            <div className="flex items-center justify-between">
+              <Label
+                htmlFor="skip-enabled"
+                className="text-sm text-slate-700 cursor-pointer"
+              >
+                Allow Skip (no minimum recording time)
+              </Label>
+              <Switch
+                id="skip-enabled"
+                checked={localSkipEnabled}
+                onCheckedChange={setLocalSkipEnabled}
+              />
+            </div>
+
+            {!localSkipEnabled && (
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-slate-600">Minimum Recording Time</span>
+                  <span className="font-medium text-blue-600 tabular-nums">
+                    {localDuration}s
+                  </span>
+                </div>
+                <Slider
+                  value={[localDuration]}
+                  onValueChange={([value]) => setLocalDuration(value)}
+                  min={10}
+                  max={120}
+                  step={10}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-slate-400">
+                  <span>10s</span>
+                  <span>120s (2 min)</span>
+                </div>
+              </div>
+            )}
           </div>
 
           <Button

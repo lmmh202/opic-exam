@@ -6,6 +6,8 @@ interface ExamState {
   timeLeft: number; // in seconds, detailed management in components
   isRecording: boolean;
   answers: Record<number, { audioUrl?: string; submitted: boolean }>; // questionId -> status
+  skipEnabled: boolean; // Allow skipping without minimum recording
+  minRecordingDuration: number; // Minimum recording duration in seconds (10-120)
 
   // Actions
   setQuestionIndex: (index: number) => void;
@@ -14,6 +16,7 @@ interface ExamState {
   decrementTime: () => void;
   setIsRecording: (isRecording: boolean) => void;
   submitAnswer: (questionId: number) => void;
+  setSkipSettings: (skipEnabled: boolean, duration: number) => void;
   resetExam: () => void;
 }
 
@@ -26,6 +29,8 @@ export const useExamStore = create<ExamState>()(
       timeLeft: TOTAL_TIME,
       isRecording: false,
       answers: {},
+      skipEnabled: false,
+      minRecordingDuration: 60,
 
       setQuestionIndex: (index) => set({ currentQuestionIndex: index }),
 
@@ -50,6 +55,9 @@ export const useExamStore = create<ExamState>()(
           },
         })),
 
+      setSkipSettings: (skipEnabled, duration) =>
+        set({ skipEnabled, minRecordingDuration: duration }),
+
       resetExam: () =>
         set({
           currentQuestionIndex: 0,
@@ -65,6 +73,8 @@ export const useExamStore = create<ExamState>()(
         currentQuestionIndex: state.currentQuestionIndex,
         timeLeft: state.timeLeft,
         answers: state.answers,
+        skipEnabled: state.skipEnabled,
+        minRecordingDuration: state.minRecordingDuration,
         // Don't persist isRecording, better to reset on reload
       }),
     },

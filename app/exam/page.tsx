@@ -13,10 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 
-// Minimum recording duration in seconds.
-// Use shorter duration in development for easier testing.
-const MIN_RECORDING_DURATION = process.env.NODE_ENV === "development" ? 3 : 60;
-
 export default function ExamPage() {
   const router = useRouter();
   const {
@@ -27,6 +23,8 @@ export default function ExamPage() {
     decrementTime,
     isRecording: isStoreRecording,
     setIsRecording,
+    skipEnabled,
+    minRecordingDuration,
   } = useExamStore();
 
   const { startRecording, stopRecording, visualizerData } = useAudioRecorder({
@@ -104,11 +102,12 @@ export default function ExamPage() {
   const handleNext = async () => {
     if (isStoreRecording) {
       if (
+        !skipEnabled &&
         currentQuestionIndex > 0 &&
-        recordingDuration < MIN_RECORDING_DURATION
+        recordingDuration < minRecordingDuration
       ) {
         toast.error(
-          `You must record for at least ${MIN_RECORDING_DURATION} seconds.`,
+          `You must record for at least ${minRecordingDuration} seconds.`,
         );
         return;
       }
@@ -116,11 +115,12 @@ export default function ExamPage() {
       setIsRecording(false);
     } else {
       if (
+        !skipEnabled &&
         currentQuestionIndex > 0 &&
-        recordingDuration < MIN_RECORDING_DURATION
+        recordingDuration < minRecordingDuration
       ) {
         toast.error(
-          `Please complete the recording. (Min ${MIN_RECORDING_DURATION} seconds)`,
+          `Please complete the recording. (Min ${minRecordingDuration} seconds)`,
         );
         return;
       }
@@ -139,11 +139,12 @@ export default function ExamPage() {
     if (isStoreRecording) {
       // Trying to stop
       if (
+        !skipEnabled &&
         currentQuestionIndex > 0 &&
-        recordingDuration < MIN_RECORDING_DURATION
+        recordingDuration < minRecordingDuration
       ) {
         toast.error(
-          `You must record for at least ${MIN_RECORDING_DURATION} seconds.`,
+          `You must record for at least ${minRecordingDuration} seconds.`,
         );
         return;
       }
@@ -252,13 +253,14 @@ export default function ExamPage() {
                 </Button>
                 {isStoreRecording && (
                   <span
-                    className={`text-sm font-medium ${recordingDuration < MIN_RECORDING_DURATION && currentQuestionIndex > 0 ? "text-red-500" : "text-green-600"}`}
+                    className={`text-sm font-medium ${!skipEnabled && recordingDuration < minRecordingDuration && currentQuestionIndex > 0 ? "text-red-500" : "text-green-600"}`}
                   >
                     {Math.floor(recordingDuration / 60)}:
                     {(recordingDuration % 60).toString().padStart(2, "0")}
-                    {currentQuestionIndex > 0 &&
-                      recordingDuration < MIN_RECORDING_DURATION &&
-                      ` (Min ${MIN_RECORDING_DURATION}s)`}
+                    {!skipEnabled &&
+                      currentQuestionIndex > 0 &&
+                      recordingDuration < minRecordingDuration &&
+                      ` (Min ${minRecordingDuration}s)`}
                   </span>
                 )}
               </div>
@@ -272,9 +274,10 @@ export default function ExamPage() {
         <Button
           onClick={handleNext}
           disabled={
+            !skipEnabled &&
             isStoreRecording &&
             currentQuestionIndex > 0 &&
-            recordingDuration < MIN_RECORDING_DURATION
+            recordingDuration < minRecordingDuration
           }
           size="lg"
           className="text-lg px-8"
