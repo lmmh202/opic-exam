@@ -25,6 +25,7 @@ import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
+import surveyData from "@/public/survey.json";
 
 export default function Home() {
   const router = useRouter();
@@ -122,29 +123,17 @@ export default function Home() {
           <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
             <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-green-600" />
-              Applied Survey Settings (Hardcoded)
+              Applied Survey Settings
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-600">
-              <div className="space-y-1">
-                <span className="font-medium text-slate-900 block">
-                  Housing
-                </span>
-                Alone in Apartment
-              </div>
-              <div className="space-y-1">
-                <span className="font-medium text-slate-900 block">
-                  Hobbies
-                </span>
-                Music, Movies, Parks
-              </div>
-              <div className="space-y-1">
-                <span className="font-medium text-slate-900 block">Sports</span>
-                Jogging, Walking, Cycling
-              </div>
-              <div className="space-y-1">
-                <span className="font-medium text-slate-900 block">Travel</span>
-                Domestic/Overseas, Staycation
-              </div>
+              {surveyData.map((item) => (
+                <div key={item.label} className="space-y-1">
+                  <span className="font-medium text-slate-900 block">
+                    {item.label}
+                  </span>
+                  {item.value}
+                </div>
+              ))}
             </div>
           </div>
 

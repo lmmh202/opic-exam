@@ -1,0 +1,10 @@
+[
+  { "label": "Work Experience", "value": "No experience" },
+  { "label": "Student Status", "value": "Not a student" },
+  { "label": "Recent Courses", "value": "Over 5 years since last course" },
+  { "label": "Housing", "value": "Living alone in apartment" },
+  { "label": "Leisure Activities", "value": "Movies, Concerts, Performances, Parks, Camping, Beach" },
+  { "label": "Hobbies", "value": "Listening to music" },
+  { "label": "Sports", "value": "Jogging, Walking, No exercise" },
+  { "label": "Travel", "value": "Staycation, Domestic travel" }
+]
