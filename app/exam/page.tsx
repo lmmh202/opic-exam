@@ -25,6 +25,8 @@ export default function ExamPage() {
     setIsRecording,
     skipEnabled,
     minRecordingDuration,
+    skipCount,
+    incrementSkipCount,
   } = useExamStore();
 
   const { startRecording, stopRecording, visualizerData } = useAudioRecorder({
@@ -41,6 +43,8 @@ export default function ExamPage() {
 
   const currentQuestion = questionsData[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex >= questionsData.length - 1;
+  const canSkip = skipEnabled && skipCount < 2;
+  const isSkipping = recordingDuration < minRecordingDuration;
 
   // Timer
   useEffect(() => {
@@ -100,30 +104,29 @@ export default function ExamPage() {
   };
 
   const handleNext = async () => {
+    const needsMinRecording = currentQuestionIndex > 0 && recordingDuration < minRecordingDuration;
+    
     if (isStoreRecording) {
-      if (
-        !skipEnabled &&
-        currentQuestionIndex > 0 &&
-        recordingDuration < minRecordingDuration
-      ) {
+      if (needsMinRecording && !canSkip) {
         toast.error(
-          `You must record for at least ${minRecordingDuration} seconds.`,
+          `You must record for at least ${minRecordingDuration} seconds.${skipEnabled ? " (No skips remaining)" : ""}`,
         );
         return;
       }
       stopRecording();
       setIsRecording(false);
     } else {
-      if (
-        !skipEnabled &&
-        currentQuestionIndex > 0 &&
-        recordingDuration < minRecordingDuration
-      ) {
+      if (needsMinRecording && !canSkip) {
         toast.error(
-          `Please complete the recording. (Min ${minRecordingDuration} seconds)`,
+          `Please complete the recording. (Min ${minRecordingDuration} seconds)${skipEnabled ? " No skips remaining." : ""}`,
         );
         return;
       }
+    }
+
+    // Track skip if skipping with minimum not met
+    if (currentQuestionIndex > 0 && isSkipping && canSkip) {
+      incrementSkipCount();
     }
 
     if (isLastQuestion) {
@@ -138,13 +141,10 @@ export default function ExamPage() {
   const handleToggleRecord = async () => {
     if (isStoreRecording) {
       // Trying to stop
-      if (
-        !skipEnabled &&
-        currentQuestionIndex > 0 &&
-        recordingDuration < minRecordingDuration
-      ) {
+      const needsMinRecording = currentQuestionIndex > 0 && recordingDuration < minRecordingDuration;
+      if (needsMinRecording && !canSkip) {
         toast.error(
-          `You must record for at least ${minRecordingDuration} seconds.`,
+          `You must record for at least ${minRecordingDuration} seconds.${skipEnabled ? " (No skips remaining)" : ""}`,
         );
         return;
       }
@@ -253,14 +253,15 @@ export default function ExamPage() {
                 </Button>
                 {isStoreRecording && (
                   <span
-                    className={`text-sm font-medium ${!skipEnabled && recordingDuration < minRecordingDuration && currentQuestionIndex > 0 ? "text-red-500" : "text-green-600"}`}
+                    className={`text-sm font-medium ${!canSkip && recordingDuration < minRecordingDuration && currentQuestionIndex > 0 ? "text-red-500" : "text-green-600"}`}
                   >
                     {Math.floor(recordingDuration / 60)}:
                     {(recordingDuration % 60).toString().padStart(2, "0")}
-                    {!skipEnabled &&
-                      currentQuestionIndex > 0 &&
+                    {currentQuestionIndex > 0 &&
                       recordingDuration < minRecordingDuration &&
-                      ` (Min ${minRecordingDuration}s)`}
+                      (canSkip
+                        ? ` (Skip ${skipCount}/2)`
+                        : ` (Min ${minRecordingDuration}s)`)}
                   </span>
                 )}
               </div>
@@ -274,7 +275,7 @@ export default function ExamPage() {
         <Button
           onClick={handleNext}
           disabled={
-            !skipEnabled &&
+            !canSkip &&
             isStoreRecording &&
             currentQuestionIndex > 0 &&
             recordingDuration < minRecordingDuration
