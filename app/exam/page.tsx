@@ -13,6 +13,10 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 
+// Minimum recording duration in seconds.
+// Use shorter duration in development for easier testing.
+const MIN_RECORDING_DURATION = process.env.NODE_ENV === "development" ? 3 : 60;
+
 export default function ExamPage() {
   const router = useRouter();
   const {
@@ -59,6 +63,7 @@ export default function ExamPage() {
     return () => clearInterval(interval);
   }, [isStoreRecording]);
 
+  // Reset duration on question change logic moved to handler to avoid setState in global useEffect
   // Handle Question Change
   useEffect(() => {
     if (!currentQuestion) {
@@ -98,15 +103,25 @@ export default function ExamPage() {
 
   const handleNext = async () => {
     if (isStoreRecording) {
-      if (currentQuestionIndex > 0 && recordingDuration < 60) {
-        toast.error("You must record for at least 1 minute.");
+      if (
+        currentQuestionIndex > 0 &&
+        recordingDuration < MIN_RECORDING_DURATION
+      ) {
+        toast.error(
+          `You must record for at least ${MIN_RECORDING_DURATION} seconds.`,
+        );
         return;
       }
       stopRecording();
       setIsRecording(false);
     } else {
-      if (currentQuestionIndex > 0 && recordingDuration < 60) {
-        toast.error("Please complete the recording. (Min 1 minute)");
+      if (
+        currentQuestionIndex > 0 &&
+        recordingDuration < MIN_RECORDING_DURATION
+      ) {
+        toast.error(
+          `Please complete the recording. (Min ${MIN_RECORDING_DURATION} seconds)`,
+        );
         return;
       }
     }
@@ -115,7 +130,7 @@ export default function ExamPage() {
       router.push("/results");
     } else {
       setPlayCount(0); // Reset for next question
-      setRecordingDuration(0);
+      setRecordingDuration(0); // Reset duration manually
       nextQuestion();
     }
   };
@@ -123,8 +138,13 @@ export default function ExamPage() {
   const handleToggleRecord = async () => {
     if (isStoreRecording) {
       // Trying to stop
-      if (currentQuestionIndex > 0 && recordingDuration < 60) {
-        toast.error("You must record for at least 1 minute.");
+      if (
+        currentQuestionIndex > 0 &&
+        recordingDuration < MIN_RECORDING_DURATION
+      ) {
+        toast.error(
+          `You must record for at least ${MIN_RECORDING_DURATION} seconds.`,
+        );
         return;
       }
       stopRecording();
@@ -193,21 +213,12 @@ export default function ExamPage() {
             </div>
           </div>
 
-          {/* Question Text (Hidden in real OPIc, usually shown in Simulator for practice?) 
-              Real OPIc does NOT show text. 
-              Let's show it or hide it? 
-              Simulator usually shows it for practice mode. 
-              Let's hide it by default or show it since we don't have real audio.
-              "Real OPIc color and layout mimic" -> Real layout doesn't show text.
-              But using TTS without text might be hard if TTS is robotic.
-              I will show the topic at least.
-           */}
+          {/* Question Text */}
           <div className="text-center">
             <Badge variant="outline" className="mb-2">
               {currentQuestion.topic}
             </Badge>
             <h2 className="text-2xl font-medium text-slate-800 transition-opacity duration-300">
-              {/* Visual cue for question play */}
               {isPlaying ? "Listening..." : "Your Turn"}
             </h2>
           </div>
@@ -241,13 +252,13 @@ export default function ExamPage() {
                 </Button>
                 {isStoreRecording && (
                   <span
-                    className={`text-sm font-medium ${recordingDuration < 60 && currentQuestionIndex > 0 ? "text-red-500" : "text-green-600"}`}
+                    className={`text-sm font-medium ${recordingDuration < MIN_RECORDING_DURATION && currentQuestionIndex > 0 ? "text-red-500" : "text-green-600"}`}
                   >
                     {Math.floor(recordingDuration / 60)}:
                     {(recordingDuration % 60).toString().padStart(2, "0")}
                     {currentQuestionIndex > 0 &&
-                      recordingDuration < 60 &&
-                      " (Min 1:00)"}
+                      recordingDuration < MIN_RECORDING_DURATION &&
+                      ` (Min ${MIN_RECORDING_DURATION}s)`}
                   </span>
                 )}
               </div>
@@ -263,7 +274,7 @@ export default function ExamPage() {
           disabled={
             isStoreRecording &&
             currentQuestionIndex > 0 &&
-            recordingDuration < 60
+            recordingDuration < MIN_RECORDING_DURATION
           }
           size="lg"
           className="text-lg px-8"
