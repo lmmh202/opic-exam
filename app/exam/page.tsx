@@ -25,8 +25,6 @@ export default function ExamPage() {
     setIsRecording,
     skipEnabled,
     minRecordingDuration,
-    skipCount,
-    incrementSkipCount,
   } = useExamStore();
 
   const { startRecording, stopRecording, visualizerData } = useAudioRecorder({
@@ -43,8 +41,6 @@ export default function ExamPage() {
 
   const currentQuestion = questionsData[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex >= questionsData.length - 1;
-  const canSkip = skipEnabled && skipCount < 2;
-  const isSkipping = recordingDuration < minRecordingDuration;
 
   // Timer
   useEffect(() => {
@@ -107,26 +103,21 @@ export default function ExamPage() {
     const needsMinRecording = currentQuestionIndex > 0 && recordingDuration < minRecordingDuration;
     
     if (isStoreRecording) {
-      if (needsMinRecording && !canSkip) {
+      if (needsMinRecording && !skipEnabled) {
         toast.error(
-          `You must record for at least ${minRecordingDuration} seconds.${skipEnabled ? " (No skips remaining)" : ""}`,
+          `You must record for at least ${minRecordingDuration} seconds.`,
         );
         return;
       }
       stopRecording();
       setIsRecording(false);
     } else {
-      if (needsMinRecording && !canSkip) {
+      if (needsMinRecording && !skipEnabled) {
         toast.error(
-          `Please complete the recording. (Min ${minRecordingDuration} seconds)${skipEnabled ? " No skips remaining." : ""}`,
+          `Please complete the recording. (Min ${minRecordingDuration} seconds)`,
         );
         return;
       }
-    }
-
-    // Track skip if skipping with minimum not met
-    if (currentQuestionIndex > 0 && isSkipping && canSkip) {
-      incrementSkipCount();
     }
 
     if (isLastQuestion) {
@@ -142,9 +133,9 @@ export default function ExamPage() {
     if (isStoreRecording) {
       // Trying to stop
       const needsMinRecording = currentQuestionIndex > 0 && recordingDuration < minRecordingDuration;
-      if (needsMinRecording && !canSkip) {
+      if (needsMinRecording && !skipEnabled) {
         toast.error(
-          `You must record for at least ${minRecordingDuration} seconds.${skipEnabled ? " (No skips remaining)" : ""}`,
+          `You must record for at least ${minRecordingDuration} seconds.`,
         );
         return;
       }
@@ -253,15 +244,14 @@ export default function ExamPage() {
                 </Button>
                 {isStoreRecording && (
                   <span
-                    className={`text-sm font-medium ${!canSkip && recordingDuration < minRecordingDuration && currentQuestionIndex > 0 ? "text-red-500" : "text-green-600"}`}
+                    className={`text-sm font-medium ${!skipEnabled && recordingDuration < minRecordingDuration && currentQuestionIndex > 0 ? "text-red-500" : "text-green-600"}`}
                   >
                     {Math.floor(recordingDuration / 60)}:
                     {(recordingDuration % 60).toString().padStart(2, "0")}
-                    {currentQuestionIndex > 0 &&
+                    {!skipEnabled &&
+                      currentQuestionIndex > 0 &&
                       recordingDuration < minRecordingDuration &&
-                      (canSkip
-                        ? ` (Skip ${skipCount}/2)`
-                        : ` (Min ${minRecordingDuration}s)`)}
+                      ` (Min ${minRecordingDuration}s)`}
                   </span>
                 )}
               </div>
@@ -275,7 +265,7 @@ export default function ExamPage() {
         <Button
           onClick={handleNext}
           disabled={
-            !canSkip &&
+            !skipEnabled &&
             isStoreRecording &&
             currentQuestionIndex > 0 &&
             recordingDuration < minRecordingDuration

@@ -235,7 +235,7 @@ export default function Home() {
                 htmlFor="skip-enabled"
                 className="text-sm text-slate-700 cursor-pointer"
               >
-                Allow Skip (max 2 times)
+                Allow Skip (no minimum recording time)
               </Label>
               <Switch
                 id="skip-enabled"
