@@ -140,6 +140,25 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Privacy Notice */}
+          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                <span className="text-green-600 text-lg">🔒</span>
+              </div>
+              <div>
+                <h4 className="font-semibold text-green-900 mb-1">
+                  Your Privacy is Protected
+                </h4>
+                <p className="text-sm text-green-800">
+                  All voice recordings are stored <strong>only in your browser</strong> (IndexedDB). 
+                  No audio data is saved to any server or database. 
+                  Clear your browser data to delete all recordings.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Mic Test Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">

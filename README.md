@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OPIc Exam Simulator
 
-## Getting Started
+> 🎯 Real-time OPIc mock exam simulator powered by Gemini AI
 
-First, run the development server:
+## ✨ Features
+
+- **Realistic Exam Environment** - 15 randomized questions, timer, audio recording
+- **Survey-Based Questions** - Customized questions based on your background survey
+- **AI Feedback Analysis** - Batch analysis of all responses with Gemini AI (1 API call)
+- **Score Visualization** - Radar chart for Fluency, Grammar, Vocabulary
+- **Local Storage** - Audio saved to IndexedDB, no server required
+
+## 🔒 Privacy
+
+> **⚠️ Your voice recordings are NOT stored on any server.**
+
+- All audio recordings are saved **only in your browser's IndexedDB**
+- No external database or cloud storage is used
+- Clear your browser data to delete all recordings
+- AI analysis is processed once and voice data is not retained by Gemini
+
+## 🚀 Getting Started
+
+### 1. Install Dependencies
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Configure Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp .env.example .env
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Add your Gemini API key to `.env`:
 
-## Learn More
+```env
+GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Run Development Server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Deploy on Vercel
+## 📁 Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+opic-exam/
+├── app/
+│   ├── api/analyze/       # Gemini AI analysis API
+│   ├── exam/              # Exam page
+│   ├── results/           # Results & analysis page
+│   └── page.tsx           # Home (start page)
+├── components/ui/         # shadcn/ui components
+├── hooks/
+│   └── useAudioRecorder.ts # Audio recording hook
+├── lib/
+│   ├── question-generator.ts # Question generation logic
+│   ├── store.ts           # Zustand state management
+│   └── db.ts              # IndexedDB utilities
+└── public/
+    ├── question-bank.json # Question bank (sets/roleplay/comparison)
+    └── survey.json        # Background survey data
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠️ Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| Framework | Next.js 16, React 19 |
+| Styling | Tailwind CSS 4, shadcn/ui |
+| State | Zustand (persist) |
+| AI | Google Gemini API |
+| Storage | IndexedDB (idb-keyval) |
+| Charts | Recharts |
+
+## 📋 Exam Structure
+
+The exam consists of **15 questions**:
+
+| Question | Type |
+|----------|------|
+| 1 | Self-Introduction (fixed) |
+| 2-10 | Set Questions (3 random sets) |
+| 11-12 | Roleplay (asking questions, problem solving) |
+| 13 | Similar Experience |
+| 14 | Past vs Present Comparison |
+| 15 | Issues/Problems Description |
+
+## 📄 License
+
+MIT License
