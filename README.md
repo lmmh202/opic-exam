@@ -47,6 +47,32 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser
 
+## 🐳 Docker Deployment
+
+### Using Docker Compose (Recommended)
+
+```bash
+# Set your API key
+export GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here
+
+# Build and run
+docker compose up -d
+```
+
+### Using Docker Directly
+
+```bash
+# Build the image
+docker build -t opic-exam .
+
+# Run the container
+docker run -d -p 3000:3000 \
+  -e GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here \
+  opic-exam
+```
+
+Access the application at [http://localhost:3000](http://localhost:3000)
+
 ## 📁 Project Structure
 
 ```
