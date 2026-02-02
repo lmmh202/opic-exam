@@ -155,7 +155,7 @@ export default function ResultsPage() {
             <Button
               variant="outline"
               onClick={analyzeAllQuestions}
-              disabled={isAnalyzing}
+              disabled={isAnalyzing || analysisComplete}
             >
               {isAnalyzing ? (
                 <>
