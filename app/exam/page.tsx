@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useExamStore } from "@/lib/store";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import { saveAudio } from "@/lib/db";
-import questionsData from "@/public/questions.json";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Play, Pause, ChevronRight, Mic } from "lucide-react";
@@ -25,12 +24,16 @@ export default function ExamPage() {
     setIsRecording,
     skipEnabled,
     minRecordingDuration,
+    examQuestions,
   } = useExamStore();
 
   const { startRecording, stopRecording, visualizerData } = useAudioRecorder({
     onStop: async (blob) => {
-      await saveAudio(questionsData[currentQuestionIndex].id, blob);
-      submitAnswer(questionsData[currentQuestionIndex].id);
+      const currentQuestion = examQuestions[currentQuestionIndex];
+      if (currentQuestion) {
+        await saveAudio(currentQuestion.id, blob);
+        submitAnswer(currentQuestion.id);
+      }
     },
   });
 
@@ -39,8 +42,8 @@ export default function ExamPage() {
   const [recordingDuration, setRecordingDuration] = useState(0);
   const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  const currentQuestion = questionsData[currentQuestionIndex];
-  const isLastQuestion = currentQuestionIndex >= questionsData.length - 1;
+  const currentQuestion = examQuestions[currentQuestionIndex];
+  const isLastQuestion = currentQuestionIndex >= examQuestions.length - 1;
 
   // Timer
   useEffect(() => {
@@ -161,7 +164,7 @@ export default function ExamPage() {
             {(timeLeft % 60).toString().padStart(2, "0")}
           </Badge>
           <div className="text-sm font-medium text-slate-500">
-            {currentQuestionIndex + 1} / {questionsData.length}
+            {currentQuestionIndex + 1} / {examQuestions.length}
           </div>
         </div>
       </div>

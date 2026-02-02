@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import type { Question } from "./question-generator";
 
 interface ExamState {
   currentQuestionIndex: number;
@@ -8,6 +9,7 @@ interface ExamState {
   answers: Record<number, { audioUrl?: string; submitted: boolean }>; // questionId -> status
   skipEnabled: boolean; // Allow skipping without minimum recording
   minRecordingDuration: number; // Minimum recording duration in seconds (10-120)
+  examQuestions: Question[]; // Generated exam questions
 
   // Actions
   setQuestionIndex: (index: number) => void;
@@ -17,6 +19,7 @@ interface ExamState {
   setIsRecording: (isRecording: boolean) => void;
   submitAnswer: (questionId: number) => void;
   setSkipSettings: (skipEnabled: boolean, duration: number) => void;
+  setExamQuestions: (questions: Question[]) => void;
   resetExam: () => void;
 }
 
@@ -31,6 +34,7 @@ export const useExamStore = create<ExamState>()(
       answers: {},
       skipEnabled: false,
       minRecordingDuration: 30,
+      examQuestions: [],
 
       setQuestionIndex: (index) => set({ currentQuestionIndex: index }),
 
@@ -58,6 +62,8 @@ export const useExamStore = create<ExamState>()(
       setSkipSettings: (skipEnabled, duration) =>
         set({ skipEnabled, minRecordingDuration: duration }),
 
+      setExamQuestions: (questions) => set({ examQuestions: questions }),
+
       resetExam: () =>
         set({
           currentQuestionIndex: 0,
@@ -75,6 +81,7 @@ export const useExamStore = create<ExamState>()(
         answers: state.answers,
         skipEnabled: state.skipEnabled,
         minRecordingDuration: state.minRecordingDuration,
+        examQuestions: state.examQuestions,
         // Don't persist isRecording, better to reset on reload
       }),
     },

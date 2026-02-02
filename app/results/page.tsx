@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { useExamStore } from "@/lib/store";
 import { getAudio } from "@/lib/db";
-import { analyzeAudioAction, AnalysisResult } from "@/app/actions";
-import questionsData from "@/public/questions.json";
+import type { AnalysisResult } from "@/app/api/analyze/route";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,7 +32,7 @@ import {
 } from "recharts";
 
 export default function ResultsPage() {
-  const { answers } = useExamStore();
+  const { answers, examQuestions } = useExamStore();
   const [analyzedData, setAnalyzedData] = useState<
     Record<number, AnalysisResult>
   >({});
@@ -82,30 +81,35 @@ export default function ResultsPage() {
       const blob = await getAudio(questionId);
       if (!blob) {
         toast.error("Audio recording not found.");
+        setLoadingMap((prev) => ({ ...prev, [questionId]: false }));
         return;
       }
 
-      // Convert Blob to Base64
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onloadend = async () => {
-        const base64Audio = reader.result as string;
-        const questionText =
-          questionsData.find((q) => q.id === questionId)?.text || "";
+      const questionText =
+        examQuestions.find((q) => q.id === questionId)?.text || "";
 
-        const result = await analyzeAudioAction(base64Audio, questionText);
+      // Use FormData with API Route instead of Server Action
+      const formData = new FormData();
+      formData.append("audio", blob, "recording.webm");
+      formData.append("questionText", questionText);
 
-        if (result.success && result.data) {
-          setAnalyzedData((prev) => ({ ...prev, [questionId]: result.data }));
-          toast.success("Analysis Complete!");
-        } else {
-          toast.error(result.error || "Analysis failed");
-        }
-        setLoadingMap((prev) => ({ ...prev, [questionId]: false }));
-      };
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        setAnalyzedData((prev) => ({ ...prev, [questionId]: result.data }));
+        toast.success("Analysis Complete!");
+      } else {
+        toast.error(result.error || "Analysis failed");
+      }
     } catch (e) {
       console.error(e);
       toast.error("Error analyzing audio");
+    } finally {
       setLoadingMap((prev) => ({ ...prev, [questionId]: false }));
     }
   };
@@ -187,7 +191,7 @@ export default function ResultsPage() {
               <CardContent>
                 <ScrollArea className="h-[600px] pr-4">
                   <Accordion type="single" collapsible className="w-full">
-                    {questionsData.map((q) => {
+                    {examQuestions.map((q) => {
                       const isAnswered = answeredIds.includes(q.id);
                       if (!isAnswered) return null; // Skip skipped questions if any
 

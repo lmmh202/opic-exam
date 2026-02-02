@@ -26,10 +26,11 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import surveyData from "@/public/survey.json";
+import { generateExam } from "@/lib/question-generator";
 
 export default function Home() {
   const router = useRouter();
-  const { resetExam, setSkipSettings, skipEnabled, minRecordingDuration } =
+  const { resetExam, setSkipSettings, setExamQuestions, skipEnabled, minRecordingDuration } =
     useExamStore();
   const [localSkipEnabled, setLocalSkipEnabled] = useState(skipEnabled);
   const [localDuration, setLocalDuration] = useState(minRecordingDuration);
@@ -51,6 +52,8 @@ export default function Home() {
 
   const handleStartExam = () => {
     setSkipSettings(localSkipEnabled, localDuration);
+    const questions = generateExam();
+    setExamQuestions(questions);
     resetExam();
     router.push("/exam");
   };
