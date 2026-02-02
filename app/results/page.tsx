@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useExamStore } from "@/lib/store";
 import { getAudio } from "@/lib/db";
-import type { QuestionAnalysis, BatchAnalysisResult } from "@/app/api/analyze-all/route";
+import type { QuestionAnalysis, BatchAnalysisResult } from "@/app/api/analyze/route";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -99,7 +99,7 @@ export default function ResultsPage() {
       }
 
       // Send all at once to batch API
-      const response = await fetch("/api/analyze-all", {
+      const response = await fetch("/api/analyze", {
         method: "POST",
         body: formData,
       });
