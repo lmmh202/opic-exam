@@ -17,6 +17,7 @@ import { ExamSetupPanel } from "@/components/exam-setup-panel";
 import { useExamStore } from "@/lib/store";
 import {
   generatePracticeExam,
+  listPracticeQuestionSets,
   listPracticeTopics,
   type PracticeCategory,
 } from "@/lib/question-generator";
@@ -38,13 +39,23 @@ export default function PracticeHubPage() {
   const { switchExamMode, setExamQuestions, resetExam } = useExamStore();
   const [category, setCategory] = useState<PracticeCategory>("combo");
   const [topicId, setTopicId] = useState<string>("random");
+  const [setId, setSetId] = useState<string>("random");
 
   const filteredTopics = topics.filter((t) => t.category === category);
   const selectedTopic = filteredTopics.find((t) => t.id === topicId);
+  const questionSets =
+    topicId !== "random" ? listPracticeQuestionSets(category, topicId) : [];
+  const selectedSet = questionSets.find((s) => s.id === setId);
 
   const handleCategoryChange = (value: PracticeCategory) => {
     setCategory(value);
     setTopicId("random");
+    setSetId("random");
+  };
+
+  const handleTopicChange = (value: string) => {
+    setTopicId(value);
+    setSetId("random");
   };
 
   const handleStartSession = async () => {
@@ -52,6 +63,7 @@ export default function PracticeHubPage() {
     const questions = generatePracticeExam({
       category,
       topicId: topicId === "random" ? "random" : topicId,
+      setId: topicId === "random" ? undefined : setId,
     });
     setExamQuestions(questions);
     resetExam();
@@ -142,26 +154,52 @@ export default function PracticeHubPage() {
                   <select
                     id="practice-topic"
                     value={topicId}
-                    onChange={(e) => setTopicId(e.target.value)}
+                    onChange={(e) => handleTopicChange(e.target.value)}
                     className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
                   >
                     <option value="random">{t("랜덤 주제")}</option>
                     {filteredTopics.map((topic) => (
                       <option key={topic.id} value={topic.id}>
-                        {topic.topic} (
-                        {t("{count}문항", { count: topic.questionCount })})
+                        {topic.topic}
                       </option>
                     ))}
                   </select>
                 </div>
 
+                {topicId !== "random" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="practice-set">{t("문항 세트")}</Label>
+                    <select
+                      id="practice-set"
+                      value={setId}
+                      onChange={(e) => setSetId(e.target.value)}
+                      className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                    >
+                      <option value="random">{t("랜덤 세트")}</option>
+                      {questionSets.map((set) => (
+                        <option key={set.id} value={set.id}>
+                          {t("{name} ({count}문항)", {
+                            name: set.label,
+                            count: set.questionCount,
+                          })}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
                 <p className="text-xs text-slate-500">
                   {t("카테고리")}: {t(CATEGORY_LABEL_KEY[category])}
-                  {selectedTopic
-                    ? ` · ${t("{count}개 문항", { count: selectedTopic.questionCount })}`
-                    : topicId === "random"
-                      ? ` · ${t("랜덤 선택")}`
-                      : ""}
+                  {selectedSet
+                    ? ` · ${t("{name} ({count}문항)", {
+                        name: selectedSet.label,
+                        count: selectedSet.questionCount,
+                      })}`
+                    : selectedTopic
+                      ? ` · ${t("{count}개 문항", { count: selectedTopic.questionCount })}`
+                      : topicId === "random"
+                        ? ` · ${t("랜덤 선택")}`
+                        : ""}
                 </p>
               </div>
             </ExamSetupPanel>

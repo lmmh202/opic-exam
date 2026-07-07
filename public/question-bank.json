@@ -8,416 +8,622 @@
       }
     ]
   },
-  "sets": [
+  "topics": [
     {
       "id": "geography",
-      "topic": "Geography & Outdoor Activities",
-      "keywords": ["geography", "outdoor", "nature"],
-      "combo": [
+      "label": "Geography & Outdoor Activities",
+      "keywords": [
+        "geography",
+        "outdoor",
+        "nature"
+      ],
+      "sets": [
         {
-          "type": "place_description",
-          "text": "Tell me about the geography in your country. What are some notable geographical features?"
-        },
-        {
-          "type": "activity_description",
-          "text": "Tell me about the outdoor activities you do in your country. What do you enjoy doing outside?"
-        },
-        {
-          "type": "recent_experience",
-          "text": "Tell me about the last place you visited in your country and its geographical features. What did you see there?"
+          "id": "geography-default",
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Tell me about the geography in your country. What are some notable geographical features?"
+            },
+            {
+              "type": "activity_description",
+              "text": "Tell me about the outdoor activities you do in your country. What do you enjoy doing outside?"
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about the last place you visited in your country and its geographical features. What did you see there?"
+            }
+          ]
         }
       ]
     },
     {
       "id": "park",
-      "topic": "Going to Parks",
-      "keywords": ["park", "leisure", "nature"],
-      "combo": [
+      "label": "Going to Parks",
+      "keywords": [
+        "park",
+        "leisure",
+        "nature"
+      ],
+      "sets": [
         {
-          "type": "activity_description",
-          "text": "What do you normally do at parks? Tell me about the things you do and see at parks."
-        },
-        {
-          "type": "first_experience",
-          "text": "How did you first start going to the park? Why did you visit the park at that time? Please explain in as much detail as possible."
-        },
-        {
-          "type": "memorable_experience",
-          "text": "Tell me about an interesting thing that has happened at a park. What happened? Why was it so memorable?"
+          "id": "park-default",
+          "questions": [
+            {
+              "type": "activity_description",
+              "text": "What do you normally do at parks? Tell me about the things you do and see at parks."
+            },
+            {
+              "type": "first_experience",
+              "text": "How did you first start going to the park? Why did you visit the park at that time? Please explain in as much detail as possible."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about an interesting thing that has happened at a park. What happened? Why was it so memorable?"
+            }
+          ]
         }
       ]
     },
     {
       "id": "movies",
-      "topic": "Movies & Actors",
-      "keywords": ["movie", "actor", "film", "theater"],
-      "combo": [
+      "label": "Movies & Actors",
+      "keywords": [
+        "movie",
+        "actor",
+        "film",
+        "theater"
+      ],
+      "sets": [
         {
-          "type": "person_description",
-          "text": "I would like to know about your favorite actor. Was he or she mentioned in the media recently? What was it about? Tell me some background about that actor."
-        },
-        {
-          "type": "routine",
-          "text": "Please tell me what you normally do when you go to the movie theater. What do you do before and after the movie?"
-        },
-        {
-          "type": "memorable_experience",
-          "text": "Tell me about the most memorable movie you watched in the past. What was it about and why was it memorable?"
+          "id": "movies-default",
+          "questions": [
+            {
+              "type": "person_description",
+              "text": "I would like to know about your favorite actor. Was he or she mentioned in the media recently? What was it about? Tell me some background about that actor."
+            },
+            {
+              "type": "routine",
+              "text": "Please tell me what you normally do when you go to the movie theater. What do you do before and after the movie?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about the most memorable movie you watched in the past. What was it about and why was it memorable?"
+            }
+          ]
         }
       ]
     },
     {
       "id": "music",
-      "topic": "Listening to Music",
-      "keywords": ["music", "song", "concert", "singer"],
-      "combo": [
+      "label": "Listening to Music",
+      "keywords": [
+        "music",
+        "song",
+        "concert",
+        "singer"
+      ],
+      "sets": [
         {
-          "type": "preference_description",
-          "text": "You indicated that you like listening to music. What kind of music do you like? Who is your favorite singer or composer? Why do you like that music?"
-        },
-        {
-          "type": "routine",
-          "text": "When and where do you usually listen to music? Do you listen to music when you are travelling or when you are resting at home? Tell me about your routine for listening to music."
-        },
-        {
-          "type": "memorable_experience",
-          "text": "Tell me about a memorable experience related to music. Did you go to a concert or did you listen to a song that made you feel happy or sad? What happened and why was it memorable?"
+          "id": "music-default",
+          "questions": [
+            {
+              "type": "preference_description",
+              "text": "You indicated that you like listening to music. What kind of music do you like? Who is your favorite singer or composer? Why do you like that music?"
+            },
+            {
+              "type": "routine",
+              "text": "When and where do you usually listen to music? Do you listen to music when you are travelling or when you are resting at home? Tell me about your routine for listening to music."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable experience related to music. Did you go to a concert or did you listen to a song that made you feel happy or sad? What happened and why was it memorable?"
+            }
+          ]
         }
       ]
     },
     {
       "id": "concerts",
-      "topic": "Going to Concerts",
-      "keywords": ["concert", "performance", "live"],
-      "combo": [
+      "label": "Going to Concerts",
+      "keywords": [
+        "concert",
+        "performance",
+        "live"
+      ],
+      "sets": [
         {
-          "type": "place_description",
-          "text": "Describe a concert venue you have been to. What does it look like? What facilities does it have?"
-        },
-        {
-          "type": "routine",
-          "text": "What do you usually do when you go to a concert? Tell me about your routine from arriving to leaving."
-        },
-        {
-          "type": "memorable_experience",
-          "text": "Tell me about a memorable concert you attended. Who was performing and what made it special?"
+          "id": "concerts-default",
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Describe a concert venue you have been to. What does it look like? What facilities does it have?"
+            },
+            {
+              "type": "routine",
+              "text": "What do you usually do when you go to a concert? Tell me about your routine from arriving to leaving."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable concert you attended. Who was performing and what made it special?"
+            }
+          ]
         }
       ]
     },
     {
       "id": "performances",
-      "topic": "Watching Performances",
-      "keywords": ["performance", "theater", "show", "play"],
-      "combo": [
+      "label": "Watching Performances",
+      "keywords": [
+        "performance",
+        "theater",
+        "show",
+        "play"
+      ],
+      "sets": [
         {
-          "type": "preference_description",
-          "text": "What kind of performances do you enjoy watching? Tell me about the types of shows you like."
-        },
-        {
-          "type": "routine",
-          "text": "How do you usually prepare when going to see a performance? What do you do before, during, and after?"
-        },
-        {
-          "type": "memorable_experience",
-          "text": "Tell me about a performance that left a strong impression on you. What was it and why was it memorable?"
+          "id": "performances-default",
+          "questions": [
+            {
+              "type": "preference_description",
+              "text": "What kind of performances do you enjoy watching? Tell me about the types of shows you like."
+            },
+            {
+              "type": "routine",
+              "text": "How do you usually prepare when going to see a performance? What do you do before, during, and after?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a performance that left a strong impression on you. What was it and why was it memorable?"
+            }
+          ]
         }
       ]
     },
     {
       "id": "camping",
-      "topic": "Camping",
-      "keywords": ["camping", "outdoor", "tent", "nature"],
-      "combo": [
+      "label": "Camping",
+      "keywords": [
+        "camping",
+        "outdoor",
+        "tent",
+        "nature"
+      ],
+      "sets": [
         {
-          "type": "place_description",
-          "text": "Describe your favorite camping spot. What does it look like and what facilities are available?"
-        },
-        {
-          "type": "activity_description",
-          "text": "What do you usually do when you go camping? Tell me about your typical camping activities."
-        },
-        {
-          "type": "memorable_experience",
-          "text": "Tell me about a memorable camping experience. What happened and why do you remember it?"
+          "id": "camping-default",
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Describe your favorite camping spot. What does it look like and what facilities are available?"
+            },
+            {
+              "type": "activity_description",
+              "text": "What do you usually do when you go camping? Tell me about your typical camping activities."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable camping experience. What happened and why do you remember it?"
+            }
+          ]
         }
       ]
     },
     {
       "id": "beach",
-      "topic": "Going to the Beach",
-      "keywords": ["beach", "ocean", "sea", "swimming"],
-      "combo": [
+      "label": "Going to the Beach",
+      "keywords": [
+        "beach",
+        "ocean",
+        "sea",
+        "swimming"
+      ],
+      "sets": [
         {
-          "type": "place_description",
-          "text": "Describe a beach you like to visit. What does it look like? What can you see and do there?"
-        },
-        {
-          "type": "activity_description",
-          "text": "What do you usually do when you go to the beach? Tell me about your beach activities."
-        },
-        {
-          "type": "memorable_experience",
-          "text": "Tell me about a memorable experience at the beach. What happened and why was it special?"
+          "id": "beach-default",
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Describe a beach you like to visit. What does it look like? What can you see and do there?"
+            },
+            {
+              "type": "activity_description",
+              "text": "What do you usually do when you go to the beach? Tell me about your beach activities."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable experience at the beach. What happened and why was it special?"
+            }
+          ]
         }
       ]
     },
     {
       "id": "jogging",
-      "topic": "Jogging",
-      "keywords": ["jogging", "running", "exercise", "fitness"],
-      "combo": [
+      "label": "Jogging",
+      "keywords": [
+        "jogging",
+        "running",
+        "exercise",
+        "fitness"
+      ],
+      "sets": [
         {
-          "type": "routine",
-          "text": "You indicated that you enjoy jogging. How often do you go jogging? Where do you go and who do you go with? Tell me about your jogging routine."
-        },
-        {
-          "type": "preparation",
-          "text": "What do you prepare before you go jogging? Do you wear special clothes or shoes? Do you take anything with you?"
-        },
-        {
-          "type": "memorable_experience",
-          "text": "Tell me about a memorable experience while jogging. Did you see something interesting or did something unexpected happen?"
+          "id": "jogging-default",
+          "questions": [
+            {
+              "type": "routine",
+              "text": "You indicated that you enjoy jogging. How often do you go jogging? Where do you go and who do you go with? Tell me about your jogging routine."
+            },
+            {
+              "type": "preparation",
+              "text": "What do you prepare before you go jogging? Do you wear special clothes or shoes? Do you take anything with you?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable experience while jogging. Did you see something interesting or did something unexpected happen?"
+            }
+          ]
         }
       ]
     },
     {
       "id": "walking",
-      "topic": "Walking",
-      "keywords": ["walking", "stroll", "exercise"],
-      "combo": [
+      "label": "Walking",
+      "keywords": [
+        "walking",
+        "stroll",
+        "exercise"
+      ],
+      "sets": [
         {
-          "type": "routine",
-          "text": "Tell me about your walking habits. Where do you usually walk? How often and for how long?"
-        },
-        {
-          "type": "place_description",
-          "text": "Describe your favorite place to walk. What do you see along the way?"
-        },
-        {
-          "type": "memorable_experience",
-          "text": "Tell me about something interesting that happened while you were walking. What did you see or experience?"
+          "id": "walking-default",
+          "questions": [
+            {
+              "type": "routine",
+              "text": "Tell me about your walking habits. Where do you usually walk? How often and for how long?"
+            },
+            {
+              "type": "place_description",
+              "text": "Describe your favorite place to walk. What do you see along the way?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about something interesting that happened while you were walking. What did you see or experience?"
+            }
+          ]
         }
       ]
     },
     {
       "id": "housing",
-      "topic": "Housing",
-      "keywords": ["home", "apartment", "house", "living"],
-      "combo": [
+      "label": "Housing",
+      "keywords": [
+        "home",
+        "apartment",
+        "house",
+        "living"
+      ],
+      "sets": [
         {
-          "type": "place_description",
-          "text": "You indicated in the survey that you live alone in an apartment. Please describe your home in detail. What does it look like? How many rooms are there?"
-        },
-        {
-          "type": "problem_experience",
-          "text": "Tell me about the problems you have experienced in your home. Have you ever had anything broken or not working properly? What was the problem and how did you solve it?"
-        },
-        {
-          "type": "neighbor_experience",
-          "text": "Tell me about your neighbors. Have you ever had any issues or memorable interactions with them?"
+          "id": "housing-default",
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "You indicated in the survey that you live alone in an apartment. Please describe your home in detail. What does it look like? How many rooms are there?"
+            },
+            {
+              "type": "problem_experience",
+              "text": "Tell me about the problems you have experienced in your home. Have you ever had anything broken or not working properly? What was the problem and how did you solve it?"
+            },
+            {
+              "type": "neighbor_experience",
+              "text": "Tell me about your neighbors. Have you ever had any issues or memorable interactions with them?"
+            }
+          ]
         }
       ]
     },
     {
       "id": "internet",
-      "topic": "Using the Internet",
-      "keywords": ["internet", "web", "online", "website"],
-      "combo": [
+      "label": "Using the Internet",
+      "keywords": [
+        "internet",
+        "web",
+        "online",
+        "website"
+      ],
+      "sets": [
         {
-          "type": "activity_description",
-          "text": "What do you usually do on the internet? Tell me about your online activities."
-        },
-        {
-          "type": "preference_description",
-          "text": "What is your favorite website or online service? Why do you like it? How often do you use it?"
-        },
-        {
-          "type": "first_experience",
-          "text": "How did you first start using the internet? When was it and what did you do online at first?"
+          "id": "internet-default",
+          "questions": [
+            {
+              "type": "activity_description",
+              "text": "What do you usually do on the internet? Tell me about your online activities."
+            },
+            {
+              "type": "preference_description",
+              "text": "What is your favorite website or online service? Why do you like it? How often do you use it?"
+            },
+            {
+              "type": "first_experience",
+              "text": "How did you first start using the internet? When was it and what did you do online at first?"
+            }
+          ]
         }
       ]
     },
     {
       "id": "domestic_travel",
-      "topic": "Domestic Travel",
-      "keywords": ["travel", "trip", "domestic", "vacation"],
-      "combo": [
+      "label": "Domestic Travel",
+      "keywords": [
+        "travel",
+        "trip",
+        "domestic",
+        "vacation"
+      ],
+      "sets": [
         {
-          "type": "place_description",
-          "text": "Tell me about a domestic destination you have visited. What was the place like?"
-        },
-        {
-          "type": "activity_description",
-          "text": "What do you usually do when traveling domestically? Tell me about your typical travel activities."
-        },
-        {
-          "type": "memorable_experience",
-          "text": "Tell me about a memorable domestic trip. Where did you go and what made it special?"
+          "id": "domestic_travel-default",
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Tell me about a domestic destination you have visited. What was the place like?"
+            },
+            {
+              "type": "activity_description",
+              "text": "What do you usually do when traveling domestically? Tell me about your typical travel activities."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable domestic trip. Where did you go and what made it special?"
+            }
+          ]
         }
       ]
     },
     {
       "id": "staycation",
-      "topic": "Staycation",
-      "keywords": ["staycation", "home", "vacation", "rest"],
-      "combo": [
+      "label": "Staycation",
+      "keywords": [
+        "staycation",
+        "home",
+        "vacation",
+        "rest"
+      ],
+      "sets": [
         {
-          "type": "activity_description",
-          "text": "What do you usually do during a staycation? How do you spend your time at home during vacation?"
-        },
-        {
-          "type": "routine",
-          "text": "Describe a typical day during your staycation. What is your routine like?"
-        },
-        {
-          "type": "memorable_experience",
-          "text": "Tell me about a memorable staycation experience. What did you do that made it enjoyable?"
+          "id": "staycation-default",
+          "questions": [
+            {
+              "type": "activity_description",
+              "text": "What do you usually do during a staycation? How do you spend your time at home during vacation?"
+            },
+            {
+              "type": "routine",
+              "text": "Describe a typical day during your staycation. What is your routine like?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable staycation experience. What did you do that made it enjoyable?"
+            }
+          ]
         }
       ]
     }
   ],
-  "roleplay": [
+  "roleplayTopics": [
     {
       "id": "cellphone",
-      "topic": "Cell Phone Purchase",
-      "q11": {
-        "type": "situation_questions",
-        "text": "I'd like to give you a situation and ask you to act it out. You want to buy a new cell phone. Call a store and ask three or four questions about a new phone you want to buy."
-      },
-      "q12": {
-        "type": "problem_solving",
-        "text": "I am sorry, but there is a problem I need you to resolve. The new phone you ordered has arrived, but there is something wrong with the cell phone. You want to return it and get a new phone. Call the store. Explain the situation and give two to three alternatives."
-      },
-      "q13": {
-        "type": "similar_experience",
-        "text": "That's the end of the situation. Have you ever ordered anything to your home and was not satisfied with the product or service? Tell me what the problem was and how you dealt with the situation."
-      }
+      "label": "Cell Phone Purchase",
+      "sets": [
+        {
+          "id": "cellphone-default",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "I'd like to give you a situation and ask you to act it out. You want to buy a new cell phone. Call a store and ask three or four questions about a new phone you want to buy."
+            },
+            {
+              "type": "problem_solving",
+              "text": "I am sorry, but there is a problem I need you to resolve. The new phone you ordered has arrived, but there is something wrong with the cell phone. You want to return it and get a new phone. Call the store. Explain the situation and give two to three alternatives."
+            },
+            {
+              "type": "similar_experience",
+              "text": "That's the end of the situation. Have you ever ordered anything to your home and was not satisfied with the product or service? Tell me what the problem was and how you dealt with the situation."
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "travel_agency",
-      "topic": "Travel Agency",
-      "q11": {
-        "type": "situation_questions",
-        "text": "I will give you a situation to act out. You are planning to travel to another country. Call a travel agency and ask three or four questions to get information for your trip."
-      },
-      "q12": {
-        "type": "problem_solving",
-        "text": "I'm sorry, but there is a problem I need you to resolve. The travel agent says there are no tickets available for the dates you want. Call your friend who you are traveling with and explain the situation. Offer two or three alternatives."
-      },
-      "q13": {
-        "type": "similar_experience",
-        "text": "That's the end of the situation. Have you ever experienced a problem while traveling? What happened and how did you solve it?"
-      }
+      "label": "Travel Agency",
+      "sets": [
+        {
+          "id": "travel_agency-default",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "I will give you a situation to act out. You are planning to travel to another country. Call a travel agency and ask three or four questions to get information for your trip."
+            },
+            {
+              "type": "problem_solving",
+              "text": "I'm sorry, but there is a problem I need you to resolve. The travel agent says there are no tickets available for the dates you want. Call your friend who you are traveling with and explain the situation. Offer two or three alternatives."
+            },
+            {
+              "type": "similar_experience",
+              "text": "That's the end of the situation. Have you ever experienced a problem while traveling? What happened and how did you solve it?"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "restaurant",
-      "topic": "Restaurant",
-      "q11": {
-        "type": "situation_questions",
-        "text": "I'd like to give you a situation to act it out. You've entered a restaurant and want to find a new store nearby. Ask an employee three or four questions about the location of the new store."
-      },
-      "q12": {
-        "type": "problem_solving",
-        "text": "I'm sorry, but there is a problem I need you to resolve. You left your phone at the restaurant. Call the restaurant, explain the situation, and ask them to either hold it for you or send it to your address."
-      },
-      "q13": {
-        "type": "similar_experience",
-        "text": "That's the end of the situation. Have you ever lost something at a restaurant or store? Tell me what happened and how you resolved the situation."
-      }
+      "label": "Restaurant",
+      "sets": [
+        {
+          "id": "restaurant-default",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "I'd like to give you a situation to act it out. You've entered a restaurant and want to find a new store nearby. Ask an employee three or four questions about the location of the new store."
+            },
+            {
+              "type": "problem_solving",
+              "text": "I'm sorry, but there is a problem I need you to resolve. You left your phone at the restaurant. Call the restaurant, explain the situation, and ask them to either hold it for you or send it to your address."
+            },
+            {
+              "type": "similar_experience",
+              "text": "That's the end of the situation. Have you ever lost something at a restaurant or store? Tell me what happened and how you resolved the situation."
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "hotel",
-      "topic": "Hotel Reservation",
-      "q11": {
-        "type": "situation_questions",
-        "text": "I'd like to give you a situation to act it out. You want to book a hotel room for your vacation. Call a hotel and ask three or four questions about the room and facilities."
-      },
-      "q12": {
-        "type": "problem_solving",
-        "text": "I'm sorry, but there is a problem. When you arrived at the hotel, the room you booked was not available. Call the front desk, explain the problem, and offer two or three alternatives."
-      },
-      "q13": {
-        "type": "similar_experience",
-        "text": "That's the end of the situation. Have you ever had a problem with a hotel reservation or during your stay at a hotel? What happened and how did you handle it?"
-      }
+      "label": "Hotel Reservation",
+      "sets": [
+        {
+          "id": "hotel-default",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "I'd like to give you a situation to act it out. You want to book a hotel room for your vacation. Call a hotel and ask three or four questions about the room and facilities."
+            },
+            {
+              "type": "problem_solving",
+              "text": "I'm sorry, but there is a problem. When you arrived at the hotel, the room you booked was not available. Call the front desk, explain the problem, and offer two or three alternatives."
+            },
+            {
+              "type": "similar_experience",
+              "text": "That's the end of the situation. Have you ever had a problem with a hotel reservation or during your stay at a hotel? What happened and how did you handle it?"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "appointment",
-      "topic": "Appointment",
-      "q11": {
-        "type": "situation_questions",
-        "text": "I'd like to give you a situation to act it out. You need to make an appointment at a clinic. Call the clinic and ask three or four questions about available time slots and services."
-      },
-      "q12": {
-        "type": "problem_solving",
-        "text": "I'm sorry, but there is a problem. You cannot make it to your scheduled appointment. Call the clinic, explain why you can't come, and suggest two or three alternative times."
-      },
-      "q13": {
-        "type": "similar_experience",
-        "text": "That's the end of the situation. Have you ever had to cancel or reschedule an important appointment? Tell me what happened and how you dealt with it."
-      }
+      "label": "Appointment",
+      "sets": [
+        {
+          "id": "appointment-default",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "I'd like to give you a situation to act it out. You need to make an appointment at a clinic. Call the clinic and ask three or four questions about available time slots and services."
+            },
+            {
+              "type": "problem_solving",
+              "text": "I'm sorry, but there is a problem. You cannot make it to your scheduled appointment. Call the clinic, explain why you can't come, and suggest two or three alternative times."
+            },
+            {
+              "type": "similar_experience",
+              "text": "That's the end of the situation. Have you ever had to cancel or reschedule an important appointment? Tell me what happened and how you dealt with it."
+            }
+          ]
+        }
+      ]
     }
   ],
-  "comparison": [
+  "comparisonTopics": [
     {
       "id": "housing",
-      "topic": "Housing",
-      "q14": {
-        "type": "past_present_comparison",
-        "text": "Tell me about the place you lived in as a child. How was it different from the one you live in now? What are the differences and the similarities?"
-      },
-      "q15": {
-        "type": "issue_discussion",
-        "text": "People face with various problems when they rent a house. What is a major issue they experience in your country, and how do people deal with that problem?"
-      }
+      "label": "Housing",
+      "sets": [
+        {
+          "id": "housing-default",
+          "questions": [
+            {
+              "type": "past_present_comparison",
+              "text": "Tell me about the place you lived in as a child. How was it different from the one you live in now? What are the differences and the similarities?"
+            },
+            {
+              "type": "issue_discussion",
+              "text": "People face with various problems when they rent a house. What is a major issue they experience in your country, and how do people deal with that problem?"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "technology",
-      "topic": "Technology",
-      "q14": {
-        "type": "past_present_comparison",
-        "text": "How has technology changed the way people communicate compared to when you were young? What are the differences between then and now?"
-      },
-      "q15": {
-        "type": "issue_discussion",
-        "text": "What are some issues people face with technology today? How do they deal with problems like privacy, addiction, or security?"
-      }
+      "label": "Technology",
+      "sets": [
+        {
+          "id": "technology-default",
+          "questions": [
+            {
+              "type": "past_present_comparison",
+              "text": "How has technology changed the way people communicate compared to when you were young? What are the differences between then and now?"
+            },
+            {
+              "type": "issue_discussion",
+              "text": "What are some issues people face with technology today? How do they deal with problems like privacy, addiction, or security?"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "travel",
-      "topic": "Travel",
-      "q14": {
-        "type": "past_present_comparison",
-        "text": "How has traveling changed compared to the past? Why is it easier or more difficult to travel now? What are the main differences?"
-      },
-      "q15": {
-        "type": "issue_discussion",
-        "text": "What are some issues that travelers discuss among friends these days? What topics related to travel are people talking about?"
-      }
+      "label": "Travel",
+      "sets": [
+        {
+          "id": "travel-default",
+          "questions": [
+            {
+              "type": "past_present_comparison",
+              "text": "How has traveling changed compared to the past? Why is it easier or more difficult to travel now? What are the main differences?"
+            },
+            {
+              "type": "issue_discussion",
+              "text": "What are some issues that travelers discuss among friends these days? What topics related to travel are people talking about?"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "entertainment",
-      "topic": "Entertainment",
-      "q14": {
-        "type": "past_present_comparison",
-        "text": "How has entertainment changed from when you were younger to now? What did people do for fun before and what do they do now?"
-      },
-      "q15": {
-        "type": "issue_discussion",
-        "text": "What are some current issues or trends in entertainment that people discuss? What concerns do people have about modern entertainment?"
-      }
+      "label": "Entertainment",
+      "sets": [
+        {
+          "id": "entertainment-default",
+          "questions": [
+            {
+              "type": "past_present_comparison",
+              "text": "How has entertainment changed from when you were younger to now? What did people do for fun before and what do they do now?"
+            },
+            {
+              "type": "issue_discussion",
+              "text": "What are some current issues or trends in entertainment that people discuss? What concerns do people have about modern entertainment?"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "health",
-      "topic": "Health & Fitness",
-      "q14": {
-        "type": "past_present_comparison",
-        "text": "How have people's attitudes toward health and fitness changed over the years? What did people do to stay healthy before and what do they do now?"
-      },
-      "q15": {
-        "type": "issue_discussion",
-        "text": "What health-related issues are people concerned about these days? How do people try to address these health concerns?"
-      }
+      "label": "Health & Fitness",
+      "sets": [
+        {
+          "id": "health-default",
+          "questions": [
+            {
+              "type": "past_present_comparison",
+              "text": "How have people's attitudes toward health and fitness changed over the years? What did people do to stay healthy before and what do they do now?"
+            },
+            {
+              "type": "issue_discussion",
+              "text": "What health-related issues are people concerned about these days? How do people try to address these health concerns?"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

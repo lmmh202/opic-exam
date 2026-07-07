@@ -12,40 +12,45 @@ interface QuestionItem {
   text: string;
 }
 
-interface ComboSet {
+interface QuestionSet {
   id: string;
-  topic: string;
-  keywords: string[];
-  combo: QuestionItem[];
+  label?: string;
+  questions: QuestionItem[];
 }
 
-interface RoleplaySet {
+interface BankTopic {
   id: string;
-  topic: string;
-  q11: QuestionItem;
-  q12: QuestionItem;
-  q13: QuestionItem;
-}
-
-interface ComparisonSet {
-  id: string;
-  topic: string;
-  q14: QuestionItem;
-  q15: QuestionItem;
+  label: string;
+  keywords?: string[];
+  sets: QuestionSet[];
 }
 
 interface QuestionBank {
   intro: {
     questions: Array<{ id: string; type: string; text: string }>;
   };
-  sets: ComboSet[];
-  roleplay: RoleplaySet[];
-  comparison: ComparisonSet[];
+  topics: BankTopic[];
+  roleplayTopics: BankTopic[];
+  comparisonTopics: BankTopic[];
 }
 
-/**
- * Shuffles an array using Fisher-Yates algorithm
- */
+export type PracticeCategory = "combo" | "roleplay" | "comparison";
+
+const CATEGORY_BANK_KEY: Record<
+  PracticeCategory,
+  "topics" | "roleplayTopics" | "comparisonTopics"
+> = {
+  combo: "topics",
+  roleplay: "roleplayTopics",
+  comparison: "comparisonTopics",
+};
+
+const CATEGORY_LABELS: Record<PracticeCategory, string> = {
+  combo: "Topic Set",
+  roleplay: "Roleplay",
+  comparison: "Comparison",
+};
+
 function shuffle<T>(array: T[]): T[] {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -55,203 +60,184 @@ function shuffle<T>(array: T[]): T[] {
   return shuffled;
 }
 
+function pickRandom<T>(array: T[]): T {
+  return shuffle(array)[0];
+}
+
+function getBank(): QuestionBank {
+  return questionBank as QuestionBank;
+}
+
+function getTopicsForCategory(category: PracticeCategory): BankTopic[] {
+  return getBank()[CATEGORY_BANK_KEY[category]];
+}
+
+function findTopic(category: PracticeCategory, topicId: string): BankTopic {
+  const topic = getTopicsForCategory(category).find((t) => t.id === topicId);
+  if (!topic) throw new Error(`Topic not found: ${topicId}`);
+  return topic;
+}
+
+function findQuestionSet(topic: BankTopic, setId?: string): QuestionSet {
+  if (!setId || setId === "random") {
+    return pickRandom(topic.sets);
+  }
+  const set = topic.sets.find((s) => s.id === setId);
+  if (!set) throw new Error(`Question set not found: ${setId}`);
+  return set;
+}
+
+function getTopicDisplayLabel(
+  category: PracticeCategory,
+  label: string,
+): string {
+  if (category === "roleplay") return `Roleplay: ${label}`;
+  return label;
+}
+
+function pushSetQuestions(
+  exam: Question[],
+  category: PracticeCategory,
+  topicLabel: string,
+  set: QuestionSet,
+  questionId: { value: number },
+): void {
+  const displayLabel = getTopicDisplayLabel(category, topicLabel);
+  for (const q of set.questions) {
+    exam.push({
+      id: questionId.value++,
+      type: q.type,
+      topic: displayLabel,
+      text: q.text,
+    });
+  }
+}
+
 /**
  * Generates a randomized 15-question OPIc exam
- * 
+ *
  * Structure:
  * - Q1: Self-introduction (fixed)
- * - Q2-Q10: 3 random combo sets (3 questions each = 9 questions)
- * - Q11-Q13: 1 random roleplay set
- * - Q14-Q15: 1 random comparison set
+ * - Q2-Q10: 3 random combo topics, one set each
+ * - Q11-Q13: 1 random roleplay topic, one set
+ * - Q14-Q15: 1 random comparison topic, one set
  */
 export function generateExam(): Question[] {
-  const bank = questionBank as QuestionBank;
+  const bank = getBank();
   const exam: Question[] = [];
-  let questionId = 1;
+  const questionId = { value: 1 };
 
-  // 1. Add intro question (Q1)
   const intro = bank.intro.questions[0];
   exam.push({
-    id: questionId++,
+    id: questionId.value++,
     type: intro.type,
     topic: "Self-Introduction",
     text: intro.text,
   });
 
-  // 2. Select 3 random combo sets for Q2-Q10
-  const shuffledSets = shuffle(bank.sets);
-  const selectedSets = shuffledSets.slice(0, 3);
-
-  for (const set of selectedSets) {
-    for (const q of set.combo) {
-      exam.push({
-        id: questionId++,
-        type: q.type,
-        topic: set.topic,
-        text: q.text,
-      });
-    }
+  const selectedComboTopics = shuffle(bank.topics).slice(0, 3);
+  for (const topic of selectedComboTopics) {
+    const set = pickRandom(topic.sets);
+    pushSetQuestions(exam, "combo", topic.label, set, questionId);
   }
 
-  // 3. Select 1 random roleplay set for Q11-Q13
-  const roleplay = shuffle(bank.roleplay)[0];
-  exam.push({
-    id: questionId++,
-    type: roleplay.q11.type,
-    topic: `Roleplay: ${roleplay.topic}`,
-    text: roleplay.q11.text,
-  });
-  exam.push({
-    id: questionId++,
-    type: roleplay.q12.type,
-    topic: `Roleplay: ${roleplay.topic}`,
-    text: roleplay.q12.text,
-  });
-  exam.push({
-    id: questionId++,
-    type: roleplay.q13.type,
-    topic: `Roleplay: ${roleplay.topic}`,
-    text: roleplay.q13.text,
-  });
+  const roleplayTopic = pickRandom(bank.roleplayTopics);
+  const roleplaySet = pickRandom(roleplayTopic.sets);
+  pushSetQuestions(
+    exam,
+    "roleplay",
+    roleplayTopic.label,
+    roleplaySet,
+    questionId,
+  );
 
-  // 4. Select 1 random comparison set for Q14-Q15
-  const comparison = shuffle(bank.comparison)[0];
-  exam.push({
-    id: questionId++,
-    type: comparison.q14.type,
-    topic: comparison.topic,
-    text: comparison.q14.text,
-  });
-  exam.push({
-    id: questionId++,
-    type: comparison.q15.type,
-    topic: comparison.topic,
-    text: comparison.q15.text,
-  });
+  const comparisonTopic = pickRandom(bank.comparisonTopics);
+  const comparisonSet = pickRandom(comparisonTopic.sets);
+  pushSetQuestions(
+    exam,
+    "comparison",
+    comparisonTopic.label,
+    comparisonSet,
+    questionId,
+  );
 
   return exam;
 }
-
-export type PracticeCategory = "combo" | "roleplay" | "comparison";
 
 export interface PracticeTopic {
   id: string;
   category: PracticeCategory;
   topic: string;
   questionCount: number;
+  setCount: number;
 }
 
-const CATEGORY_LABELS: Record<PracticeCategory, string> = {
-  combo: "Topic Set",
-  roleplay: "Roleplay",
-  comparison: "Comparison",
-};
+export interface PracticeQuestionSet {
+  id: string;
+  topicId: string;
+  label: string;
+  questionCount: number;
+}
 
 export function getPracticeCategoryLabel(category: PracticeCategory): string {
   return CATEGORY_LABELS[category];
 }
 
 export function listPracticeTopics(): PracticeTopic[] {
-  const bank = questionBank as QuestionBank;
   const topics: PracticeTopic[] = [];
 
-  for (const set of bank.sets) {
-    topics.push({
-      id: set.id,
-      category: "combo",
-      topic: set.topic,
-      questionCount: set.combo.length,
-    });
-  }
-
-  for (const set of bank.roleplay) {
-    topics.push({
-      id: set.id,
-      category: "roleplay",
-      topic: set.topic,
-      questionCount: 3,
-    });
-  }
-
-  for (const set of bank.comparison) {
-    topics.push({
-      id: set.id,
-      category: "comparison",
-      topic: set.topic,
-      questionCount: 2,
-    });
+  const categories: PracticeCategory[] = ["combo", "roleplay", "comparison"];
+  for (const category of categories) {
+    for (const topic of getTopicsForCategory(category)) {
+      const firstSet = topic.sets[0];
+      topics.push({
+        id: topic.id,
+        category,
+        topic: topic.label,
+        questionCount: firstSet?.questions.length ?? 0,
+        setCount: topic.sets.length,
+      });
+    }
   }
 
   return topics;
 }
 
+export function listPracticeQuestionSets(
+  category: PracticeCategory,
+  topicId: string,
+): PracticeQuestionSet[] {
+  const topic = findTopic(category, topicId);
+  return topic.sets.map((set, index) => ({
+    id: set.id,
+    topicId: topic.id,
+    label: set.label ?? `Set ${index + 1}`,
+    questionCount: set.questions.length,
+  }));
+}
+
 export interface GeneratePracticeExamOptions {
   category: PracticeCategory;
   topicId?: string;
+  setId?: string;
 }
 
 export function generatePracticeExam(
   options: GeneratePracticeExamOptions,
 ): Question[] {
-  const bank = questionBank as QuestionBank;
   const { category } = options;
   let topicId = options.topicId;
+  let setId = options.setId;
 
   if (!topicId || topicId === "random") {
-    if (category === "combo") {
-      topicId = shuffle(bank.sets)[0].id;
-    } else if (category === "roleplay") {
-      topicId = shuffle(bank.roleplay)[0].id;
-    } else {
-      topicId = shuffle(bank.comparison)[0].id;
-    }
+    topicId = pickRandom(getTopicsForCategory(category)).id;
   }
+
+  const topic = findTopic(category, topicId);
+  const set = findQuestionSet(topic, setId);
 
   const exam: Question[] = [];
-  let questionId = 1;
-
-  if (category === "combo") {
-    const set = bank.sets.find((s) => s.id === topicId);
-    if (!set) throw new Error(`Combo set not found: ${topicId}`);
-    for (const q of set.combo) {
-      exam.push({
-        id: questionId++,
-        type: q.type,
-        topic: set.topic,
-        text: q.text,
-      });
-    }
-    return exam;
-  }
-
-  if (category === "roleplay") {
-    const set = bank.roleplay.find((s) => s.id === topicId);
-    if (!set) throw new Error(`Roleplay set not found: ${topicId}`);
-    const items = [set.q11, set.q12, set.q13];
-    for (const q of items) {
-      exam.push({
-        id: questionId++,
-        type: q.type,
-        topic: `Roleplay: ${set.topic}`,
-        text: q.text,
-      });
-    }
-    return exam;
-  }
-
-  const set = bank.comparison.find((s) => s.id === topicId);
-  if (!set) throw new Error(`Comparison set not found: ${topicId}`);
-  exam.push({
-    id: questionId++,
-    type: set.q14.type,
-    topic: set.topic,
-    text: set.q14.text,
-  });
-  exam.push({
-    id: questionId++,
-    type: set.q15.type,
-    topic: set.topic,
-    text: set.q15.text,
-  });
+  const questionId = { value: 1 };
+  pushSetQuestions(exam, category, topic.label, set, questionId);
   return exam;
 }
