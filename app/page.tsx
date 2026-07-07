@@ -11,6 +11,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 import {
   Mic,
   ArrowRight,
@@ -19,6 +20,7 @@ import {
   Pause,
   RotateCcw,
   Clock,
+  Volume2,
 } from "lucide-react";
 import { useExamStore } from "@/lib/store";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
@@ -285,6 +287,17 @@ export default function Home() {
             disabled={micStatus !== "success" && false} // Optional: enforce mic test
           >
             Start Exam <ArrowRight className="ml-2 w-5 h-5" />
+          </Button>
+
+          <Button
+            variant="outline"
+            className="w-full"
+            asChild
+          >
+            <Link href="/practice">
+              <Volume2 className="w-4 h-4 mr-2" />
+              Pronunciation Practice
+            </Link>
           </Button>
         </CardContent>
       </Card>
