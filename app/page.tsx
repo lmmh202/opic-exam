@@ -11,6 +11,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 import {
   Mic,
   ArrowRight,
@@ -19,6 +20,7 @@ import {
   Pause,
   RotateCcw,
   Clock,
+  Volume2,
 } from "lucide-react";
 import { useExamStore } from "@/lib/store";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
@@ -107,6 +109,12 @@ export default function Home() {
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-2xl shadow-xl">
         <CardHeader className="text-center pb-2">
+          <Button variant="outline" size="sm" className="w-fit mx-auto mb-4" asChild>
+            <Link href="/practice">
+              <Volume2 className="w-4 h-4 mr-2" />
+              Pronunciation Practice
+            </Link>
+          </Button>
           <Badge
             variant="outline"
             className="w-fit mx-auto mb-2 border-blue-200 text-blue-700 bg-blue-50"
