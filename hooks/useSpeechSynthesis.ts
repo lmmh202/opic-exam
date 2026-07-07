@@ -5,6 +5,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+import { loadVoices, pickVoice, preloadVoices, stopSpeech } from "@/lib/tts";
 
 interface UseSpeechSynthesisOptions {
   lang?: string;
@@ -32,17 +33,6 @@ function getServerSpeechSynthesisSupport() {
   return false;
 }
 
-function pickVoice(lang: string): SpeechSynthesisVoice | undefined {
-  const voices = window.speechSynthesis.getVoices();
-  const langPrefix = lang.split("-")[0];
-
-  return (
-    voices.find((voice) => voice.lang === lang && !voice.localService) ??
-    voices.find((voice) => voice.lang.startsWith(langPrefix)) ??
-    voices[0]
-  );
-}
-
 export function useSpeechSynthesis({
   lang = "en-US",
   rate = 1.0,
@@ -55,7 +45,6 @@ export function useSpeechSynthesis({
     getServerSpeechSynthesisSupport,
   );
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const onEndRef = useRef(onEnd);
   const onErrorRef = useRef(onError);
 
@@ -65,13 +54,19 @@ export function useSpeechSynthesis({
   }, [onEnd, onError]);
 
   useEffect(() => {
+    if (isSupported) {
+      preloadVoices();
+    }
+  }, [isSupported]);
+
+  useEffect(() => {
     return () => {
-      window.speechSynthesis?.cancel();
+      stopSpeech();
     };
   }, []);
 
   const stop = useCallback(() => {
-    window.speechSynthesis.cancel();
+    stopSpeech();
     setIsSpeaking(false);
   }, []);
 
@@ -82,28 +77,31 @@ export function useSpeechSynthesis({
         return;
       }
 
-      window.speechSynthesis.cancel();
+      stopSpeech();
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = lang;
-      utterance.rate = rate;
-      const voice = pickVoice(lang);
-      if (voice) {
-        utterance.voice = voice;
-      }
+      void (async () => {
+        const voices = await loadVoices();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        utterance.rate = rate;
 
-      utterance.onstart = () => setIsSpeaking(true);
-      utterance.onend = () => {
-        setIsSpeaking(false);
-        onEndRef.current?.();
-      };
-      utterance.onerror = () => {
-        setIsSpeaking(false);
-        onErrorRef.current?.("Failed to play audio. Please try again.");
-      };
+        const voice = pickVoice(voices, lang);
+        if (voice) {
+          utterance.voice = voice;
+        }
 
-      utteranceRef.current = utterance;
-      window.speechSynthesis.speak(utterance);
+        utterance.onstart = () => setIsSpeaking(true);
+        utterance.onend = () => {
+          setIsSpeaking(false);
+          onEndRef.current?.();
+        };
+        utterance.onerror = () => {
+          setIsSpeaking(false);
+          onErrorRef.current?.("Failed to play audio. Please try again.");
+        };
+
+        window.speechSynthesis.speak(utterance);
+      })();
     },
     [isSupported, lang, rate],
   );

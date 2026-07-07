@@ -1,9 +1,10 @@
 "use client";
 
-import { Suspense, useEffect, useState, useRef } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useExamStore } from "@/lib/store";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
+import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
 import { saveAudio, deleteAudio } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -59,10 +60,10 @@ function ExamPageContent() {
     },
   });
 
-  const [isPlaying, setIsPlaying] = useState(false);
   const [playCount, setPlayCount] = useState(0);
   const [recordingDuration, setRecordingDuration] = useState(0);
-  const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  const { speak, stop, isSpeaking } = useSpeechSynthesis();
 
   const currentQuestion = examQuestions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex >= examQuestions.length - 1;
@@ -113,19 +114,12 @@ function ExamPageContent() {
   useEffect(() => {
     if (!currentQuestion) {
       router.push(`${config.resultsPath}?mode=${mode}`);
-      return;
     }
+  }, [currentQuestion, router, config.resultsPath, mode]);
 
-    const u = new SpeechSynthesisUtterance(currentQuestion.text);
-    u.lang = "en-US";
-    u.rate = 1.0;
-    u.onend = () => setIsPlaying(false);
-    speechRef.current = u;
-
-    return () => {
-      window.speechSynthesis.cancel();
-    };
-  }, [currentQuestionIndex, router, currentQuestion, config.resultsPath, mode]);
+  useEffect(() => {
+    stop();
+  }, [currentQuestionIndex, stop]);
 
   const needsMinRecording = () => {
     if (!config.enforceMinRecording) return false;
@@ -133,17 +127,13 @@ function ExamPageContent() {
   };
 
   const togglePlayQuestion = () => {
-    if (isPlaying) {
-      window.speechSynthesis.cancel();
-      setIsPlaying(false);
+    if (isSpeaking) {
+      stop();
     } else {
-      if (replaysExhausted) return;
+      if (replaysExhausted || !currentQuestion) return;
 
-      if (speechRef.current) {
-        window.speechSynthesis.speak(speechRef.current);
-        setIsPlaying(true);
-        setPlayCount((prev) => prev + 1);
-      }
+      speak(currentQuestion.text);
+      setPlayCount((prev) => prev + 1);
     }
   };
 
@@ -187,8 +177,7 @@ function ExamPageContent() {
       stopRecording();
       setIsRecording(false);
     }
-    window.speechSynthesis.cancel();
-    setIsPlaying(false);
+    stop();
     setPlayCount(0);
     setRecordingDuration(0);
     prevQuestion();
@@ -263,18 +252,18 @@ function ExamPageContent() {
             <div className="flex flex-col items-center gap-2">
               <Button
                 onClick={togglePlayQuestion}
-                variant={isPlaying ? "outline" : "default"}
+                variant={isSpeaking ? "outline" : "default"}
                 className="rounded-full w-14 h-14"
-                disabled={!isPlaying && replaysExhausted}
+                disabled={!isSpeaking && replaysExhausted}
               >
-                {isPlaying ? (
+                {isSpeaking ? (
                   <Pause className="fill-current" />
                 ) : (
                   <Play className="fill-current ml-1" />
                 )}
               </Button>
               <span className="text-sm text-slate-500 text-center">
-                {isPlaying
+                {isSpeaking
                   ? "Eva is speaking..."
                   : replaysExhausted
                     ? "No replays left"
@@ -298,7 +287,7 @@ function ExamPageContent() {
               </p>
             ) : (
               <h2 className="text-2xl font-medium text-slate-800 transition-opacity duration-300">
-                {isPlaying ? "Listening..." : "Your Turn"}
+                {isSpeaking ? "Listening..." : "Your Turn"}
               </h2>
             )}
           </div>
