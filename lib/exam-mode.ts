@@ -8,6 +8,7 @@ export interface ExamModeConfig {
   enforceMinRecording: boolean;
   allowBackNavigation: boolean;
   allowReRecord: boolean;
+  perQuestionFeedback: boolean;
   resultsPath: string;
   setupPath: string;
 }
@@ -21,6 +22,7 @@ export const EXAM_MODE_CONFIG: Record<ExamMode, ExamModeConfig> = {
     enforceMinRecording: true,
     allowBackNavigation: false,
     allowReRecord: false,
+    perQuestionFeedback: false,
     resultsPath: "/results",
     setupPath: "/real/setup",
   },
@@ -32,6 +34,7 @@ export const EXAM_MODE_CONFIG: Record<ExamMode, ExamModeConfig> = {
     enforceMinRecording: false,
     allowBackNavigation: true,
     allowReRecord: true,
+    perQuestionFeedback: true,
     resultsPath: "/results",
     setupPath: "/practice",
   },

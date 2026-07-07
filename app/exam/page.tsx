@@ -1,11 +1,16 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useExamStore } from "@/lib/store";
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { useSpeechSynthesis } from "@/hooks/use-speech-synthesis";
-import { saveAudio, deleteAudio } from "@/lib/db";
+import { saveAudio, deleteAudio, getAudio } from "@/lib/db";
+import type {
+  BatchAnalysisResult,
+  QuestionAnalysis,
+} from "@/app/api/analyze/route";
+import { PracticeAnswerPanel } from "@/components/practice-answer-panel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -50,18 +55,31 @@ function ExamPageContent() {
   const mode: ExamMode = urlMode;
   const config = EXAM_MODE_CONFIG[mode];
 
+  const [playCount, setPlayCount] = useState(0);
+  const [recordingDuration, setRecordingDuration] = useState(0);
+  const [questionFeedback, setQuestionFeedback] = useState<
+    Record<number, QuestionAnalysis>
+  >({});
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isPlayingAnswer, setIsPlayingAnswer] = useState(false);
+  const answerAudioRef = useRef<HTMLAudioElement | null>(null);
+
   const { startRecording, stopRecording, visualizerData } = useAudioRecorder({
     onStop: async (blob) => {
       const currentQuestion = examQuestions[currentQuestionIndex];
       if (currentQuestion) {
         await saveAudio(mode, currentQuestion.id, blob);
         submitAnswer(currentQuestion.id);
+        if (config.perQuestionFeedback) {
+          setQuestionFeedback((prev) => {
+            const next = { ...prev };
+            delete next[currentQuestion.id];
+            return next;
+          });
+        }
       }
     },
   });
-
-  const [playCount, setPlayCount] = useState(0);
-  const [recordingDuration, setRecordingDuration] = useState(0);
 
   const { speak, stop, isSpeaking } = useSpeechSynthesis();
 
@@ -79,6 +97,16 @@ function ExamPageContent() {
       : config.maxQuestionReplays;
   const replaysExhausted =
     Number.isFinite(maxReplays) && playCount >= maxReplays;
+
+  const currentAnalysis = currentQuestion
+    ? questionFeedback[currentQuestion.id]
+    : undefined;
+
+  const stopAnswerPlayback = useCallback(() => {
+    answerAudioRef.current?.pause();
+    answerAudioRef.current = null;
+    setIsPlayingAnswer(false);
+  }, []);
 
   useEffect(() => {
     if (examMode !== mode) {
@@ -119,7 +147,14 @@ function ExamPageContent() {
 
   useEffect(() => {
     stop();
-  }, [currentQuestionIndex, stop]);
+    stopAnswerPlayback();
+  }, [currentQuestionIndex, stop, stopAnswerPlayback]);
+
+  useEffect(() => {
+    return () => {
+      stopAnswerPlayback();
+    };
+  }, [stopAnswerPlayback]);
 
   const needsMinRecording = () => {
     if (!config.enforceMinRecording) return false;
@@ -132,8 +167,101 @@ function ExamPageContent() {
     } else {
       if (replaysExhausted || !currentQuestion) return;
 
+      stopAnswerPlayback();
       speak(currentQuestion.text);
       setPlayCount((prev) => prev + 1);
+    }
+  };
+
+  const handlePlayMyAnswer = async () => {
+    if (!currentQuestion || !hasRecording) return;
+
+    if (isPlayingAnswer) {
+      stopAnswerPlayback();
+      return;
+    }
+
+    stop();
+
+    const blob = await getAudio(mode, currentQuestion.id);
+    if (!blob) {
+      toast.error("No recording found for this question.");
+      return;
+    }
+
+    const audio = new Audio(URL.createObjectURL(blob));
+    answerAudioRef.current = audio;
+    audio.onended = () => {
+      URL.revokeObjectURL(audio.src);
+      setIsPlayingAnswer(false);
+      answerAudioRef.current = null;
+    };
+    audio.onerror = () => {
+      URL.revokeObjectURL(audio.src);
+      toast.error("Failed to play your recording.");
+      setIsPlayingAnswer(false);
+      answerAudioRef.current = null;
+    };
+
+    try {
+      await audio.play();
+      setIsPlayingAnswer(true);
+    } catch {
+      URL.revokeObjectURL(audio.src);
+      toast.error("Failed to play your recording.");
+    }
+  };
+
+  const handleAnalyzeQuestion = async () => {
+    if (!currentQuestion || !hasRecording || isAnalyzing) return;
+
+    stopAnswerPlayback();
+    setIsAnalyzing(true);
+
+    try {
+      const blob = await getAudio(mode, currentQuestion.id);
+      if (!blob) {
+        toast.error("No recording found for this question.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append(
+        `audio_${currentQuestion.id}`,
+        blob,
+        `recording_${currentQuestion.id}.webm`,
+      );
+      formData.append(`questionText_${currentQuestion.id}`, currentQuestion.text);
+
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        body: formData,
+      });
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        const batchResult = result.data as BatchAnalysisResult;
+        const analysis = batchResult.questions.find(
+          (item) => Number(item.question_id) === currentQuestion.id,
+        );
+
+        if (analysis) {
+          setQuestionFeedback((prev) => ({
+            ...prev,
+            [currentQuestion.id]: analysis,
+          }));
+          toast.success("Feedback ready!");
+        } else {
+          toast.error("Analysis result not found.");
+        }
+      } else {
+        toast.error(result.error || "Analysis failed");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Error analyzing your answer");
+    } finally {
+      setIsAnalyzing(false);
     }
   };
 
@@ -209,6 +337,11 @@ function ExamPageContent() {
 
     await deleteAudio(mode, currentQuestion.id);
     clearAnswer(currentQuestion.id);
+    setQuestionFeedback((prev) => {
+      const next = { ...prev };
+      delete next[currentQuestion.id];
+      return next;
+    });
     setRecordingDuration(0);
     toast.success("Recording cleared. You can record again.");
   };
@@ -349,6 +482,17 @@ function ExamPageContent() {
                 </span>
               )}
             </div>
+
+            {config.perQuestionFeedback && (
+              <PracticeAnswerPanel
+                hasRecording={hasRecording && !isStoreRecording}
+                isPlayingAnswer={isPlayingAnswer}
+                isAnalyzing={isAnalyzing}
+                analysis={currentAnalysis ?? null}
+                onPlayAnswer={handlePlayMyAnswer}
+                onAnalyze={handleAnalyzeQuestion}
+              />
+            )}
           </div>
         </CardContent>
       </Card>
