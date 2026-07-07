@@ -14,7 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { useExamStore } from "@/lib/store";
-import { useAudioRecorder } from "@/hooks/useAudioRecorder";
+import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import surveyData from "@/public/survey.json";
 
 interface ExamSetupPanelProps {

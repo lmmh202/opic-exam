@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
+import { useSpeechSynthesis } from "@/hooks/use-speech-synthesis";
 
 const MAX_LENGTH = 500;
 

@@ -3,8 +3,8 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useExamStore } from "@/lib/store";
-import { useAudioRecorder } from "@/hooks/useAudioRecorder";
-import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
+import { useAudioRecorder } from "@/hooks/use-audio-recorder";
+import { useSpeechSynthesis } from "@/hooks/use-speech-synthesis";
 import { saveAudio, deleteAudio } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
