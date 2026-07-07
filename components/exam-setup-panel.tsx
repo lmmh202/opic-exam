@@ -23,6 +23,7 @@ interface ExamSetupPanelProps {
   startLabel: React.ReactNode;
   onStart: () => void;
   startDisabled?: boolean;
+  showRecordingSettings?: boolean;
 }
 
 export function ExamSetupPanel({
@@ -30,6 +31,7 @@ export function ExamSetupPanel({
   startLabel,
   onStart,
   startDisabled = false,
+  showRecordingSettings = true,
 }: ExamSetupPanelProps) {
   const { t } = useTranslation();
   const { skipEnabled, minRecordingDuration } = useExamStore();
@@ -54,7 +56,9 @@ export function ExamSetupPanel({
   const { setSkipSettings } = useExamStore();
 
   const handleStart = () => {
-    setSkipSettings(localSkipEnabled, localDuration);
+    if (showRecordingSettings) {
+      setSkipSettings(localSkipEnabled, localDuration);
+    }
     onStart();
   };
 
@@ -214,49 +218,51 @@ export function ExamSetupPanel({
         </p>
       </div>
 
-      <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
-        <h3 className="font-semibold text-slate-800 flex items-center gap-2">
-          <Clock className="w-5 h-5 text-blue-600" />
-          {t("녹음 설정")}
-        </h3>
+      {showRecordingSettings && (
+        <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
+          <h3 className="font-semibold text-slate-800 flex items-center gap-2">
+            <Clock className="w-5 h-5 text-blue-600" />
+            {t("녹음 설정")}
+          </h3>
 
-        <div className="flex items-center justify-between">
-          <Label
-            htmlFor="skip-enabled"
-            className="text-sm text-slate-700 cursor-pointer"
-          >
-            {t("건너뛰기 허용 (최소 녹음 시간 없음)")}
-          </Label>
-          <Switch
-            id="skip-enabled"
-            checked={localSkipEnabled}
-            onCheckedChange={setLocalSkipEnabled}
-          />
-        </div>
-
-        {!localSkipEnabled && (
-          <div className="space-y-3 pt-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-slate-600">{t("최소 녹음 시간")}</span>
-              <span className="font-medium text-blue-600 tabular-nums">
-                {t("{seconds}초", { seconds: localDuration })}
-              </span>
-            </div>
-            <Slider
-              value={[localDuration]}
-              onValueChange={([value]) => setLocalDuration(value)}
-              min={10}
-              max={120}
-              step={10}
-              className="w-full"
+          <div className="flex items-center justify-between">
+            <Label
+              htmlFor="skip-enabled"
+              className="text-sm text-slate-700 cursor-pointer"
+            >
+              {t("건너뛰기 허용 (최소 녹음 시간 없음)")}
+            </Label>
+            <Switch
+              id="skip-enabled"
+              checked={localSkipEnabled}
+              onCheckedChange={setLocalSkipEnabled}
             />
-            <div className="flex justify-between text-xs text-slate-400">
-              <span>{t("10초")}</span>
-              <span>{t("120초 (2분)")}</span>
-            </div>
           </div>
-        )}
-      </div>
+
+          {!localSkipEnabled && (
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-600">{t("최소 녹음 시간")}</span>
+                <span className="font-medium text-blue-600 tabular-nums">
+                  {t("{seconds}초", { seconds: localDuration })}
+                </span>
+              </div>
+              <Slider
+                value={[localDuration]}
+                onValueChange={([value]) => setLocalDuration(value)}
+                min={10}
+                max={120}
+                step={10}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-slate-400">
+                <span>{t("10초")}</span>
+                <span>{t("120초 (2분)")}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       <Button
         className="w-full text-lg h-14 font-semibold shadow-lg shadow-blue-500/20"

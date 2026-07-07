@@ -118,6 +118,7 @@ export default function PracticeHubPage() {
               }
               onStart={handleStartSession}
               startDisabled={filteredTopics.length === 0}
+              showRecordingSettings={false}
             >
               <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
                 <div className="space-y-2">
