@@ -29,9 +29,11 @@ import {
   parseExamMode,
   type ExamMode,
 } from "@/lib/exam-mode";
+import { useTranslation } from "@/components/i18n-provider";
 
 function ExamPageContent() {
   const router = useRouter();
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const urlMode = parseExamMode(searchParams.get("mode"));
 
@@ -221,7 +223,7 @@ function ExamPageContent() {
     try {
       const blob = await getAudio(mode, currentQuestion.id);
       if (!blob) {
-        toast.error("No recording found for this question.");
+        toast.error(t("이 문항에 대한 녹음을 찾을 수 없습니다."));
         return;
       }
 
@@ -250,16 +252,16 @@ function ExamPageContent() {
             ...prev,
             [currentQuestion.id]: analysis,
           }));
-          toast.success("Feedback ready!");
+          toast.success(t("피드백이 준비되었습니다!"));
         } else {
-          toast.error("Analysis result not found.");
+          toast.error(t("분석 결과를 찾을 수 없습니다."));
         }
       } else {
-        toast.error(result.error || "Analysis failed");
+        toast.error(result.error || t("분석에 실패했습니다"));
       }
     } catch (error) {
       console.error(error);
-      toast.error("Error analyzing your answer");
+      toast.error(t("답변 분석 중 오류가 발생했습니다"));
     } finally {
       setIsAnalyzing(false);
     }
@@ -279,7 +281,9 @@ function ExamPageContent() {
     if (needsMinRecording()) {
       if (!skipEnabled) {
         toast.error(
-          `You must record for at least ${minRecordingDuration} seconds.`,
+          t("최소 {seconds}초 이상 녹음해야 합니다.", {
+            seconds: minRecordingDuration,
+          }),
         );
         return;
       }
@@ -290,7 +294,9 @@ function ExamPageContent() {
       setIsRecording(false);
     } else if (needsMinRecording() && !skipEnabled) {
       toast.error(
-        `Please complete the recording. (Min ${minRecordingDuration} seconds)`,
+        t("녹음을 완료해 주세요. (최소 {seconds}초)", {
+          seconds: minRecordingDuration,
+        }),
       );
       return;
     }
@@ -315,7 +321,9 @@ function ExamPageContent() {
     if (isStoreRecording) {
       if (needsMinRecording() && !skipEnabled) {
         toast.error(
-          `You must record for at least ${minRecordingDuration} seconds.`,
+          t("최소 {seconds}초 이상 녹음해야 합니다.", {
+            seconds: minRecordingDuration,
+          }),
         );
         return;
       }
@@ -343,7 +351,7 @@ function ExamPageContent() {
       return next;
     });
     setRecordingDuration(0);
-    toast.success("Recording cleared. You can record again.");
+    toast.success(t("녹음이 삭제되었습니다. 다시 녹음할 수 있습니다."));
   };
 
   if (!currentQuestion || examMode !== mode) return null;
@@ -352,10 +360,10 @@ function ExamPageContent() {
     <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-between p-4">
       <div className="w-full max-w-4xl flex justify-between items-center mb-4">
         <div className="text-xl font-bold text-slate-700">
-          {config.label}
+          {t(mode === "practice" ? "연습" : "실전 모의고사")}
           {mode === "practice" && (
             <Badge variant="outline" className="ml-2 text-xs font-normal">
-              Practice
+              {t("연습")}
             </Badge>
           )}
         </div>
@@ -397,13 +405,16 @@ function ExamPageContent() {
               </Button>
               <span className="text-sm text-slate-500 text-center">
                 {isSpeaking
-                  ? "Eva is speaking..."
+                  ? t("Eva가 말하고 있어요...")
                   : replaysExhausted
-                    ? "No replays left"
-                    : "Click to listen"}
+                    ? t("재생 횟수가 없습니다")
+                    : t("눌러서 듣기")}
                 {Number.isFinite(maxReplays) && (
                   <span className="block text-xs text-slate-400 mt-1">
-                    ({playCount}/{maxReplays} played)
+                    {t("({count}/{max}회 재생)", {
+                      count: playCount,
+                      max: maxReplays,
+                    })}
                   </span>
                 )}
               </span>
@@ -420,7 +431,7 @@ function ExamPageContent() {
               </p>
             ) : (
               <h2 className="text-2xl font-medium text-slate-800 transition-opacity duration-300">
-                {isSpeaking ? "Listening..." : "Your Turn"}
+                {isSpeaking ? t("듣는 중...") : t("답변하세요")}
               </h2>
             )}
           </div>
@@ -448,7 +459,7 @@ function ExamPageContent() {
                   onClick={handleToggleRecord}
                 >
                   <Mic className="mr-2 w-6 h-6" />
-                  {isStoreRecording ? "Stop Recording" : "Start Recording"}
+                  {isStoreRecording ? t("녹음 중지") : t("녹음 시작")}
                 </Button>
 
                 {config.allowReRecord && hasRecording && !isStoreRecording && (
@@ -459,7 +470,7 @@ function ExamPageContent() {
                     onClick={handleReRecord}
                   >
                     <RotateCcw className="mr-2 w-5 h-5" />
-                    Re-record
+                    {t("다시 녹음")}
                   </Button>
                 )}
               </div>
@@ -472,13 +483,13 @@ function ExamPageContent() {
                   {(recordingDuration % 60).toString().padStart(2, "0")}
                   {needsMinRecording() &&
                     !skipEnabled &&
-                    ` (Min ${minRecordingDuration}s)`}
+                    ` ${t("(최소 {seconds}초)", { seconds: minRecordingDuration })}`}
                 </span>
               )}
 
               {hasRecording && !isStoreRecording && (
                 <span className="text-sm text-green-600 font-medium">
-                  Answer recorded
+                  {t("답변이 녹음되었습니다")}
                 </span>
               )}
             </div>
@@ -506,7 +517,7 @@ function ExamPageContent() {
             size="lg"
             className="text-lg px-8"
           >
-            <ChevronLeft className="mr-2" /> Previous
+            <ChevronLeft className="mr-2" /> {t("이전")}
           </Button>
         ) : (
           <div />
@@ -523,7 +534,8 @@ function ExamPageContent() {
           size="lg"
           className="text-lg px-8"
         >
-          {isLastQuestion ? "Finish" : "Next"} <ChevronRight className="ml-2" />
+          {isLastQuestion ? t("완료") : t("다음")}{" "}
+          <ChevronRight className="ml-2" />
         </Button>
       </div>
     </div>

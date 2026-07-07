@@ -36,8 +36,10 @@ import {
   parseExamMode,
   type ExamMode,
 } from "@/lib/exam-mode";
+import { useTranslation } from "@/components/i18n-provider";
 
 function ResultsPageContent() {
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const mode: ExamMode = parseExamMode(searchParams.get("mode"));
   const config = EXAM_MODE_CONFIG[mode];
@@ -55,10 +57,10 @@ function ResultsPageContent() {
     const results = Object.values(analyzedData);
     if (results.length === 0)
       return [
-        { subject: "Fluency", A: 0, fullMark: 100 },
-        { subject: "Grammar", A: 0, fullMark: 100 },
-        { subject: "Vocabulary", A: 0, fullMark: 100 },
-        { subject: "Content", A: 0, fullMark: 100 },
+        { subject: t("유창성"), A: 0, fullMark: 100 },
+        { subject: t("문법"), A: 0, fullMark: 100 },
+        { subject: t("어휘"), A: 0, fullMark: 100 },
+        { subject: t("내용"), A: 0, fullMark: 100 },
       ];
 
     const sum = results.reduce(
@@ -73,21 +75,21 @@ function ResultsPageContent() {
 
     const count = results.length;
     return [
-      { subject: "Fluency", A: Math.round(sum.fluency / count), fullMark: 100 },
-      { subject: "Grammar", A: Math.round(sum.grammar / count), fullMark: 100 },
+      { subject: t("유창성"), A: Math.round(sum.fluency / count), fullMark: 100 },
+      { subject: t("문법"), A: Math.round(sum.grammar / count), fullMark: 100 },
       {
-        subject: "Vocabulary",
+        subject: t("어휘"),
         A: Math.round(sum.vocabs / count),
         fullMark: 100,
       },
-      { subject: "Content", A: 85, fullMark: 100 },
+      { subject: t("내용"), A: 85, fullMark: 100 },
     ];
   };
 
   const analyzeAllQuestions = useCallback(async () => {
     const questionIds = Object.keys(answers).map(Number);
     if (questionIds.length === 0) {
-      toast.error("No answered questions found.");
+      toast.error(t("답변한 문항이 없습니다."));
       return;
     }
 
@@ -124,17 +126,17 @@ function ResultsPageContent() {
         setOverallGrade(batchResult.overall_grade);
         setOverallFeedback(batchResult.overall_feedback);
         setAnalysisComplete(true);
-        toast.success("All questions analyzed!");
+        toast.success(t("모든 문항 분석이 완료되었습니다!"));
       } else {
-        toast.error(result.error || "Analysis failed");
+        toast.error(result.error || t("분석에 실패했습니다"));
       }
     } catch (e) {
       console.error(e);
-      toast.error("Error analyzing audio");
+      toast.error(t("오디오 분석 중 오류가 발생했습니다"));
     } finally {
       setIsAnalyzing(false);
     }
-  }, [answers, examQuestions, mode]);
+  }, [answers, examQuestions, mode, t]);
 
   useEffect(() => {
     if (examMode !== mode) return;
@@ -144,8 +146,7 @@ function ResultsPageContent() {
   }, [answeredIds.length, analysisComplete, isAnalyzing, analyzeAllQuestions, examMode, mode]);
 
   const backPath = mode === "practice" ? "/practice" : "/real/setup";
-  const pageTitle =
-    mode === "practice" ? "Practice Results" : "Exam Results";
+  const pageTitle = mode === "practice" ? t("연습 결과") : t("시험 결과");
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
@@ -154,12 +155,14 @@ function ResultsPageContent() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <h1 className="text-3xl font-bold text-slate-900">{pageTitle}</h1>
-              <Badge variant="outline">{config.label}</Badge>
+              <Badge variant="outline">
+                {t(mode === "practice" ? "연습" : "실전 모의고사")}
+              </Badge>
             </div>
             <p className="text-slate-500">
               {isAnalyzing
-                ? "Analyzing all responses with AI..."
-                : "Review your performance and AI feedback."}
+                ? t("AI로 모든 답변을 분석하는 중...")
+                : t("성적과 AI 피드백을 확인하세요.")}
             </p>
           </div>
           <div className="flex gap-2">
@@ -171,12 +174,12 @@ function ResultsPageContent() {
               {isAnalyzing ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Analyzing...
+                  {t("분석 중...")}
                 </>
               ) : (
                 <>
                   <RefreshCw className="mr-2 h-4 w-4" />
-                  Re-analyze
+                  {t("다시 분석")}
                 </>
               )}
             </Button>
@@ -184,7 +187,7 @@ function ResultsPageContent() {
               variant="outline"
               onClick={() => (window.location.href = backPath)}
             >
-              {mode === "practice" ? "Back to Practice" : "Back to Setup"}
+              {mode === "practice" ? t("연습으로 돌아가기") : t("설정으로 돌아가기")}
             </Button>
           </div>
         </div>
@@ -196,10 +199,12 @@ function ResultsPageContent() {
                 <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto" />
                 <div>
                   <p className="text-lg font-medium text-blue-900">
-                    Analyzing {answeredIds.length} responses...
+                    {t("{count}개 답변을 분석하는 중...", {
+                      count: answeredIds.length,
+                    })}
                   </p>
                   <p className="text-sm text-blue-700">
-                    This may take a minute. Please wait.
+                    {t("잠시 시간이 걸릴 수 있습니다. 기다려 주세요.")}
                   </p>
                 </div>
               </div>
@@ -212,7 +217,7 @@ function ResultsPageContent() {
             <div className="lg:col-span-1 space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Performance Overview</CardTitle>
+                  <CardTitle>{t("성적 개요")}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center">
                   <div className="h-64 w-full">
@@ -227,7 +232,7 @@ function ResultsPageContent() {
                         <PolarAngleAxis dataKey="subject" />
                         <PolarRadiusAxis angle={30} domain={[0, 100]} />
                         <Radar
-                          name="My Score"
+                          name={t("내 점수")}
                           dataKey="A"
                           stroke="#2563eb"
                           fill="#3b82f6"
@@ -238,7 +243,9 @@ function ResultsPageContent() {
                   </div>
 
                   <div className="mt-4 text-center">
-                    <p className="text-sm text-slate-500 mb-1">Estimated Level</p>
+                    <p className="text-sm text-slate-500 mb-1">
+                      {t("예상 등급")}
+                    </p>
                     <Badge className="text-2xl px-4 py-2 bg-blue-600 hover:bg-blue-700">
                       {overallGrade || "—"}
                     </Badge>
@@ -249,7 +256,7 @@ function ResultsPageContent() {
               {overallFeedback && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Overall Feedback</CardTitle>
+                    <CardTitle>{t("종합 피드백")}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-slate-700 whitespace-pre-wrap">
@@ -263,11 +270,11 @@ function ResultsPageContent() {
             <div className="lg:col-span-2">
               <Card className="h-full">
                 <CardHeader>
-                  <CardTitle>Question Analysis</CardTitle>
+                  <CardTitle>{t("문항 분석")}</CardTitle>
                   <CardDescription>
                     {analysisComplete
-                      ? "Click on each question to see detailed feedback."
-                      : "Analysis results will appear here."}
+                      ? t("각 문항을 클릭하면 상세 피드백을 볼 수 있습니다.")
+                      : t("분석 결과가 여기에 표시됩니다.")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -301,19 +308,19 @@ function ResultsPageContent() {
                                   <div className="grid grid-cols-3 gap-2 text-center text-sm">
                                     <div className="bg-slate-100 p-2 rounded">
                                       <div className="font-semibold text-slate-700">
-                                        Fluency
+                                        {t("유창성")}
                                       </div>
                                       <div>{analysis.fluency_score}</div>
                                     </div>
                                     <div className="bg-slate-100 p-2 rounded">
                                       <div className="font-semibold text-slate-700">
-                                        Grammar
+                                        {t("문법")}
                                       </div>
                                       <div>{analysis.grammar_score}</div>
                                     </div>
                                     <div className="bg-slate-100 p-2 rounded">
                                       <div className="font-semibold text-slate-700">
-                                        Vocab
+                                        {t("어휘")}
                                       </div>
                                       <div>{analysis.vocabulary_score}</div>
                                     </div>
@@ -321,7 +328,7 @@ function ResultsPageContent() {
 
                                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
                                     <h4 className="font-semibold text-blue-900 mb-2">
-                                      Feedback
+                                      {t("피드백")}
                                     </h4>
                                     <p className="text-sm text-blue-800 whitespace-pre-wrap">
                                       {analysis.feedback}
@@ -330,7 +337,7 @@ function ResultsPageContent() {
 
                                   <div className="bg-green-50 p-4 rounded-lg border border-green-100">
                                     <h4 className="font-semibold text-green-900 mb-2">
-                                      Corrected Script
+                                      {t("교정된 스크립트")}
                                     </h4>
                                     <p className="text-sm text-green-800">
                                       {analysis.corrected_script}
@@ -339,7 +346,9 @@ function ResultsPageContent() {
                                 </div>
                               ) : (
                                 <div className="text-center py-4 text-slate-500">
-                                  {isAnalyzing ? "Analyzing..." : "No analysis available"}
+                                  {isAnalyzing
+                                    ? t("분석 중...")
+                                    : t("분석 결과가 없습니다")}
                                 </div>
                               )}
                             </AccordionContent>

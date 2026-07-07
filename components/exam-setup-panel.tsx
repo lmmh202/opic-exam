@@ -15,6 +15,7 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { useExamStore } from "@/lib/store";
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
+import { useTranslation } from "@/components/i18n-provider";
 import surveyData from "@/public/survey.json";
 
 interface ExamSetupPanelProps {
@@ -30,6 +31,7 @@ export function ExamSetupPanel({
   onStart,
   startDisabled = false,
 }: ExamSetupPanelProps) {
+  const { t } = useTranslation();
   const { skipEnabled, minRecordingDuration } = useExamStore();
   const [localSkipEnabled, setLocalSkipEnabled] = useState(skipEnabled);
   const [localDuration, setLocalDuration] = useState(minRecordingDuration);
@@ -108,7 +110,7 @@ export function ExamSetupPanel({
       <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
         <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
           <CheckCircle2 className="w-5 h-5 text-green-600" />
-          Applied Survey Settings
+          {t("적용된 설문 설정")}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-600">
           {surveyData.map((item) => (
@@ -129,12 +131,12 @@ export function ExamSetupPanel({
           </div>
           <div>
             <h4 className="font-semibold text-green-900 mb-1">
-              Your Privacy is Protected
+              {t("개인정보가 보호됩니다")}
             </h4>
             <p className="text-sm text-green-800">
-              All voice recordings are stored{" "}
-              <strong>only in your browser</strong> (IndexedDB). No audio data
-              is saved to any server or database.
+              {t(
+                "모든 음성 녹음은 브라우저 안에만 저장됩니다 (IndexedDB). 어떤 오디오 데이터도 서버나 데이터베이스에 저장되지 않습니다.",
+              )}
             </p>
           </div>
         </div>
@@ -142,11 +144,11 @@ export function ExamSetupPanel({
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-medium text-slate-900">Microphone Check</h3>
+          <h3 className="font-medium text-slate-900">{t("마이크 점검")}</h3>
           {micReady && (
             <div className="flex items-center gap-2">
               <span className="text-green-600 text-sm font-medium flex items-center gap-1">
-                <CheckCircle2 className="w-4 h-4" /> Sound Captured
+                <CheckCircle2 className="w-4 h-4" /> {t("소리 감지됨")}
               </span>
               <Button
                 variant="ghost"
@@ -154,7 +156,7 @@ export function ExamSetupPanel({
                 onClick={handleRetry}
                 className="text-slate-500 hover:text-slate-900 h-8 px-2 text-xs"
               >
-                <RotateCcw className="w-3 h-3 mr-1" /> Retry
+                <RotateCcw className="w-3 h-3 mr-1" /> {t("다시 시도")}
               </Button>
             </div>
           )}
@@ -205,17 +207,17 @@ export function ExamSetupPanel({
 
         <p className="text-xs text-slate-500 text-center">
           {isRecording
-            ? "Listening... Speak to test."
+            ? t("듣는 중... 말해서 테스트하세요.")
             : audioUrl
-              ? "Click play to verify your voice."
-              : "Click the mic to start testing."}
+              ? t("재생을 눌러 목소리를 확인하세요.")
+              : t("마이크를 눌러 테스트를 시작하세요.")}
         </p>
       </div>
 
       <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
         <h3 className="font-semibold text-slate-800 flex items-center gap-2">
           <Clock className="w-5 h-5 text-blue-600" />
-          Recording Settings
+          {t("녹음 설정")}
         </h3>
 
         <div className="flex items-center justify-between">
@@ -223,7 +225,7 @@ export function ExamSetupPanel({
             htmlFor="skip-enabled"
             className="text-sm text-slate-700 cursor-pointer"
           >
-            Allow Skip (no minimum recording time)
+            {t("건너뛰기 허용 (최소 녹음 시간 없음)")}
           </Label>
           <Switch
             id="skip-enabled"
@@ -235,9 +237,9 @@ export function ExamSetupPanel({
         {!localSkipEnabled && (
           <div className="space-y-3 pt-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-slate-600">Minimum Recording Time</span>
+              <span className="text-slate-600">{t("최소 녹음 시간")}</span>
               <span className="font-medium text-blue-600 tabular-nums">
-                {localDuration}s
+                {t("{seconds}초", { seconds: localDuration })}
               </span>
             </div>
             <Slider
@@ -249,8 +251,8 @@ export function ExamSetupPanel({
               className="w-full"
             />
             <div className="flex justify-between text-xs text-slate-400">
-              <span>10s</span>
-              <span>120s (2 min)</span>
+              <span>{t("10초")}</span>
+              <span>{t("120초 (2분)")}</span>
             </div>
           </div>
         )}

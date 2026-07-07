@@ -14,10 +14,12 @@ import {
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useSpeechSynthesis } from "@/hooks/use-speech-synthesis";
+import { useTranslation } from "@/components/i18n-provider";
 
 const MAX_LENGTH = 500;
 
 export default function PronunciationPracticePage() {
+  const { t } = useTranslation();
   const [text, setText] = useState("");
   const { speak, stop, isSpeaking, isSupported } = useSpeechSynthesis({
     onError: (message) => toast.error(message),
@@ -26,7 +28,7 @@ export default function PronunciationPracticePage() {
   const handleSpeak = () => {
     const trimmed = text.trim();
     if (!trimmed) {
-      toast.error("Please enter a sentence.");
+      toast.error(t("문장을 입력해 주세요."));
       return;
     }
 
@@ -58,14 +60,13 @@ export default function PronunciationPracticePage() {
             className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-900 w-fit mb-2 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Practice Hub
+            {t("연습 허브로 돌아가기")}
           </Link>
           <CardTitle className="text-2xl font-bold tracking-tight text-slate-900">
-            Pronunciation Practice
+            {t("발음 연습")}
           </CardTitle>
           <CardDescription className="text-slate-600">
-            Enter an English sentence and listen to its pronunciation using
-            your browser&apos;s text-to-speech.
+            {t("영어 문장을 입력하면 브라우저 TTS로 발음을 들려줍니다.")}
           </CardDescription>
         </CardHeader>
 
@@ -75,13 +76,13 @@ export default function PronunciationPracticePage() {
               htmlFor="practice-sentence"
               className="text-sm font-medium text-slate-900"
             >
-              Enter a sentence in English
+              {t("영어 문장을 입력하세요")}
             </label>
             <Textarea
               id="practice-sentence"
               value={text}
               onChange={(e) => handleChange(e.target.value)}
-              placeholder="Type or paste your sentence here..."
+              placeholder={t("여기에 문장을 입력하거나 붙여넣으세요...")}
               className="min-h-[120px] resize-none"
               maxLength={MAX_LENGTH}
               onKeyDown={(e) => {
@@ -92,7 +93,7 @@ export default function PronunciationPracticePage() {
               }}
             />
             <p className="text-xs text-slate-500 text-right tabular-nums">
-              {text.length} / {MAX_LENGTH} characters
+              {t("{count} / {max}자", { count: text.length, max: MAX_LENGTH })}
             </p>
           </div>
 
@@ -105,12 +106,12 @@ export default function PronunciationPracticePage() {
               {isSpeaking ? (
                 <>
                   <Square className="w-4 h-4 mr-2" />
-                  Stop
+                  {t("정지")}
                 </>
               ) : (
                 <>
                   <Volume2 className="w-4 h-4 mr-2" />
-                  Speak
+                  {t("말하기")}
                 </>
               )}
             </Button>
@@ -120,24 +121,24 @@ export default function PronunciationPracticePage() {
               disabled={!text && !isSpeaking}
             >
               <RotateCcw className="w-4 h-4 mr-2" />
-              Clear
+              {t("지우기")}
             </Button>
           </div>
 
           {isSpeaking && (
             <p className="text-sm text-blue-600 text-center animate-pulse">
-              Playing pronunciation...
+              {t("발음 재생 중...")}
             </p>
           )}
 
           {!isSupported && (
             <p className="text-sm text-red-600 text-center">
-              Your browser doesn&apos;t support text-to-speech.
+              {t("이 브라우저는 음성 합성(TTS)을 지원하지 않습니다.")}
             </p>
           )}
 
           <p className="text-xs text-slate-400 text-center">
-            Tip: Press Cmd/Ctrl + Enter to speak
+            {t("팁: Cmd/Ctrl + Enter로 말하기")}
           </p>
         </CardContent>
       </Card>
