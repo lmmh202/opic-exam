@@ -29,20 +29,20 @@ interface QuestionBank {
   intro: {
     questions: Array<{ id: string; type: string; text: string }>;
   };
-  topics: BankTopic[];
-  roleplayTopics: BankTopic[];
-  comparisonTopics: BankTopic[];
+  combo: BankTopic[];
+  roleplay: BankTopic[];
+  comparison: BankTopic[];
 }
 
 export type PracticeCategory = "combo" | "roleplay" | "comparison";
 
 const CATEGORY_BANK_KEY: Record<
   PracticeCategory,
-  "topics" | "roleplayTopics" | "comparisonTopics"
+  "combo" | "roleplay" | "comparison"
 > = {
-  combo: "topics",
-  roleplay: "roleplayTopics",
-  comparison: "comparisonTopics",
+  combo: "combo",
+  roleplay: "roleplay",
+  comparison: "comparison",
 };
 
 const CATEGORY_LABELS: Record<PracticeCategory, string> = {
@@ -135,13 +135,13 @@ export function generateExam(): Question[] {
     text: intro.text,
   });
 
-  const selectedComboTopics = shuffle(bank.topics).slice(0, 3);
+  const selectedComboTopics = shuffle(bank.combo).slice(0, 3);
   for (const topic of selectedComboTopics) {
     const set = pickRandom(topic.sets);
     pushSetQuestions(exam, "combo", topic.label, set, questionId);
   }
 
-  const roleplayTopic = pickRandom(bank.roleplayTopics);
+  const roleplayTopic = pickRandom(bank.roleplay);
   const roleplaySet = pickRandom(roleplayTopic.sets);
   pushSetQuestions(
     exam,
@@ -151,7 +151,7 @@ export function generateExam(): Question[] {
     questionId,
   );
 
-  const comparisonTopic = pickRandom(bank.comparisonTopics);
+  const comparisonTopic = pickRandom(bank.comparison);
   const comparisonSet = pickRandom(comparisonTopic.sets);
   pushSetQuestions(
     exam,

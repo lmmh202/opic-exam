@@ -8,7 +8,7 @@
       }
     ]
   },
-  "topics": [
+  "combo": [
     {
       "id": "geography",
       "label": "Geography & Outdoor Activities",
@@ -412,7 +412,7 @@
       ]
     }
   ],
-  "roleplayTopics": [
+  "roleplay": [
     {
       "id": "cellphone",
       "label": "Cell Phone Purchase",
@@ -529,7 +529,7 @@
       ]
     }
   ],
-  "comparisonTopics": [
+  "comparison": [
     {
       "id": "housing",
       "label": "Housing",

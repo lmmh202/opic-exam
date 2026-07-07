@@ -90,7 +90,7 @@ opic-exam/
 │   ├── store.ts           # Zustand state management
 │   └── db.ts              # IndexedDB utilities
 └── public/
-    ├── question-bank.json # Question bank (topics/roleplayTopics/comparisonTopics)
+    ├── question-bank.json # Question bank (combo/roleplay/comparison)
     └── survey.json        # Background survey data
 ```
 
