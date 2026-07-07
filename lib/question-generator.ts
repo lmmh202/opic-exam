@@ -131,3 +131,127 @@ export function generateExam(): Question[] {
 
   return exam;
 }
+
+export type PracticeCategory = "combo" | "roleplay" | "comparison";
+
+export interface PracticeTopic {
+  id: string;
+  category: PracticeCategory;
+  topic: string;
+  questionCount: number;
+}
+
+const CATEGORY_LABELS: Record<PracticeCategory, string> = {
+  combo: "Topic Set",
+  roleplay: "Roleplay",
+  comparison: "Comparison",
+};
+
+export function getPracticeCategoryLabel(category: PracticeCategory): string {
+  return CATEGORY_LABELS[category];
+}
+
+export function listPracticeTopics(): PracticeTopic[] {
+  const bank = questionBank as QuestionBank;
+  const topics: PracticeTopic[] = [];
+
+  for (const set of bank.sets) {
+    topics.push({
+      id: set.id,
+      category: "combo",
+      topic: set.topic,
+      questionCount: set.combo.length,
+    });
+  }
+
+  for (const set of bank.roleplay) {
+    topics.push({
+      id: set.id,
+      category: "roleplay",
+      topic: set.topic,
+      questionCount: 3,
+    });
+  }
+
+  for (const set of bank.comparison) {
+    topics.push({
+      id: set.id,
+      category: "comparison",
+      topic: set.topic,
+      questionCount: 2,
+    });
+  }
+
+  return topics;
+}
+
+export interface GeneratePracticeExamOptions {
+  category: PracticeCategory;
+  topicId?: string;
+}
+
+export function generatePracticeExam(
+  options: GeneratePracticeExamOptions,
+): Question[] {
+  const bank = questionBank as QuestionBank;
+  const { category } = options;
+  let topicId = options.topicId;
+
+  if (!topicId || topicId === "random") {
+    if (category === "combo") {
+      topicId = shuffle(bank.sets)[0].id;
+    } else if (category === "roleplay") {
+      topicId = shuffle(bank.roleplay)[0].id;
+    } else {
+      topicId = shuffle(bank.comparison)[0].id;
+    }
+  }
+
+  const exam: Question[] = [];
+  let questionId = 1;
+
+  if (category === "combo") {
+    const set = bank.sets.find((s) => s.id === topicId);
+    if (!set) throw new Error(`Combo set not found: ${topicId}`);
+    for (const q of set.combo) {
+      exam.push({
+        id: questionId++,
+        type: q.type,
+        topic: set.topic,
+        text: q.text,
+      });
+    }
+    return exam;
+  }
+
+  if (category === "roleplay") {
+    const set = bank.roleplay.find((s) => s.id === topicId);
+    if (!set) throw new Error(`Roleplay set not found: ${topicId}`);
+    const items = [set.q11, set.q12, set.q13];
+    for (const q of items) {
+      exam.push({
+        id: questionId++,
+        type: q.type,
+        topic: `Roleplay: ${set.topic}`,
+        text: q.text,
+      });
+    }
+    return exam;
+  }
+
+  const set = bank.comparison.find((s) => s.id === topicId);
+  if (!set) throw new Error(`Comparison set not found: ${topicId}`);
+  exam.push({
+    id: questionId++,
+    type: set.q14.type,
+    topic: set.topic,
+    text: set.q14.text,
+  });
+  exam.push({
+    id: questionId++,
+    type: set.q15.type,
+    topic: set.topic,
+    text: set.q15.text,
+  });
+  return exam;
+}

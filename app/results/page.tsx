@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import { useExamStore } from "@/lib/store";
 import { getAudio } from "@/lib/db";
 import type { QuestionAnalysis, BatchAnalysisResult } from "@/app/api/analyze/route";
@@ -30,19 +31,26 @@ import {
   PolarRadiusAxis,
   ResponsiveContainer,
 } from "recharts";
+import {
+  EXAM_MODE_CONFIG,
+  parseExamMode,
+  type ExamMode,
+} from "@/lib/exam-mode";
 
-export default function ResultsPage() {
-  const { answers, examQuestions } = useExamStore();
+function ResultsPageContent() {
+  const searchParams = useSearchParams();
+  const mode: ExamMode = parseExamMode(searchParams.get("mode"));
+  const config = EXAM_MODE_CONFIG[mode];
+
+  const { answers, examQuestions, examMode } = useExamStore();
   const [analyzedData, setAnalyzedData] = useState<Record<number, QuestionAnalysis>>({});
   const [overallGrade, setOverallGrade] = useState<string | null>(null);
   const [overallFeedback, setOverallFeedback] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
 
-  // Convert answers to array
   const answeredIds = Object.keys(answers).map(Number);
 
-  // Aggregate Scores for Chart
   const calculateAverageScores = () => {
     const results = Object.values(analyzedData);
     if (results.length === 0)
@@ -76,9 +84,9 @@ export default function ResultsPage() {
     ];
   };
 
-  // Batch analyze all questions on page load
-  const analyzeAllQuestions = async () => {
-    if (answeredIds.length === 0) {
+  const analyzeAllQuestions = useCallback(async () => {
+    const questionIds = Object.keys(answers).map(Number);
+    if (questionIds.length === 0) {
       toast.error("No answered questions found.");
       return;
     }
@@ -87,9 +95,8 @@ export default function ResultsPage() {
     try {
       const formData = new FormData();
 
-      // Gather all audio files from IndexedDB
-      for (const questionId of answeredIds) {
-        const blob = await getAudio(questionId);
+      for (const questionId of questionIds) {
+        const blob = await getAudio(mode, questionId);
         if (blob) {
           const questionText =
             examQuestions.find((q) => q.id === questionId)?.text || "";
@@ -98,7 +105,6 @@ export default function ResultsPage() {
         }
       }
 
-      // Send all at once to batch API
       const response = await fetch("/api/analyze", {
         method: "POST",
         body: formData,
@@ -108,13 +114,12 @@ export default function ResultsPage() {
 
       if (result.success && result.data) {
         const batchResult = result.data as BatchAnalysisResult;
-        
-        // Convert array to Record using question_id
+
         const questionAnalysis: Record<number, QuestionAnalysis> = {};
         for (const item of batchResult.questions) {
           questionAnalysis[Number(item.question_id)] = item;
         }
-        
+
         setAnalyzedData(questionAnalysis);
         setOverallGrade(batchResult.overall_grade);
         setOverallFeedback(batchResult.overall_feedback);
@@ -129,25 +134,31 @@ export default function ResultsPage() {
     } finally {
       setIsAnalyzing(false);
     }
-  };
+  }, [answers, examQuestions, mode]);
 
-  // Auto-analyze on page load
   useEffect(() => {
+    if (examMode !== mode) return;
     if (answeredIds.length > 0 && !analysisComplete && !isAnalyzing) {
       analyzeAllQuestions();
     }
-  }, [answeredIds.length]);
+  }, [answeredIds.length, analysisComplete, isAnalyzing, analyzeAllQuestions, examMode, mode]);
+
+  const backPath = mode === "practice" ? "/practice" : "/real/setup";
+  const pageTitle =
+    mode === "practice" ? "Practice Results" : "Exam Results";
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
-        {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Exam Results</h1>
+            <div className="flex items-center gap-2 mb-1">
+              <h1 className="text-3xl font-bold text-slate-900">{pageTitle}</h1>
+              <Badge variant="outline">{config.label}</Badge>
+            </div>
             <p className="text-slate-500">
-              {isAnalyzing 
-                ? "Analyzing all responses with AI..." 
+              {isAnalyzing
+                ? "Analyzing all responses with AI..."
                 : "Review your performance and AI feedback."}
             </p>
           </div>
@@ -171,14 +182,13 @@ export default function ResultsPage() {
             </Button>
             <Button
               variant="outline"
-              onClick={() => (window.location.href = "/")}
+              onClick={() => (window.location.href = backPath)}
             >
-              Back to Home
+              {mode === "practice" ? "Back to Practice" : "Back to Setup"}
             </Button>
           </div>
         </div>
 
-        {/* Loading State */}
         {isAnalyzing && (
           <Card className="border-blue-200 bg-blue-50">
             <CardContent className="flex items-center justify-center py-12">
@@ -199,7 +209,6 @@ export default function ResultsPage() {
 
         {!isAnalyzing && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Column: Summary & Chart */}
             <div className="lg:col-span-1 space-y-6">
               <Card>
                 <CardHeader>
@@ -228,7 +237,6 @@ export default function ResultsPage() {
                     </ResponsiveContainer>
                   </div>
 
-                  {/* Overall Grade */}
                   <div className="mt-4 text-center">
                     <p className="text-sm text-slate-500 mb-1">Estimated Level</p>
                     <Badge className="text-2xl px-4 py-2 bg-blue-600 hover:bg-blue-700">
@@ -238,7 +246,6 @@ export default function ResultsPage() {
                 </CardContent>
               </Card>
 
-              {/* Overall Feedback Card */}
               {overallFeedback && (
                 <Card>
                   <CardHeader>
@@ -253,7 +260,6 @@ export default function ResultsPage() {
               )}
             </div>
 
-            {/* Right Column: Question List & Analysis */}
             <div className="lg:col-span-2">
               <Card className="h-full">
                 <CardHeader>
@@ -349,5 +355,13 @@ export default function ResultsPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResultsPageContent />
+    </Suspense>
   );
 }

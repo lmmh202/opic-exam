@@ -1,120 +1,23 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Target, BookOpen, ArrowRight } from "lucide-react";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
-import {
-  Mic,
-  ArrowRight,
-  CheckCircle2,
-  Play,
-  Pause,
-  RotateCcw,
-  Clock,
-  Volume2,
-} from "lucide-react";
-import { useExamStore } from "@/lib/store";
-import { useAudioRecorder } from "@/hooks/useAudioRecorder";
-import { Switch } from "@/components/ui/switch";
-import { Slider } from "@/components/ui/slider";
-import { Label } from "@/components/ui/label";
-import surveyData from "@/public/survey.json";
-import { generateExam } from "@/lib/question-generator";
 
-export default function Home() {
+export default function HomePage() {
   const router = useRouter();
-  const { resetExam, setSkipSettings, setExamQuestions, skipEnabled, minRecordingDuration } =
-    useExamStore();
-  const [localSkipEnabled, setLocalSkipEnabled] = useState(skipEnabled);
-  const [localDuration, setLocalDuration] = useState(minRecordingDuration);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [micStatus, setMicStatus] = useState<"idle" | "testing" | "success">(
-    "idle",
-  );
-
-  const { startRecording, stopRecording, isRecording, visualizerData } =
-    useAudioRecorder({
-      onStop: (blob) => {
-        const url = URL.createObjectURL(blob);
-        setAudioUrl(url);
-        setMicStatus("success");
-      },
-    });
-
-  const handleStartExam = () => {
-    setSkipSettings(localSkipEnabled, localDuration);
-    const questions = generateExam();
-    setExamQuestions(questions);
-    resetExam();
-    router.push("/exam");
-  };
-
-  const handleMicToggle = async () => {
-    if (isRecording) {
-      stopRecording();
-    } else {
-      // Clear previous audio if retrying
-      if (audioUrl) {
-        URL.revokeObjectURL(audioUrl);
-        setAudioUrl(null);
-      }
-      setMicStatus("testing");
-      await startRecording();
-    }
-  };
-
-  const handlePlayAudio = () => {
-    if (!audioUrl) return;
-
-    if (isPlaying) {
-      audioRef.current?.pause();
-      setIsPlaying(false);
-    } else {
-      const audio = new Audio(audioUrl);
-      audioRef.current = audio;
-      audio.onended = () => setIsPlaying(false);
-      audio.play();
-      setIsPlaying(true);
-    }
-  };
-
-  const handleRetry = () => {
-    if (audioUrl) {
-      URL.revokeObjectURL(audioUrl);
-      setAudioUrl(null);
-    }
-    setMicStatus("idle"); // UI resets to standard "Ready to test" look, but user clicks mic to start
-  };
-
-  // Cleanup audio on unmount
-  useEffect(() => {
-    return () => {
-      if (audioUrl) URL.revokeObjectURL(audioUrl);
-      if (audioRef.current) audioRef.current.pause();
-    };
-  }, [audioUrl]);
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-2xl shadow-xl">
         <CardHeader className="text-center pb-2">
-          <Button variant="outline" size="sm" className="w-fit mx-auto mb-4" asChild>
-            <Link href="/practice">
-              <Volume2 className="w-4 h-4 mr-2" />
-              Pronunciation Practice
-            </Link>
-          </Button>
           <Badge
             variant="outline"
             className="w-fit mx-auto mb-2 border-blue-200 text-blue-700 bg-blue-50"
@@ -125,175 +28,52 @@ export default function Home() {
             Welcome to Opic Exam
           </CardTitle>
           <CardDescription className="text-lg text-slate-600 mt-2">
-            Real-time, serverless OPIc simulation powered by Gemini AI
+            Choose a mode to get started
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-8">
-          {/* Survey Info */}
-          <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
-            <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-green-600" />
-              Applied Survey Settings
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-600">
-              {surveyData.map((item) => (
-                <div key={item.label} className="space-y-1">
-                  <span className="font-medium text-slate-900 block">
-                    {item.label}
-                  </span>
-                  {item.value}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Privacy Notice */}
-          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                <span className="text-green-600 text-lg">🔒</span>
-              </div>
-              <div>
-                <h4 className="font-semibold text-green-900 mb-1">
-                  Your Privacy is Protected
-                </h4>
-                <p className="text-sm text-green-800">
-                  All voice recordings are stored <strong>only in your browser</strong> (IndexedDB). 
-                  No audio data is saved to any server or database. 
-                  Clear your browser data to delete all recordings.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Mic Test Section */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-medium text-slate-900">Microphone Check</h3>
-              {micStatus === "success" && audioUrl && (
-                <div className="flex items-center gap-2">
-                  <span className="text-green-600 text-sm font-medium flex items-center gap-1">
-                    <CheckCircle2 className="w-4 h-4" /> Sound Captured
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleRetry}
-                    className="text-slate-500 hover:text-slate-900 h-8 px-2 text-xs"
-                  >
-                    <RotateCcw className="w-3 h-3 mr-1" /> Retry
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            <div className="flex items-center gap-4 bg-slate-100 p-4 rounded-xl">
-              {/* Control Button */}
-              {audioUrl ? (
-                <Button
-                  onClick={handlePlayAudio}
-                  variant={isPlaying ? "default" : "secondary"}
-                  size="icon"
-                  className="h-12 w-12 rounded-full shrink-0 transition-all shadow-sm bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  {isPlaying ? (
-                    <Pause className="w-5 h-5" />
-                  ) : (
-                    <Play className="w-5 h-5 ml-1" />
-                  )}
-                </Button>
-              ) : (
-                <Button
-                  variant={isRecording ? "destructive" : "secondary"}
-                  size="icon"
-                  className="h-12 w-12 rounded-full shrink-0 transition-all shadow-sm"
-                  onClick={handleMicToggle}
-                >
-                  {isRecording ? (
-                    <div className="w-4 h-4 bg-white rounded-sm" />
-                  ) : (
-                    <Mic className="w-5 h-5" />
-                  )}
-                </Button>
-              )}
-
-              <div className="flex-1 h-12 bg-white rounded-lg border border-slate-200 overflow-hidden flex items-end justify-center gap-[2px] pb-2 px-4 shadow-inner">
-                {visualizerData.map((value, i) => (
-                  <div
-                    key={i}
-                    className={`w-1.5 rounded-t-sm transition-all duration-75 ${isRecording ? "bg-blue-500" : "bg-slate-300"}`}
-                    style={{
-                      height: `${Math.max(10, value / 2.5)}%`,
-                      opacity: isRecording ? 1 : audioUrl ? 0.5 : 0.3,
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Hint text */}
-            <p className="text-xs text-slate-500 text-center">
-              {isRecording
-                ? "Listening... Speak to test."
-                : audioUrl
-                  ? "Click play to verify your voice."
-                  : "Click the mic to start testing."}
-            </p>
-          </div>
-
-          {/* Skip Settings Section */}
-          <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
-            <h3 className="font-semibold text-slate-800 flex items-center gap-2">
-              <Clock className="w-5 h-5 text-blue-600" />
-              Recording Settings
-            </h3>
-
-            <div className="flex items-center justify-between">
-              <Label
-                htmlFor="skip-enabled"
-                className="text-sm text-slate-700 cursor-pointer"
-              >
-                Allow Skip (no minimum recording time)
-              </Label>
-              <Switch
-                id="skip-enabled"
-                checked={localSkipEnabled}
-                onCheckedChange={setLocalSkipEnabled}
-              />
-            </div>
-
-            {!localSkipEnabled && (
-              <div className="space-y-3 pt-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-600">Minimum Recording Time</span>
-                  <span className="font-medium text-blue-600 tabular-nums">
-                    {localDuration}s
-                  </span>
-                </div>
-                <Slider
-                  value={[localDuration]}
-                  onValueChange={([value]) => setLocalDuration(value)}
-                  min={10}
-                  max={120}
-                  step={10}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-xs text-slate-400">
-                  <span>10s</span>
-                  <span>120s (2 min)</span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <Button
-            className="w-full text-lg h-14 font-semibold shadow-lg shadow-blue-500/20"
-            onClick={handleStartExam}
-            disabled={micStatus !== "success" && false} // Optional: enforce mic test
+        <CardContent className="grid gap-4 sm:grid-cols-2">
+          <button
+            type="button"
+            onClick={() => router.push("/real/setup")}
+            className="group text-left p-6 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 transition-all space-y-3"
           >
-            Start Exam <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
+            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+              <Target className="w-6 h-6 text-blue-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-lg text-slate-900">
+                Real Exam
+              </h3>
+              <p className="text-sm text-slate-600 mt-1">
+                Full 15-question OPIc simulation with 40-minute timer and
+                strict exam rules.
+              </p>
+            </div>
+            <span className="inline-flex items-center text-sm font-medium text-blue-600">
+              Start setup <ArrowRight className="w-4 h-4 ml-1" />
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => router.push("/practice")}
+            className="group text-left p-6 rounded-xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all space-y-3"
+          >
+            <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
+              <BookOpen className="w-6 h-6 text-emerald-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-lg text-slate-900">Practice</h3>
+              <p className="text-sm text-slate-600 mt-1">
+                Topic-based sessions, pronunciation drills, and relaxed rules
+                with instant feedback.
+              </p>
+            </div>
+            <span className="inline-flex items-center text-sm font-medium text-emerald-600">
+              Open practice hub <ArrowRight className="w-4 h-4 ml-1" />
+            </span>
+          </button>
         </CardContent>
       </Card>
     </div>

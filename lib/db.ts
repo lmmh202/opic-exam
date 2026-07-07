@@ -1,13 +1,17 @@
-import { set, get, del, clear } from "idb-keyval";
+import { set, get, del } from "idb-keyval";
+import type { ExamMode } from "./exam-mode";
 
-const AUDIO_PREFIX = "topic_exam_audio_";
+function audioKey(mode: ExamMode, questionId: number): string {
+  return `opic_exam_${mode}_audio_${questionId}`;
+}
 
 export const saveAudio = async (
+  mode: ExamMode,
   questionId: number,
   blob: Blob,
 ): Promise<void> => {
   try {
-    await set(`${AUDIO_PREFIX}${questionId}`, blob);
+    await set(audioKey(mode, questionId), blob);
   } catch (error) {
     console.error("Failed to save audio to IndexedDB:", error);
     throw error;
@@ -15,32 +19,31 @@ export const saveAudio = async (
 };
 
 export const getAudio = async (
+  mode: ExamMode,
   questionId: number,
 ): Promise<Blob | undefined> => {
   try {
-    return await get<Blob>(`${AUDIO_PREFIX}${questionId}`);
+    return await get<Blob>(audioKey(mode, questionId));
   } catch (error) {
     console.error("Failed to get audio from IndexedDB:", error);
     return undefined;
   }
 };
 
-export const deleteAudio = async (questionId: number): Promise<void> => {
+export const deleteAudio = async (
+  mode: ExamMode,
+  questionId: number,
+): Promise<void> => {
   try {
-    await del(`${AUDIO_PREFIX}${questionId}`);
+    await del(audioKey(mode, questionId));
   } catch (error) {
     console.error("Failed to delete audio from IndexedDB:", error);
   }
 };
 
-export const clearAllAudio = async (): Promise<void> => {
-  try {
-    // Only clear items with our prefix to avoid wiping other app data if shared domain
-    // idb-keyval uses a default store, so clear() wipes everything in that store.
-    // For this app, it's likely fine to clear the default store or we should iterate.
-    // Given the project scope, clear() is acceptable, effectively resetting the exam data.
-    await clear();
-  } catch (error) {
-    console.error("Failed to clear IndexedDB:", error);
-  }
+export const clearModeAudio = async (
+  mode: ExamMode,
+  questionIds: number[],
+): Promise<void> => {
+  await Promise.all(questionIds.map((id) => deleteAudio(mode, id)));
 };

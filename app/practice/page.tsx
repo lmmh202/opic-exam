@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, RotateCcw, Square, Volume2 } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, ArrowRight, Volume2, Layers } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -12,41 +11,43 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { ExamSetupPanel } from "@/components/exam-setup-panel";
+import { useExamStore } from "@/lib/store";
+import {
+  generatePracticeExam,
+  getPracticeCategoryLabel,
+  listPracticeTopics,
+  type PracticeCategory,
+} from "@/lib/question-generator";
+import { examPath } from "@/lib/exam-mode";
 
-const MAX_LENGTH = 500;
+const topics = listPracticeTopics();
 
-export default function PracticePage() {
-  const [text, setText] = useState("");
-  const { speak, stop, isSpeaking, isSupported } = useSpeechSynthesis({
-    onError: (message) => toast.error(message),
-  });
+export default function PracticeHubPage() {
+  const router = useRouter();
+  const { switchExamMode, setExamQuestions, resetExam } = useExamStore();
+  const [category, setCategory] = useState<PracticeCategory>("combo");
+  const [topicId, setTopicId] = useState<string>("random");
 
-  const handleSpeak = () => {
-    const trimmed = text.trim();
-    if (!trimmed) {
-      toast.error("Please enter a sentence.");
-      return;
-    }
+  const filteredTopics = topics.filter((t) => t.category === category);
+  const selectedTopic = filteredTopics.find((t) => t.id === topicId);
 
-    if (isSpeaking) {
-      stop();
-      return;
-    }
-
-    speak(trimmed.replace(/\s+/g, " "));
+  const handleCategoryChange = (value: PracticeCategory) => {
+    setCategory(value);
+    setTopicId("random");
   };
 
-  const handleClear = () => {
-    stop();
-    setText("");
-  };
-
-  const handleChange = (value: string) => {
-    if (value.length <= MAX_LENGTH) {
-      setText(value);
-    }
+  const handleStartSession = async () => {
+    await switchExamMode("practice");
+    const questions = generatePracticeExam({
+      category,
+      topicId: topicId === "random" ? "random" : topicId,
+    });
+    setExamQuestions(questions);
+    resetExam();
+    router.push(examPath("practice"));
   };
 
   return (
@@ -60,85 +61,101 @@ export default function PracticePage() {
             <ArrowLeft className="w-4 h-4" />
             Back to Home
           </Link>
+          <Badge
+            variant="outline"
+            className="w-fit mb-2 border-emerald-200 text-emerald-700 bg-emerald-50"
+          >
+            Practice Mode
+          </Badge>
           <CardTitle className="text-2xl font-bold tracking-tight text-slate-900">
-            Pronunciation Practice
+            Practice Hub
           </CardTitle>
           <CardDescription className="text-slate-600">
-            Enter an English sentence and listen to its pronunciation using
-            your browser&apos;s text-to-speech.
+            Choose a practice activity. Topic sessions use survey-based
+            questions from the question bank.
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <label
-              htmlFor="practice-sentence"
-              className="text-sm font-medium text-slate-900"
-            >
-              Enter a sentence in English
-            </label>
-            <Textarea
-              id="practice-sentence"
-              value={text}
-              onChange={(e) => handleChange(e.target.value)}
-              placeholder="Type or paste your sentence here..."
-              className="min-h-[120px] resize-none"
-              maxLength={MAX_LENGTH}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-                  e.preventDefault();
-                  handleSpeak();
-                }
-              }}
-            />
-            <p className="text-xs text-slate-500 text-right tabular-nums">
-              {text.length} / {MAX_LENGTH} characters
-            </p>
-          </div>
+        <CardContent className="space-y-8">
+          <Link
+            href="/practice/pronunciation"
+            className="flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all"
+          >
+            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+              <Volume2 className="w-5 h-5 text-emerald-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-slate-900">
+                Pronunciation Practice
+              </h3>
+              <p className="text-sm text-slate-600">
+                Type a sentence and listen to browser TTS pronunciation.
+              </p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
+          </Link>
 
-          <div className="flex flex-wrap gap-3">
-            <Button
-              onClick={handleSpeak}
-              disabled={!isSupported}
-              className="flex-1 sm:flex-none"
-            >
-              {isSpeaking ? (
+          <div className="border-t border-slate-200 pt-8">
+            <div className="flex items-center gap-2 mb-4">
+              <Layers className="w-5 h-5 text-emerald-600" />
+              <h3 className="font-semibold text-slate-900">Topic Session</h3>
+            </div>
+
+            <ExamSetupPanel
+              startLabel={
                 <>
-                  <Square className="w-4 h-4 mr-2" />
-                  Stop
+                  Start Practice Session{" "}
+                  <ArrowRight className="ml-2 w-5 h-5" />
                 </>
-              ) : (
-                <>
-                  <Volume2 className="w-4 h-4 mr-2" />
-                  Speak
-                </>
-              )}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleClear}
-              disabled={!text && !isSpeaking}
+              }
+              onStart={handleStartSession}
+              startDisabled={filteredTopics.length === 0}
             >
-              <RotateCcw className="w-4 h-4 mr-2" />
-              Clear
-            </Button>
+              <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="practice-category">Question Type</Label>
+                  <select
+                    id="practice-category"
+                    value={category}
+                    onChange={(e) =>
+                      handleCategoryChange(e.target.value as PracticeCategory)
+                    }
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                  >
+                    <option value="combo">Topic Set (3 questions)</option>
+                    <option value="roleplay">Roleplay (3 questions)</option>
+                    <option value="comparison">Comparison (2 questions)</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="practice-topic">Topic</Label>
+                  <select
+                    id="practice-topic"
+                    value={topicId}
+                    onChange={(e) => setTopicId(e.target.value)}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                  >
+                    <option value="random">Random topic</option>
+                    {filteredTopics.map((topic) => (
+                      <option key={topic.id} value={topic.id}>
+                        {topic.topic} ({topic.questionCount} Q)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <p className="text-xs text-slate-500">
+                  Category: {getPracticeCategoryLabel(category)}
+                  {selectedTopic
+                    ? ` · ${selectedTopic.questionCount} questions`
+                    : topicId === "random"
+                      ? " · Random selection"
+                      : ""}
+                </p>
+              </div>
+            </ExamSetupPanel>
           </div>
-
-          {isSpeaking && (
-            <p className="text-sm text-blue-600 text-center animate-pulse">
-              Playing pronunciation...
-            </p>
-          )}
-
-          {!isSupported && (
-            <p className="text-sm text-red-600 text-center">
-              Your browser doesn&apos;t support text-to-speech.
-            </p>
-          )}
-
-          <p className="text-xs text-slate-400 text-center">
-            Tip: Press Cmd/Ctrl + Enter to speak
-          </p>
         </CardContent>
       </Card>
     </div>
