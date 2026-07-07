@@ -22,6 +22,11 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import {
@@ -422,9 +427,27 @@ function ExamPageContent() {
           </div>
 
           <div className="text-center space-y-3">
-            <Badge variant="outline" className="mb-2">
-              {currentQuestion.topic}
-            </Badge>
+            <div className="flex items-center justify-center gap-2 flex-wrap mb-2">
+              <Badge variant="outline">{currentQuestion.topic}</Badge>
+              {currentQuestion.surprise && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge
+                      variant="destructive"
+                      className="cursor-help"
+                      tabIndex={0}
+                    >
+                      {t("돌발")}
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="max-w-xs">
+                    {t(
+                      "오픽 시험은 Survey에서 선택한 문항을 제외하고 돌발 문제가 추가로 출제된다",
+                    )}
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </div>
             {config.showQuestionText ? (
               <p className="text-lg text-slate-700 leading-relaxed max-w-2xl mx-auto">
                 {currentQuestion.text}

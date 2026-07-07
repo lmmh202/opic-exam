@@ -5,6 +5,7 @@ export interface Question {
   type: string;
   topic: string;
   text: string;
+  surprise?: boolean;
 }
 
 interface QuestionItem {
@@ -15,6 +16,7 @@ interface QuestionItem {
 interface QuestionSet {
   id: string;
   label?: string;
+  surprise?: boolean;
   questions: QuestionItem[];
 }
 
@@ -103,12 +105,14 @@ function pushSetQuestions(
   questionId: { value: number },
 ): void {
   const displayLabel = getTopicDisplayLabel(category, topicLabel);
+  const isSurprise = set.surprise ?? false;
   for (const q of set.questions) {
     exam.push({
       id: questionId.value++,
       type: q.type,
       topic: displayLabel,
       text: q.text,
+      surprise: isSurprise,
     });
   }
 }

@@ -20,6 +20,7 @@
       "sets": [
         {
           "id": "geography-default",
+          "surprise": true,
           "questions": [
             {
               "type": "place_description",

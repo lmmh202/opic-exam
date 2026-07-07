@@ -35,6 +35,8 @@
   "{count}개 문항": "{count} questions",
   "랜덤 선택": "Random selection",
   "문항 세트": "Question Set",
+  "돌발": "Surprise",
+  "오픽 시험은 Survey에서 선택한 문항을 제외하고 돌발 문제가 추가로 출제된다": "The OPIc exam includes surprise questions in addition to those from your survey selections.",
   "랜덤 세트": "Random set",
   "{name} ({count}문항)": "{name} ({count} questions)",
   "문장을 입력해 주세요.": "Please enter a sentence.",
