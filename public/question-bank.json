@@ -92,6 +92,25 @@
               "text": "Tell me about the most memorable movie you watched in the past. What was it about and why was it memorable?"
             }
           ]
+        },
+        {
+          "id": "movies-auto-2026-07-08-movie-experiences",
+          "label": "Movie Experiences",
+          "surprise": true,
+          "questions": [
+            {
+              "type": "activity_description",
+              "text": "Describe your typical routine when you go to the movies. What do you usually do before, during, and after the film?"
+            },
+            {
+              "type": "place_description",
+              "text": "Can you describe your favorite movie theater? What does it look like, and what do you like about it?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable experience you had while watching a movie. What happened, and why was it so special?"
+            }
+          ]
         }
       ]
     },
@@ -236,6 +255,25 @@
               "text": "Tell me about a memorable experience at the beach. What happened and why was it special?"
             }
           ]
+        },
+        {
+          "id": "beach-auto-2026-07-08-beach-activities",
+          "label": "Beach Activities",
+          "surprise": true,
+          "questions": [
+            {
+              "type": "activity_description",
+              "text": "What do you usually do when you go to the beach? Describe your typical activities there."
+            },
+            {
+              "type": "place_description",
+              "text": "Describe a beach you have visited. What does it look like, and what features does it have?"
+            },
+            {
+              "type": "experience_description",
+              "text": "Have you ever had a special or unusual experience at the beach? Tell me about it in detail."
+            }
+          ]
         }
       ]
     },
@@ -349,6 +387,25 @@
             {
               "type": "first_experience",
               "text": "How did you first start using the internet? When was it and what did you do online at first?"
+            }
+          ]
+        },
+        {
+          "id": "internet-auto-2026-07-08-internet-usage",
+          "label": "Internet Usage",
+          "surprise": true,
+          "questions": [
+            {
+              "type": "routine",
+              "text": "How often do you use the internet, and what do you typically do online on a daily basis?"
+            },
+            {
+              "type": "object_description",
+              "text": "Describe the device you most commonly use to access the internet. What kind of device is it and what are its features?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable experience you had involving the internet. Perhaps something surprising or very helpful happened."
             }
           ]
         }
