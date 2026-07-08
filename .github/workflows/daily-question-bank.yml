@@ -1,0 +1,45 @@
+name: Daily Question Bank Generation
+
+on:
+  schedule:
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate question bank updates
+        env:
+          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+          GEMINI_MODEL: gemini-2.5-flash
+          DAILY_SET_COUNT: "3"
+        run: npm run generate:question-bank
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/daily-question-bank-${{ github.run_id }}
+          title: "chore(question-bank): add daily generated combo sets"
+          commit-message: "chore(question-bank): add daily generated combo sets"
+          body: |
+            Automated daily update via Gemini.
+
+            - category: combo
+            - composition: 2 survey topics + 1 surprise context
+            - validation: 3 questions per set, final question is experience type
