@@ -92,6 +92,25 @@
               "text": "Tell me about the most memorable movie you watched in the past. What was it about and why was it memorable?"
             }
           ]
+        },
+        {
+          "id": "movies-auto-2026-07-08-movies",
+          "label": "Movies",
+          "surprise": true,
+          "questions": [
+            {
+              "type": "activity_description",
+              "text": "Can you describe a typical movie-watching experience for you? What kind of movies do you enjoy?"
+            },
+            {
+              "type": "object_description",
+              "text": "Tell me about your favorite movie. What makes it so special to you?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Describe a memorable experience you had watching a movie, either at home or in a theater."
+            }
+          ]
         }
       ]
     },
@@ -265,6 +284,25 @@
               "text": "Tell me about a memorable experience while jogging. Did you see something interesting or did something unexpected happen?"
             }
           ]
+        },
+        {
+          "id": "jogging-auto-2026-07-08-jogging",
+          "label": "Jogging",
+          "surprise": true,
+          "questions": [
+            {
+              "type": "routine",
+              "text": "Describe your jogging routine. When and where do you usually go jogging?"
+            },
+            {
+              "type": "activity_description",
+              "text": "What do you do to prepare for a jog, and what do you do after you finish?"
+            },
+            {
+              "type": "experience_description",
+              "text": "Talk about a time you went jogging that was particularly challenging or rewarding."
+            }
+          ]
         }
       ]
     },
@@ -349,6 +387,25 @@
             {
               "type": "first_experience",
               "text": "How did you first start using the internet? When was it and what did you do online at first?"
+            }
+          ]
+        },
+        {
+          "id": "internet-auto-2026-07-08-internet-use",
+          "label": "Internet Use",
+          "surprise": true,
+          "questions": [
+            {
+              "type": "routine",
+              "text": "How do you typically use the Internet in your daily life? What are some websites or apps you frequent?"
+            },
+            {
+              "type": "activity_description",
+              "text": "Describe a specific activity you often do online, such as online shopping, gaming, or learning."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Recall a memorable experience you had while using the internet, good or bad."
             }
           ]
         }
