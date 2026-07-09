@@ -29,6 +29,10 @@
       "label": { "ko": "음악 감상", "en": "Listening to Music" }
     },
     {
+      "id": "camping",
+      "label": { "ko": "캠핑", "en": "Camping" }
+    },
+    {
       "id": "jogging",
       "label": { "ko": "조깅", "en": "Jogging" }
     },
@@ -119,6 +123,12 @@
       "label": { "ko": "예약", "en": "Reservations" }
     }
   ],
+  "introQuestionTypes": [
+    {
+      "id": "self_introduction",
+      "label": { "ko": "자기소개", "en": "Self-introduction" }
+    }
+  ],
   "comboQuestionTypes": [
     {
       "id": "activity_description",
@@ -137,6 +147,10 @@
       "label": { "ko": "인물 소개", "en": "Introduce a person" }
     },
     {
+      "id": "person_description",
+      "label": { "ko": "인물 설명", "en": "Describe a person" }
+    },
+    {
       "id": "place_description",
       "label": { "ko": "공간 설명", "en": "Describe a place" }
     },
@@ -149,13 +163,39 @@
       "label": { "ko": "첫 계기 설명", "en": "Describe how it started" }
     },
     {
+      "id": "first_experience",
+      "label": { "ko": "첫 경험 설명", "en": "Describe a first experience" }
+    },
+    {
+      "id": "preference_description",
+      "label": { "ko": "선호 설명", "en": "Describe a preference" }
+    },
+    {
+      "id": "preparation",
+      "label": { "ko": "준비 과정 설명", "en": "Describe preparation" }
+    },
+    {
+      "id": "problem_experience",
+      "label": { "ko": "문제 경험 설명", "en": "Describe a problem experience" }
+    },
+    {
+      "id": "neighbor_experience",
+      "label": { "ko": "이웃 관련 경험", "en": "Describe a neighbor experience" }
+    },
+    {
+      "id": "recent_experience",
+      "label": { "ko": "최근 경험 설명", "en": "Describe a recent experience" }
+    },
+    {
       "id": "memorable_experience",
       "label": { "ko": "기억에 남는 경험", "en": "Describe a memorable experience" }
     }
   ],
   "experienceEndingTypes": [
     "experience_description",
-    "memorable_experience"
+    "memorable_experience",
+    "recent_experience",
+    "first_experience"
   ],
   "roleplayQuestionTypes": [
     {

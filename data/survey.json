@@ -59,10 +59,10 @@
       "en": "What do you usually do for leisure?"
     },
     "answer": {
-      "ko": "영화보기, 공연보기, 콘서트보기, 공원가기, 해변가기, 카페가기",
-      "en": "Watching movies, performances, concerts; going to parks, the beach, cafes"
+      "ko": "영화보기, 공연보기, 콘서트보기, 공원가기, 해변가기, 카페가기, 캠핑가기",
+      "en": "Watching movies, performances, concerts; going to parks, the beach, cafes, camping"
     },
-    "topicIds": ["movies", "performances", "concerts", "park", "beach", "cafe"]
+    "topicIds": ["movies", "performances", "concerts", "park", "beach", "cafe", "camping"]
   },
   {
     "id": "hobbies",

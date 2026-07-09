@@ -34,11 +34,15 @@ import {
   parseExamMode,
   type ExamMode,
 } from "@/lib/exam-mode";
+import {
+  getQuestionTypeLabel,
+  getTopicLabel,
+} from "@/lib/opic-constants";
 import { useTranslation } from "@/components/i18n-provider";
 
 function ExamPageContent() {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const searchParams = useSearchParams();
   const urlMode = parseExamMode(searchParams.get("mode"));
 
@@ -428,7 +432,22 @@ function ExamPageContent() {
 
           <div className="text-center space-y-3">
             <div className="flex items-center justify-center gap-2 flex-wrap mb-2">
-              <Badge variant="outline">{currentQuestion.topic}</Badge>
+              <Badge variant="outline">
+                {t("주제")}:{" "}
+                {currentQuestion.type === "self_introduction"
+                  ? t("자기소개")
+                  : getTopicLabel(
+                      currentQuestion.topicId,
+                      locale,
+                      currentQuestion.topic,
+                    )}
+              </Badge>
+              {mode === "practice" && (
+                <Badge variant="secondary">
+                  {t("유형")}:{" "}
+                  {getQuestionTypeLabel(currentQuestion.type, locale)}
+                </Badge>
+              )}
               {currentQuestion.surprise && (
                 <Tooltip>
                   <TooltipTrigger asChild>

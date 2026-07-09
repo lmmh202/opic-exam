@@ -40,6 +40,7 @@ import {
   type PracticeTopic,
 } from "@/lib/question-generator";
 import { examPath } from "@/lib/exam-mode";
+import { getTopicLabel } from "@/lib/opic-constants";
 import { useTranslation } from "@/components/i18n-provider";
 import type { TranslationKey } from "@/lib/i18n/dictionaries";
 
@@ -75,11 +76,13 @@ function TopicGroup({
   topics: groupTopics,
   topicId,
   onSelect,
+  locale,
 }: {
   label: string;
   topics: PracticeTopic[];
   topicId: string;
   onSelect: (value: string) => void;
+  locale: "ko" | "en";
 }) {
   if (groupTopics.length === 0) return null;
 
@@ -89,7 +92,7 @@ function TopicGroup({
       {groupTopics.map((topic) => (
         <TopicMenuItem
           key={topic.id}
-          label={topic.topic}
+          label={getTopicLabel(topic.id, locale, topic.topic)}
           selected={topicId === topic.id}
           onSelect={() => onSelect(topic.id)}
         />
@@ -100,7 +103,7 @@ function TopicGroup({
 
 export default function PracticeHubPage() {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { switchExamMode, setExamQuestions, resetExam } = useExamStore();
   const [category, setCategory] = useState<PracticeCategory>("combo");
   const [topicId, setTopicId] = useState<string>("random");
@@ -117,7 +120,9 @@ export default function PracticeHubPage() {
   const topicLabel =
     topicId === "random"
       ? t("랜덤 주제")
-      : (selectedTopic?.topic ?? t("주제를 선택하세요"));
+      : selectedTopic
+        ? getTopicLabel(selectedTopic.id, locale, selectedTopic.topic)
+        : t("주제를 선택하세요");
 
   const handleCategoryChange = (value: PracticeCategory) => {
     setCategory(value);
@@ -254,6 +259,7 @@ export default function PracticeHubPage() {
                             topics={surveyTopics}
                             topicId={topicId}
                             onSelect={handleTopicChange}
+                            locale={locale}
                           />
                         </>
                       )}
@@ -265,6 +271,7 @@ export default function PracticeHubPage() {
                             topics={surpriseTopics}
                             topicId={topicId}
                             onSelect={handleTopicChange}
+                            locale={locale}
                           />
                         </>
                       )}

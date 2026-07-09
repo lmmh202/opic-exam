@@ -4,6 +4,7 @@ export interface Question {
   id: number;
   type: string;
   topic: string;
+  topicId?: string;
   text: string;
   surprise?: boolean;
 }
@@ -89,14 +90,6 @@ function findQuestionSet(topic: BankTopic, setId?: string): QuestionSet {
   return set;
 }
 
-function getTopicDisplayLabel(
-  category: PracticeCategory,
-  label: string,
-): string {
-  if (category === "roleplay") return `Roleplay: ${label}`;
-  return label;
-}
-
 function pushSetQuestions(
   exam: Question[],
   category: PracticeCategory,
@@ -104,13 +97,13 @@ function pushSetQuestions(
   set: QuestionSet,
   questionId: { value: number },
 ): void {
-  const displayLabel = getTopicDisplayLabel(category, topic.label);
   const isSurprise = topic.surprise ?? false;
   for (const q of set.questions) {
     exam.push({
       id: questionId.value++,
       type: q.type,
-      topic: displayLabel,
+      topic: topic.label,
+      topicId: topic.id,
       text: q.text,
       surprise: isSurprise,
     });
