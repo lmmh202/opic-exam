@@ -16,7 +16,6 @@ interface QuestionItem {
 interface QuestionSet {
   id: string;
   label?: string;
-  surprise?: boolean;
   questions: QuestionItem[];
 }
 
@@ -24,6 +23,7 @@ interface BankTopic {
   id: string;
   label: string;
   keywords?: string[];
+  surprise?: boolean;
   sets: QuestionSet[];
 }
 
@@ -100,12 +100,12 @@ function getTopicDisplayLabel(
 function pushSetQuestions(
   exam: Question[],
   category: PracticeCategory,
-  topicLabel: string,
+  topic: BankTopic,
   set: QuestionSet,
   questionId: { value: number },
 ): void {
-  const displayLabel = getTopicDisplayLabel(category, topicLabel);
-  const isSurprise = set.surprise ?? false;
+  const displayLabel = getTopicDisplayLabel(category, topic.label);
+  const isSurprise = topic.surprise ?? false;
   for (const q of set.questions) {
     exam.push({
       id: questionId.value++,
@@ -142,25 +142,19 @@ export function generateExam(): Question[] {
   const selectedComboTopics = shuffle(bank.combo).slice(0, 3);
   for (const topic of selectedComboTopics) {
     const set = pickRandom(topic.sets);
-    pushSetQuestions(exam, "combo", topic.label, set, questionId);
+    pushSetQuestions(exam, "combo", topic, set, questionId);
   }
 
   const roleplayTopic = pickRandom(bank.roleplay);
   const roleplaySet = pickRandom(roleplayTopic.sets);
-  pushSetQuestions(
-    exam,
-    "roleplay",
-    roleplayTopic.label,
-    roleplaySet,
-    questionId,
-  );
+  pushSetQuestions(exam, "roleplay", roleplayTopic, roleplaySet, questionId);
 
   const comparisonTopic = pickRandom(bank.comparison);
   const comparisonSet = pickRandom(comparisonTopic.sets);
   pushSetQuestions(
     exam,
     "comparison",
-    comparisonTopic.label,
+    comparisonTopic,
     comparisonSet,
     questionId,
   );
@@ -242,6 +236,6 @@ export function generatePracticeExam(
 
   const exam: Question[] = [];
   const questionId = { value: 1 };
-  pushSetQuestions(exam, category, topic.label, set, questionId);
+  pushSetQuestions(exam, category, topic, set, questionId);
   return exam;
 }

@@ -17,10 +17,10 @@
         "outdoor",
         "nature"
       ],
+      "surprise": true,
       "sets": [
         {
           "id": "geography-default",
-          "surprise": true,
           "questions": [
             {
               "type": "place_description",
@@ -334,6 +334,7 @@
         "online",
         "website"
       ],
+      "surprise": true,
       "sets": [
         {
           "id": "internet-default",

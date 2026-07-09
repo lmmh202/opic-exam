@@ -47,5 +47,5 @@ jobs:
 
             - category: combo
             - composition: survey topics : surprise topics ~= 3 : 2
-            - surprise=true only for surprise-topic sets
+            - surprise=true only on surprise topics
             - validation: 3 questions per set, final question is experience type

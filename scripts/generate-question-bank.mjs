@@ -44,10 +44,10 @@ function makePrompt({
     "Composition rules:",
     `- Generate exactly ${surveyCount} survey sets and ${surpriseCount} surprise sets.`,
     "- Each set has exactly 3 questions.",
-    "- Survey sets: surprise=false, targetTopicId MUST be from survey topics.",
-    "- Surprise sets: surprise=true, targetTopicId MUST be from surprise topics.",
-    "- Never mark a survey topic as surprise=true.",
-    "- Never mark a surprise topic as surprise=false.",
+    "- Survey sets: targetTopicId MUST be from survey topics. Topic-level surprise is false.",
+    "- Surprise sets: targetTopicId MUST be from surprise topics. Topic-level surprise is true.",
+    "- Never use a survey topic as a surprise topic.",
+    "- Never use a surprise topic as a survey topic.",
     "- Last question MUST use an experience ending type.",
     `- Allowed question types: ${comboQuestionTypes.map((t) => t.id).join(", ")}`,
     `- Experience ending types: ${experienceEndingTypes.join(", ")}`,
@@ -61,7 +61,7 @@ function makePrompt({
     "Output JSON fields:",
     "- sets[].targetTopicId",
     "- sets[].label (short English label)",
-    "- sets[].surprise (boolean)",
+    "- sets[].isSurprise (boolean: true only for surprise topics)",
     "- sets[].questions[0..2]: {type, text}",
     "",
     "Survey topics:",
@@ -84,10 +84,10 @@ function validateGeneratedSet(set, {
 }) {
   if (!set || typeof set !== "object") return false;
   if (!set.targetTopicId || typeof set.targetTopicId !== "string") return false;
-  if (typeof set.surprise !== "boolean") return false;
+  if (typeof set.isSurprise !== "boolean") return false;
   if (!Array.isArray(set.questions) || set.questions.length !== 3) return false;
 
-  if (set.surprise) {
+  if (set.isSurprise) {
     if (!surpriseTopicIds.includes(set.targetTopicId)) return false;
   } else if (!surveyTopicIds.includes(set.targetTopicId)) {
     return false;
@@ -108,14 +108,18 @@ function validateGeneratedSet(set, {
   return true;
 }
 
-function ensureTopicExists(bank, topicConstant, surprise) {
+function ensureTopicExists(bank, topicConstant, isSurprise) {
   let topic = bank.combo.find((item) => item.id === topicConstant.id);
-  if (topic) return topic;
+  if (topic) {
+    if (isSurprise) topic.surprise = true;
+    return topic;
+  }
 
   topic = {
     id: topicConstant.id,
     label: topicConstant.label.en,
     keywords: [topicConstant.id, topicConstant.label.en.toLowerCase()],
+    ...(isSurprise ? { surprise: true } : {}),
     sets: [],
   };
   bank.combo.push(topic);
@@ -169,7 +173,7 @@ async function main() {
               properties: {
                 targetTopicId: { type: SchemaType.STRING },
                 label: { type: SchemaType.STRING },
-                surprise: { type: SchemaType.BOOLEAN },
+                isSurprise: { type: SchemaType.BOOLEAN },
                 questions: {
                   type: SchemaType.ARRAY,
                   items: {
@@ -182,7 +186,7 @@ async function main() {
                   },
                 },
               },
-              required: ["targetTopicId", "label", "surprise", "questions"],
+              required: ["targetTopicId", "label", "isSurprise", "questions"],
             },
           },
         },
@@ -237,12 +241,16 @@ async function main() {
   let added = 0;
 
   for (const generatedSet of validSets) {
-    const topicConstant = generatedSet.surprise
+    const topicConstant = generatedSet.isSurprise
       ? surpriseTopics.find((topic) => topic.id === generatedSet.targetTopicId)
       : surveyTopics.find((topic) => topic.id === generatedSet.targetTopicId);
     if (!topicConstant) continue;
 
-    const topic = ensureTopicExists(bank, topicConstant, generatedSet.surprise);
+    const topic = ensureTopicExists(
+      bank,
+      topicConstant,
+      generatedSet.isSurprise,
+    );
     const idSeed = normalize(generatedSet.label).replace(/[^a-z0-9]+/g, "-");
     const newSetId = `${topic.id}-auto-${now}-${idSeed || "set"}`.slice(0, 80);
     const uniqueId = topic.sets.some((s) => s.id === newSetId)
@@ -252,7 +260,6 @@ async function main() {
     topic.sets.push({
       id: uniqueId,
       label: generatedSet.label,
-      surprise: generatedSet.surprise,
       questions: generatedSet.questions,
     });
 
