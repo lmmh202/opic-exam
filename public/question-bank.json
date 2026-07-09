@@ -360,6 +360,44 @@
             }
           ],
           "difficulty": "standard"
+        },
+        {
+          "id": "walking-auto-2026-07-09-walking",
+          "label": "Walking",
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "routine",
+              "text": "You mentioned that you enjoy walking. Tell me about your typical walking routine. Where do you usually walk, and how often?"
+            },
+            {
+              "type": "past_present_change",
+              "text": "How has your habit of walking changed over the years? Do you walk more or less now, and what factors have influenced these changes?"
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever encountered an unexpected problem or a difficult situation while walking? Describe what happened and how you handled it."
+            }
+          ]
+        },
+        {
+          "id": "walking-auto-2026-07-09-walking-utswm",
+          "label": "Walking",
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "routine",
+              "text": "You mentioned that you enjoy walking. What is your typical walking routine like? Where do you usually go, how long do you walk for, and what do you do during your walk? Please describe your routine in detail."
+            },
+            {
+              "type": "past_present_change",
+              "text": "How has your walking habit changed over time? Did you walk more or less in the past, or did your preferences for walking change? Explain any significant differences between your past and present walking habits, and why these changes occurred."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a particularly memorable or unexpected experience you had while walking. What happened, where were you, and who were you with? How did this incident unfold, and what made it so unforgettable? Provide as many details as possible."
+            }
+          ]
         }
       ]
     },
@@ -508,6 +546,25 @@
             }
           ],
           "difficulty": "standard"
+        },
+        {
+          "id": "domestic_travel-auto-2026-07-09-domestic-travel-ihjwc",
+          "label": "Domestic Travel",
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "preference_description",
+              "text": "You indicated that you enjoy domestic travel. What kind of places do you prefer to visit when you travel domestically? Please describe your preferred travel destinations in detail."
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about a recent domestic trip you took. Where did you go, who did you go with, and what did you do there?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "I'd like to hear about a memorable experience you had during one of your domestic travels. What happened, and what made it so special?"
+            }
+          ]
         }
       ]
     },
@@ -606,6 +663,25 @@
               "text": "Sometimes, unusual or memorable things happen involving furniture. Describe a memorable or unexpected incident you've had related to furniture, perhaps when moving it, assembling it, or something unexpected happening to it. What happened, and how did you deal with the situation? Tell me everything about that incident."
             }
           ]
+        },
+        {
+          "id": "furniture-auto-2026-07-09-furniture-3umni",
+          "label": "Furniture",
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "preference_description",
+              "text": "People have different preferences when it comes to furniture. What kind of furniture do you like, and what factors do you consider when choosing furniture for your home?"
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about a time you recently bought some furniture. What did you buy, where did you buy it, and how was the experience?"
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever had a problem or an unexpected situation related to furniture, perhaps when assembling it or moving it? Describe what happened and how you resolved it."
+            }
+          ]
         }
       ]
     },
@@ -663,6 +739,55 @@
             {
               "type": "memorable_experience",
               "text": "Everyone has had an unexpected incident while at a cafe. Tell me about a time you experienced a memorable or unusual event at a cafe, perhaps involving other customers or staff. What happened, how did you react, and what was the outcome of that situation? Tell me everything about that incident in detail."
+            }
+          ]
+        },
+        {
+          "id": "cafe-auto-2026-07-09-going-to-cafes-tt5tx",
+          "label": "Going to Cafes",
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "You indicated that you enjoy going to cafes. Describe your favorite cafe. What does it look like, what kind of atmosphere does it have, and what makes it special to you? Tell me everything about this place, including any specific features or items you like."
+            },
+            {
+              "type": "recent_experience",
+              "text": "Can you tell me about the most recent time you went to a cafe? Who did you go with, what did you order, and what did you do there? Describe your entire experience from the moment you arrived until you left, including any specific conversations or activities."
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever encountered an unexpected problem or a memorable incident while visiting a cafe? What exactly happened? How did you handle the situation, and what was the outcome? Tell me the full story in detail, including your feelings and any interactions with staff or others."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "technology",
+      "label": "Technology",
+      "keywords": [
+        "technology",
+        "technology"
+      ],
+      "surprise": true,
+      "sets": [
+        {
+          "id": "technology-auto-2026-07-09-technology",
+          "label": "Technology",
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "activity_description",
+              "text": "Technology plays a significant role in our daily lives. Describe how you typically use a specific piece of technology, like your smartphone or computer, in your daily routine. What are its main functions for you, and how often do you use it? Provide detailed examples of how it helps you."
+            },
+            {
+              "type": "past_present_change",
+              "text": "Think about how technology has changed since you were younger. What are the most significant advancements you've observed, and how have these changes impacted your life or society in general? Compare and contrast the past and present use of technology, focusing on personal impact."
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever faced a memorable or particularly challenging problem related to technology? What was the issue, and what caused it? How did you attempt to resolve it, and what was the final outcome? Elaborate on the entire experience, explaining the steps you took and any frustrations you encountered."
             }
           ]
         }
@@ -739,6 +864,25 @@
             }
           ],
           "difficulty": "standard"
+        },
+        {
+          "id": "restaurant-auto-2026-07-09-restaurant-reservation",
+          "label": "Restaurant Reservation",
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "I'd like to make a dinner reservation at a new restaurant. Call the restaurant and ask three or four questions to learn about their menu, what times are available, and if they have any special features or popular dishes."
+            },
+            {
+              "type": "problem_solving",
+              "text": "You planned to go to the restaurant tonight, but a friend just called to say they can't make it. You need to change the reservation. Call the restaurant, explain what happened, and suggest two or three ways to reschedule or modify your booking."
+            },
+            {
+              "type": "similar_experience",
+              "text": "We've just talked about changing a restaurant reservation. Have you ever had to change or cancel plans at the last minute in real life? Tell me about that experience. What happened and how did you handle it?"
+            }
+          ]
         }
       ]
     },
@@ -827,6 +971,35 @@
           ]
         }
       ]
+    },
+    {
+      "id": "gym",
+      "label": "Gym",
+      "keywords": [
+        "gym",
+        "gym"
+      ],
+      "sets": [
+        {
+          "id": "gym-auto-2026-07-09-joining-a-gym",
+          "label": "Joining a Gym",
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "You're thinking about joining a new gym. Call the gym and ask three or four questions to find out about their membership options, what kinds of classes they offer, and what facilities are available."
+            },
+            {
+              "type": "problem_solving",
+              "text": "You went to the gym to sign up, but realized that the membership fees are more expensive than you thought, or they don't have the specific class you really wanted. Explain your concern to the staff and suggest two or three alternatives to still join or find a solution."
+            },
+            {
+              "type": "similar_experience",
+              "text": "In real life, have you ever wanted to purchase something or sign up for a service, but found the price was too high, or it didn't quite meet your expectations? Tell me about that experience. What happened and what did you decide to do?"
+            }
+          ]
+        }
+      ]
     }
   ],
   "comparison": [
@@ -882,6 +1055,21 @@
             }
           ],
           "difficulty": "standard"
+        },
+        {
+          "id": "technology-auto-2026-07-09-communication-tech-evolution",
+          "label": "Communication Tech Evolution",
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "past_present_comparison",
+              "text": "In the past, people communicated very differently than they do today. Think about how communication methods have evolved over time. Describe both the similarities and differences between how people used to communicate and how they connect with each other in the present day."
+            },
+            {
+              "type": "issue_discussion",
+              "text": "As communication technology continues to advance rapidly, some social issues or negative side effects have started to emerge. What are some of these problems that have arisen due to modern communication technology? Explain why these issues are important and what actions, if any, are being taken to address them."
+            }
+          ]
         }
       ]
     },
