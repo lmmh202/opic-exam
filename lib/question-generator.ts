@@ -1,4 +1,9 @@
 import questionBank from "@/public/question-bank.json";
+import {
+  DEFAULT_DIFFICULTY,
+  type DifficultyId,
+  isDifficultyId,
+} from "@/lib/opic-constants";
 
 export interface Question {
   id: number;
@@ -7,6 +12,7 @@ export interface Question {
   topicId?: string;
   text: string;
   surprise?: boolean;
+  difficulty?: DifficultyId;
 }
 
 interface QuestionItem {
@@ -17,6 +23,7 @@ interface QuestionItem {
 interface QuestionSet {
   id: string;
   label?: string;
+  difficulty?: DifficultyId;
   questions: QuestionItem[];
 }
 
@@ -81,11 +88,38 @@ function findTopic(category: PracticeCategory, topicId: string): BankTopic {
   return topic;
 }
 
-function findQuestionSet(topic: BankTopic, setId?: string): QuestionSet {
-  if (!setId || setId === "random") {
-    return pickRandom(topic.sets);
+function normalizeDifficulty(value?: string): DifficultyId {
+  return isDifficultyId(value) ? value : DEFAULT_DIFFICULTY;
+}
+
+function filterSetsByDifficulty(
+  sets: QuestionSet[],
+  difficulty?: DifficultyId | "random",
+): QuestionSet[] {
+  if (!difficulty || difficulty === "random") return sets;
+  return sets.filter((set) => normalizeDifficulty(set.difficulty) === difficulty);
+}
+
+function findQuestionSet(
+  topic: BankTopic,
+  setId?: string,
+  difficulty?: DifficultyId | "random",
+): QuestionSet {
+  const candidates = filterSetsByDifficulty(topic.sets, difficulty);
+  if (candidates.length === 0) {
+    throw new Error(
+      `No question sets found for topic ${topic.id}` +
+        (difficulty && difficulty !== "random"
+          ? ` with difficulty ${difficulty}`
+          : ""),
+    );
   }
-  const set = topic.sets.find((s) => s.id === setId);
+
+  if (!setId || setId === "random") {
+    return pickRandom(candidates);
+  }
+
+  const set = candidates.find((s) => s.id === setId);
   if (!set) throw new Error(`Question set not found: ${setId}`);
   return set;
 }
@@ -98,6 +132,7 @@ function pushSetQuestions(
   questionId: { value: number },
 ): void {
   const isSurprise = topic.surprise ?? false;
+  const difficulty = normalizeDifficulty(set.difficulty);
   for (const q of set.questions) {
     exam.push({
       id: questionId.value++,
@@ -106,6 +141,7 @@ function pushSetQuestions(
       topicId: topic.id,
       text: q.text,
       surprise: isSurprise,
+      difficulty,
     });
   }
 }
@@ -162,6 +198,7 @@ export interface PracticeTopic {
   surprise: boolean;
   questionCount: number;
   setCount: number;
+  difficulties: DifficultyId[];
 }
 
 export interface PracticeQuestionSet {
@@ -169,26 +206,38 @@ export interface PracticeQuestionSet {
   topicId: string;
   label: string;
   questionCount: number;
+  difficulty: DifficultyId;
 }
 
 export function getPracticeCategoryLabel(category: PracticeCategory): string {
   return CATEGORY_LABELS[category];
 }
 
-export function listPracticeTopics(): PracticeTopic[] {
+export function listPracticeTopics(
+  difficulty?: DifficultyId | "random",
+): PracticeTopic[] {
   const topics: PracticeTopic[] = [];
 
   const categories: PracticeCategory[] = ["combo", "roleplay", "comparison"];
   for (const category of categories) {
     for (const topic of getTopicsForCategory(category)) {
-      const firstSet = topic.sets[0];
+      const matchingSets = filterSetsByDifficulty(topic.sets, difficulty);
+      if (matchingSets.length === 0) continue;
+
+      const difficulties = [
+        ...new Set(
+          topic.sets.map((set) => normalizeDifficulty(set.difficulty)),
+        ),
+      ];
+      const firstSet = matchingSets[0];
       topics.push({
         id: topic.id,
         category,
         topic: topic.label,
         surprise: topic.surprise ?? false,
         questionCount: firstSet?.questions.length ?? 0,
-        setCount: topic.sets.length,
+        setCount: matchingSets.length,
+        difficulties,
       });
     }
   }
@@ -199,35 +248,60 @@ export function listPracticeTopics(): PracticeTopic[] {
 export function listPracticeQuestionSets(
   category: PracticeCategory,
   topicId: string,
+  difficulty?: DifficultyId | "random",
 ): PracticeQuestionSet[] {
   const topic = findTopic(category, topicId);
-  return topic.sets.map((set, index) => ({
+  return filterSetsByDifficulty(topic.sets, difficulty).map((set, index) => ({
     id: set.id,
     topicId: topic.id,
     label: set.label ?? `Set ${index + 1}`,
     questionCount: set.questions.length,
+    difficulty: normalizeDifficulty(set.difficulty),
   }));
+}
+
+export function countPracticeSets(
+  category: PracticeCategory,
+  difficulty?: DifficultyId | "random",
+): number {
+  return getTopicsForCategory(category).reduce(
+    (total, topic) =>
+      total + filterSetsByDifficulty(topic.sets, difficulty).length,
+    0,
+  );
 }
 
 export interface GeneratePracticeExamOptions {
   category: PracticeCategory;
   topicId?: string;
   setId?: string;
+  difficulty?: DifficultyId | "random";
 }
 
 export function generatePracticeExam(
   options: GeneratePracticeExamOptions,
 ): Question[] {
   const { category } = options;
+  const difficulty = options.difficulty ?? "random";
   let topicId = options.topicId;
   let setId = options.setId;
 
+  const topicsWithSets = getTopicsForCategory(category).filter(
+    (topic) => filterSetsByDifficulty(topic.sets, difficulty).length > 0,
+  );
+  if (topicsWithSets.length === 0) {
+    throw new Error(
+      `No practice topics available for category ${category}` +
+        (difficulty !== "random" ? ` with difficulty ${difficulty}` : ""),
+    );
+  }
+
   if (!topicId || topicId === "random") {
-    topicId = pickRandom(getTopicsForCategory(category)).id;
+    topicId = pickRandom(topicsWithSets).id;
   }
 
   const topic = findTopic(category, topicId);
-  const set = findQuestionSet(topic, setId);
+  const set = findQuestionSet(topic, setId, difficulty);
 
   const exam: Question[] = [];
   const questionId = { value: 1 };
