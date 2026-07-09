@@ -162,20 +162,29 @@ combo[] (Topic)
       keywords?: [...]
       sets[] (Set)
         ├── id: "housing-default"              ← 수동 작성 set
+        ├── difficulty: "standard" | "challenging"
         └── id: "housing-auto-2026-07-09-..."  ← Actions 자동 생성 set
 ```
 
 - **Topic 매칭**: `topic.id` (예: `housing`)
 - **Set 식별**: `sets[].id` — `-auto-{날짜}-{label}` 패턴은 자동 생성 set 표시용
+- **난이도**: `sets[].difficulty` — `standard`(기본) / `challenging`(기출형 다층 질문). 기존 bank는 전부 `standard`로 태깅됨
 - 앱은 수동/자동 set을 구분하지 않고 Topic 내 set을 랜덤 선택
+- 연습 허브(`/practice`)에서 난이도(기본/도전, 기본값: 기본)로 set을 필터링할 수 있음. 실전 `generateExam()`은 아직 난이도 구분 없이 전체 set 풀에서 선택
 
 ### 일일 자동 생성
 
 - 스크립트: `scripts/generate-question-bank.mjs`
 - 워크플로: `.github/workflows/daily-question-bank.yml` (매일 cron + 수동 실행)
 - Gemini API로 **combo** + **roleplay** + **comparison** set 생성 → 기존 Topic에 `sets.push()` 또는 Topic 신규 생성
-- Env: `DAILY_SET_COUNT` (combo, default 5), `DAILY_ROLEPLAY_SET_COUNT` (default 2), `DAILY_COMPARISON_SET_COUNT` (default 1)
+- Combo는 난이도별 **두 번** 생성 (프롬프트·검증·`difficulty` 필드 분리):
+  - `DAILY_COMBO_STANDARD_COUNT` (default 3)
+  - `DAILY_COMBO_CHALLENGING_COUNT` (default 3)
+  - 합계 6 sets; survey:surprise 비율은 각 pass의 set 수에 적용
+- Roleplay / comparison은 현재 `standard`로 생성 (난이도 분리는 추후)
+- Env: `DAILY_ROLEPLAY_SET_COUNT` (default 2), `DAILY_COMPARISON_SET_COUNT` (default 1)
 - Secret: `GOOGLE_GENERATIVE_AI_API_KEY`
+- `difficulties` 정의·가이드: `data/opic-constants.json`
 
 ---
 
@@ -183,7 +192,7 @@ combo[] (Topic)
 
 | 경로 | 역할 |
 |------|------|
-| `data/opic-constants.json` | Survey/돌발/roleplay/comparison 주제, stages, 문항 유형 |
+| `data/opic-constants.json` | Survey/돌발/roleplay/comparison 주제, stages, difficulties, 문항 유형 |
 | `data/survey.json` | 배경 설문 Q&A (ko/en), `topicIds` 매핑 |
 | `lib/opic-constants.ts` | constants JSON의 TS export |
 | `lib/question-generator.ts` | 시험/연습 문항 생성 |
