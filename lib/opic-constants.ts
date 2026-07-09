@@ -18,10 +18,13 @@ export type QuestionTypeConstant = {
 
 export type ComboStage = 1 | 2 | 3;
 export type RoleplayStage = 1 | 2 | 3;
+export type ComparisonStage = 1 | 2;
 
 export const SURVEY_TOPICS = opicConstants.surveyTopics as TopicConstant[];
 export const SURPRISE_TOPICS = opicConstants.surpriseTopics as TopicConstant[];
 export const ROLEPLAY_TOPICS = opicConstants.roleplayTopics as TopicConstant[];
+export const COMPARISON_TOPICS =
+  opicConstants.comparisonTopics as TopicConstant[];
 export const INTRO_QUESTION_TYPES =
   opicConstants.introQuestionTypes as QuestionTypeConstant[];
 export const COMBO_QUESTION_TYPES =
@@ -40,6 +43,10 @@ export const ROLEPLAY_STAGES = opicConstants.roleplayStages as Record<
 >;
 export const ADVANCED_QUESTION_TYPES =
   opicConstants.advancedQuestionTypes as QuestionTypeConstant[];
+export const COMPARISON_STAGES = opicConstants.comparisonStages as Record<
+  "1" | "2",
+  string[]
+>;
 export const EXAM_COMPOSITION = opicConstants.examComposition;
 
 export const ALL_QUESTION_TYPES: QuestionTypeConstant[] = [
@@ -52,6 +59,7 @@ export const ALL_QUESTION_TYPES: QuestionTypeConstant[] = [
 export const SURVEY_TOPIC_IDS = SURVEY_TOPICS.map((topic) => topic.id);
 export const SURPRISE_TOPIC_IDS = SURPRISE_TOPICS.map((topic) => topic.id);
 export const ROLEPLAY_TOPIC_IDS = ROLEPLAY_TOPICS.map((topic) => topic.id);
+export const COMPARISON_TOPIC_IDS = COMPARISON_TOPICS.map((topic) => topic.id);
 export const COMBO_QUESTION_TYPE_IDS = COMBO_QUESTION_TYPES.map(
   (type) => type.id,
 );
@@ -60,7 +68,12 @@ const QUESTION_TYPE_BY_ID = new Map(
   ALL_QUESTION_TYPES.map((type) => [type.id, type]),
 );
 
-const ALL_TOPICS = [...SURVEY_TOPICS, ...SURPRISE_TOPICS, ...ROLEPLAY_TOPICS];
+const ALL_TOPICS = [
+  ...SURVEY_TOPICS,
+  ...SURPRISE_TOPICS,
+  ...ROLEPLAY_TOPICS,
+  ...COMPARISON_TOPICS,
+];
 
 const TOPIC_BY_ID = new Map(ALL_TOPICS.map((topic) => [topic.id, topic]));
 
@@ -81,6 +94,13 @@ const ROLEPLAY_TYPE_TO_STAGE = new Map<string, RoleplayStage>();
 for (const stage of [1, 2, 3] as const) {
   for (const typeId of ROLEPLAY_STAGES[String(stage) as "1" | "2" | "3"]) {
     ROLEPLAY_TYPE_TO_STAGE.set(typeId, stage);
+  }
+}
+
+const COMPARISON_TYPE_TO_STAGE = new Map<string, ComparisonStage>();
+for (const stage of [1, 2] as const) {
+  for (const typeId of COMPARISON_STAGES[String(stage) as "1" | "2"]) {
+    COMPARISON_TYPE_TO_STAGE.set(typeId, stage);
   }
 }
 
@@ -133,6 +153,12 @@ export function getRoleplayStage(typeId: string): RoleplayStage | undefined {
   return ROLEPLAY_TYPE_TO_STAGE.get(typeId);
 }
 
+export function getComparisonStage(
+  typeId: string,
+): ComparisonStage | undefined {
+  return COMPARISON_TYPE_TO_STAGE.get(typeId);
+}
+
 export function isComboTypeForStage(
   typeId: string,
   stage: ComboStage,
@@ -145,6 +171,13 @@ export function isRoleplayTypeForStage(
   stage: RoleplayStage,
 ): boolean {
   return ROLEPLAY_STAGES[String(stage) as "1" | "2" | "3"].includes(typeId);
+}
+
+export function isComparisonTypeForStage(
+  typeId: string,
+  stage: ComparisonStage,
+): boolean {
+  return COMPARISON_STAGES[String(stage) as "1" | "2"].includes(typeId);
 }
 
 export function isValidComboTypeSequence(types: string[]): boolean {
@@ -162,5 +195,13 @@ export function isValidRoleplayTypeSequence(types: string[]): boolean {
     isRoleplayTypeForStage(types[0], 1) &&
     isRoleplayTypeForStage(types[1], 2) &&
     isRoleplayTypeForStage(types[2], 3)
+  );
+}
+
+export function isValidComparisonTypeSequence(types: string[]): boolean {
+  if (types.length !== 2) return false;
+  return (
+    isComparisonTypeForStage(types[0], 1) &&
+    isComparisonTypeForStage(types[1], 2)
   );
 }

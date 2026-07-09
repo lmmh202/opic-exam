@@ -13,6 +13,9 @@ const DAILY_COMBO_SET_COUNT = Number(
 const DAILY_ROLEPLAY_SET_COUNT = Number(
   process.env.DAILY_ROLEPLAY_SET_COUNT ?? 2,
 );
+const DAILY_COMPARISON_SET_COUNT = Number(
+  process.env.DAILY_COMPARISON_SET_COUNT ?? 1,
+);
 const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
 
 function normalize(text) {
@@ -147,6 +150,48 @@ function makeRoleplayPrompt({
   ].join("\n");
 }
 
+function makeComparisonPrompt({
+  setCount,
+  comparisonTopics,
+  advancedQuestionTypes,
+  comparisonStages,
+}) {
+  return [
+    "You are generating OPIc advanced/comparison question sets for an English speaking exam (Q14–Q15).",
+    "",
+    "Composition rules:",
+    `- Generate exactly ${setCount} comparison sets.`,
+    "- Each set has exactly 2 questions in a fixed progression:",
+    "  Q1 (Stage 1 / Q14): comparison — contrast two subjects OR past vs present; ask for similarities and differences with logical connectors",
+    "  Q2 (Stage 2 / Q15): issue_discussion — a current social issue/trend related to the same topic (not just personal routine)",
+    "- targetTopicId MUST be from the provided comparison topics.",
+    `- Q1 type MUST be one of: ${comparisonStages["1"].join(", ")}`,
+    `- Q2 type MUST be: ${comparisonStages["2"].join(", ")}`,
+    "",
+    "Question writing rules:",
+    "- Write natural OPIc-style English advanced prompts.",
+    "- Q14 with past_present_comparison: compare how the topic was in the past vs now (habits, tools, attitudes).",
+    "- Q14 with two_subject_comparison: compare two contemporaneous subjects (e.g. your country vs a neighboring country; old phones vs smartphones as products).",
+    "- Q15 must ask about a recent social problem, news trend, or side effect related to the topic, including why it matters and how people respond.",
+    "- Keep Q14 and Q15 on the same topic so the issue discussion follows naturally from the comparison.",
+    "- Prefer multi-part questions with follow-ups when natural.",
+    "",
+    "Output JSON fields:",
+    "- sets[].targetTopicId",
+    "- sets[].label (short English label)",
+    "- sets[].questions[0..1]: {type, text}",
+    "",
+    "Comparison topics:",
+    JSON.stringify(comparisonTopics, null, 2),
+    "",
+    "Advanced question types:",
+    JSON.stringify(advancedQuestionTypes, null, 2),
+    "",
+    "Comparison stages:",
+    JSON.stringify(comparisonStages, null, 2),
+  ].join("\n");
+}
+
 const setItemSchema = {
   type: SchemaType.OBJECT,
   properties: {
@@ -168,13 +213,20 @@ const setItemSchema = {
   required: ["targetTopicId", "label", "questions"],
 };
 
+function stageCount(stages) {
+  return Object.keys(stages).length;
+}
+
 function validateStagedSet(set, { stages, existingQuestionTexts, topicIds }) {
+  const expectedCount = stageCount(stages);
   if (!set || typeof set !== "object") return false;
   if (!set.targetTopicId || typeof set.targetTopicId !== "string") return false;
   if (!topicIds.includes(set.targetTopicId)) return false;
-  if (!Array.isArray(set.questions) || set.questions.length !== 3) return false;
+  if (!Array.isArray(set.questions) || set.questions.length !== expectedCount) {
+    return false;
+  }
 
-  for (let i = 0; i < 3; i += 1) {
+  for (let i = 0; i < expectedCount; i += 1) {
     const q = set.questions[i];
     const stageKey = String(i + 1);
     if (!q || typeof q.text !== "string" || typeof q.type !== "string") {
@@ -209,6 +261,14 @@ function validateRoleplaySet(set, context) {
     stages: context.roleplayStages,
     existingQuestionTexts: context.existingQuestionTexts,
     topicIds: context.roleplayTopicIds,
+  });
+}
+
+function validateComparisonSet(set, context) {
+  return validateStagedSet(set, {
+    stages: context.comparisonStages,
+    existingQuestionTexts: context.existingQuestionTexts,
+    topicIds: context.comparisonTopicIds,
   });
 }
 
@@ -325,13 +385,17 @@ async function main() {
   const surveyTopics = constants.surveyTopics;
   const surpriseTopics = constants.surpriseTopics;
   const roleplayTopics = constants.roleplayTopics ?? [];
+  const comparisonTopics = constants.comparisonTopics ?? [];
   const comboQuestionTypes = constants.comboQuestionTypes;
   const comboStages = constants.comboStages;
   const roleplayQuestionTypes = constants.roleplayQuestionTypes;
   const roleplayStages = constants.roleplayStages;
+  const advancedQuestionTypes = constants.advancedQuestionTypes;
+  const comparisonStages = constants.comparisonStages;
   const surveyTopicIds = surveyTopics.map((topic) => topic.id);
   const surpriseTopicIds = surpriseTopics.map((topic) => topic.id);
   const roleplayTopicIds = roleplayTopics.map((topic) => topic.id);
+  const comparisonTopicIds = comparisonTopics.map((topic) => topic.id);
 
   const { surveyCount, surpriseCount } = splitByRatio(
     DAILY_COMBO_SET_COUNT,
@@ -344,6 +408,7 @@ async function main() {
 
   let comboAdded = 0;
   let roleplayAdded = 0;
+  let comparisonAdded = 0;
 
   if (DAILY_COMBO_SET_COUNT > 0) {
     const comboSets = await generateSets(
@@ -417,14 +482,49 @@ async function main() {
     });
   }
 
-  if (comboAdded === 0 && roleplayAdded === 0) {
+  if (DAILY_COMPARISON_SET_COUNT > 0 && comparisonTopics.length > 0) {
+    const comparisonSets = await generateSets(
+      client,
+      makeComparisonPrompt({
+        setCount: DAILY_COMPARISON_SET_COUNT,
+        comparisonTopics: randomPick(
+          comparisonTopics,
+          Math.max(DAILY_COMPARISON_SET_COUNT, 4),
+        ),
+        advancedQuestionTypes,
+        comparisonStages,
+      }),
+    );
+
+    const validComparisonSets = comparisonSets.filter((set) =>
+      validateComparisonSet(set, {
+        comparisonTopicIds,
+        comparisonStages,
+        existingQuestionTexts,
+      }),
+    );
+
+    comparisonAdded = appendGeneratedSets({
+      bank,
+      category: "comparison",
+      validSets: validComparisonSets,
+      topicLookup: (generatedSet) =>
+        comparisonTopics.find(
+          (topic) => topic.id === generatedSet.targetTopicId,
+        ),
+      existingQuestionTexts,
+      now,
+    });
+  }
+
+  if (comboAdded === 0 && roleplayAdded === 0 && comparisonAdded === 0) {
     console.log("No valid sets generated. Skipping update.");
     return;
   }
 
   await fs.writeFile(QUESTION_BANK_PATH, `${JSON.stringify(bank, null, 2)}\n`);
   console.log(
-    `Added ${comboAdded} combo sets (survey:surprise ~= ${surveyCount}:${surpriseCount}) and ${roleplayAdded} roleplay sets.`,
+    `Added ${comboAdded} combo sets (survey:surprise ~= ${surveyCount}:${surpriseCount}), ${roleplayAdded} roleplay sets, and ${comparisonAdded} comparison sets.`,
   );
 }
 

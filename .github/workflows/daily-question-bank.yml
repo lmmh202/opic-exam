@@ -35,17 +35,19 @@ jobs:
           GEMINI_MODEL: gemini-2.5-flash
           DAILY_SET_COUNT: "5"
           DAILY_ROLEPLAY_SET_COUNT: "2"
+          DAILY_COMPARISON_SET_COUNT: "1"
         run: pnpm run generate:question-bank
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v6
         with:
           branch: chore/daily-question-bank-${{ github.run_id }}
-          title: "Add daily generated combo and roleplay sets"
-          commit-message: "Add daily generated combo and roleplay sets"
+          title: "Add daily generated question bank sets"
+          commit-message: "Add daily generated question bank sets"
           body: |
             Automated daily update via Gemini.
 
-            - combo: survey : surprise ~= 3 : 2, stages 1→2→3
-            - roleplay: situation_questions → problem_solving → similar_experience
+            - combo: survey : surprise ~= 3 : 2, stages 1→2→3 (5 sets)
+            - roleplay: situation_questions → problem_solving → similar_experience (2 sets)
+            - comparison: comparison → issue_discussion (1 set)
             - surprise=true only on surprise combo topics

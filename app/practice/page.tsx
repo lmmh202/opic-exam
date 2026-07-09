@@ -302,11 +302,33 @@ export default function PracticeHubPage() {
                       </ol>
                     </div>
                   ) : (
-                    <p className="text-xs text-slate-500">
-                      {t(
-                        "비교는 과거와 현재의 차이, 이슈에 대한 의견을 묻는 2문항입니다.",
-                      )}
-                    </p>
+                    <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-3 space-y-2.5">
+                      <p className="text-xs font-medium text-slate-700">
+                        {t("비교는 2문항이 단계적으로 이어집니다.")}
+                      </p>
+                      <ol className="space-y-2 text-xs text-slate-600">
+                        <li>
+                          <span className="font-medium text-slate-800">
+                            {t("1단계 · 비교와 대조")}
+                          </span>
+                          <span className="mt-0.5 block text-slate-500">
+                            {t(
+                              "두 대상 또는 과거와 현재의 공통점·차이점을 말합니다.",
+                            )}
+                          </span>
+                        </li>
+                        <li>
+                          <span className="font-medium text-slate-800">
+                            {t("2단계 · 사회 이슈")}
+                          </span>
+                          <span className="mt-0.5 block text-slate-500">
+                            {t(
+                              "같은 주제의 최신 사회 문제나 트렌드에 대해 이야기합니다.",
+                            )}
+                          </span>
+                        </li>
+                      </ol>
+                    </div>
                   )}
                 </div>
 

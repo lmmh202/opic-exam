@@ -128,12 +128,14 @@ OPIc의 핵심 구분입니다.
 
 ### Comparison / Advanced (Q14–Q15)
 
-`advancedQuestionTypes` — 주제당 2문항
+각 세트는 정확히 2문항이며, **1→2 단계 고정 구조**입니다. `comparisonStages`에 정의됩니다.
 
-| id | 한글 | English |
-|----|------|---------|
-| `past_present_comparison` | 차이점 비교하기 | Compare differences |
-| `issue_discussion` | 이슈 설명 | Discuss an issue |
+| 단계 (시험 문항) | 의도 | 허용 type |
+|------------------|------|-----------|
+| 1 (Q14) | 두 대상 비교·대조 (과거↔현재 또는 동시대 두 대상) | `past_present_comparison`, `two_subject_comparison` |
+| 2 (Q15) | 관련 사회 이슈·최신 문제 | `issue_discussion` |
+
+주제 목록: `comparisonTopics`. 일일 생성은 `DAILY_COMPARISON_SET_COUNT` (기본/워크플로 1세트).
 
 ---
 
@@ -171,8 +173,8 @@ combo[] (Topic)
 
 - 스크립트: `scripts/generate-question-bank.mjs`
 - 워크플로: `.github/workflows/daily-question-bank.yml` (매일 cron + 수동 실행)
-- Gemini API로 **combo** + **roleplay** set 생성 → 기존 Topic에 `sets.push()` 또는 Topic 신규 생성
-- Env: `DAILY_SET_COUNT` (combo, default 5), `DAILY_ROLEPLAY_SET_COUNT` (default 2)
+- Gemini API로 **combo** + **roleplay** + **comparison** set 생성 → 기존 Topic에 `sets.push()` 또는 Topic 신규 생성
+- Env: `DAILY_SET_COUNT` (combo, default 5), `DAILY_ROLEPLAY_SET_COUNT` (default 2), `DAILY_COMPARISON_SET_COUNT` (default 1)
 - Secret: `GOOGLE_GENERATIVE_AI_API_KEY`
 
 ---
@@ -181,12 +183,12 @@ combo[] (Topic)
 
 | 경로 | 역할 |
 |------|------|
-| `data/opic-constants.json` | Survey/돌발/roleplay 주제, comboStages/roleplayStages, 문항 유형 |
+| `data/opic-constants.json` | Survey/돌발/roleplay/comparison 주제, stages, 문항 유형 |
 | `data/survey.json` | 배경 설문 Q&A (ko/en), `topicIds` 매핑 |
 | `lib/opic-constants.ts` | constants JSON의 TS export |
 | `lib/question-generator.ts` | 시험/연습 문항 생성 |
 | `public/question-bank.json` | 실제 문항 은행 |
-| `scripts/generate-question-bank.mjs` | Gemini 일일 combo + roleplay set 생성 |
+| `scripts/generate-question-bank.mjs` | Gemini 일일 combo + roleplay + comparison set 생성 |
 | `components/exam-setup-panel.tsx` | 설문 표시 + 마이크 설정 |
 | `app/exam/page.tsx` | 시험 UI (돌발 배지 포함) |
 | `app/practice/page.tsx` | 유형별 연습 모드 |
@@ -203,3 +205,4 @@ combo[] (Topic)
 5. **최소 변경 원칙**: 이 프로젝트는 도메인 지식이 코드 여러 곳에 분산되어 있으므로, 주제/유형 추가 시 `opic-constants.json` (`comboStages` 포함) → `question-bank.json` → 필요 시 `survey.json` 순으로 일관되게 반영하세요.
 6. **Combo 세트는 1→2→3 단계**를 지켜야 합니다. Q1=현재 묘사/루틴, Q2=과거 경험·변화, Q3=기억에 남는/돌발 사건.
 7. **Roleplay 세트는 1→2→3 단계**를 지켜야 합니다. Q11=`situation_questions`, Q12=`problem_solving`, Q13=`similar_experience` (Q12와 연결된 실제 경험).
+8. **Comparison 세트는 1→2 단계**를 지켜야 합니다. Q14=비교(`past_present_comparison` 또는 `two_subject_comparison`), Q15=`issue_discussion`.

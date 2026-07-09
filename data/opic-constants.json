@@ -274,16 +274,59 @@
   "advancedQuestionTypes": [
     {
       "id": "past_present_comparison",
-      "label": { "ko": "차이점 비교하기", "en": "Compare differences" }
+      "label": { "ko": "과거와 현재 비교", "en": "Compare past and present" }
+    },
+    {
+      "id": "two_subject_comparison",
+      "label": { "ko": "두 대상 비교", "en": "Compare two subjects" }
     },
     {
       "id": "issue_discussion",
-      "label": { "ko": "이슈 설명", "en": "Discuss an issue" }
+      "label": { "ko": "사회 이슈 설명", "en": "Discuss a social issue" }
     }
   ],
+  "comparisonTopics": [
+    {
+      "id": "housing",
+      "label": { "ko": "주거", "en": "Housing" }
+    },
+    {
+      "id": "technology",
+      "label": { "ko": "기술", "en": "Technology" }
+    },
+    {
+      "id": "travel",
+      "label": { "ko": "여행", "en": "Travel" }
+    },
+    {
+      "id": "entertainment",
+      "label": { "ko": "여가·엔터테인먼트", "en": "Entertainment" }
+    },
+    {
+      "id": "health",
+      "label": { "ko": "건강", "en": "Health" }
+    },
+    {
+      "id": "geography",
+      "label": { "ko": "지형·환경", "en": "Geography & Environment" }
+    },
+    {
+      "id": "education",
+      "label": { "ko": "교육", "en": "Education" }
+    },
+    {
+      "id": "work",
+      "label": { "ko": "일·직장", "en": "Work" }
+    }
+  ],
+  "comparisonStages": {
+    "1": ["past_present_comparison", "two_subject_comparison"],
+    "2": ["issue_discussion"]
+  },
   "examComposition": {
     "surveyToSurpriseRatio": [3, 2],
     "comboQuestionsPerSet": 3,
-    "roleplayQuestionsPerSet": 3
+    "roleplayQuestionsPerSet": 3,
+    "comparisonQuestionsPerSet": 2
   }
 }
