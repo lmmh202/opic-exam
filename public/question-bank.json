@@ -184,6 +184,25 @@
             }
           ],
           "difficulty": "standard"
+        },
+        {
+          "id": "performances-auto-2026-07-09-watching-performances",
+          "label": "Watching Performances",
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "preference_description",
+              "text": "You indicated that you enjoy watching performances. What specific types of performances do you like the most, such as concerts, plays, musicals, or something else? Describe why you prefer these types and what draws you to them, focusing on the atmosphere and specific elements. Please provide all details."
+            },
+            {
+              "type": "past_present_change",
+              "text": "Think about your past experiences with watching performances and how they compare to your present habits. How has your preference for certain types of performances, or your frequency of attending them, changed over the years? What do you think caused these changes, and how do you feel about them now?"
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever encountered a problem or an unexpected situation while attending a performance, perhaps a technical issue or an audience disruption? Describe this incident in detail. What went wrong, how was it resolved, and what was your overall impression of the situation? Tell me everything about that incident."
+            }
+          ]
         }
       ]
     },
@@ -263,6 +282,25 @@
             }
           ],
           "difficulty": "standard"
+        },
+        {
+          "id": "beach-auto-2026-07-09-going-to-the-beach-oj04m",
+          "label": "Going to the Beach",
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "routine",
+              "text": "Tell me about your usual routine when you go to the beach. What do you typically do there?"
+            },
+            {
+              "type": "recent_experience",
+              "text": "When was the last time you went to the beach? Tell me about that specific experience from beginning to end."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Describe a memorable experience you had at the beach. What happened, and what made it so special?"
+            }
+          ]
         }
       ]
     },
@@ -371,6 +409,25 @@
             }
           ],
           "difficulty": "standard"
+        },
+        {
+          "id": "housing-auto-2026-07-09-housing-g0nw1",
+          "label": "Housing",
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Please describe the place where you live. What does it look like, and what are some of the rooms or features?"
+            },
+            {
+              "type": "past_present_change",
+              "text": "How has the area where you live changed compared to the past? Are there any significant differences now?"
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever experienced any problems or unexpected incidents related to your housing? What happened, and how did you resolve it?"
+            }
+          ]
         }
       ]
     },
@@ -511,6 +568,44 @@
             }
           ],
           "difficulty": "standard"
+        },
+        {
+          "id": "furniture-auto-2026-07-09-furniture-himvq",
+          "label": "Furniture",
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "object_description",
+              "text": "Describe a piece of furniture that you own and use frequently. What does it look like, and how do you use it?"
+            },
+            {
+              "type": "first_experience",
+              "text": "Tell me about the first time you had to buy furniture for your own place. What was that experience like?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Have you ever had a memorable or unexpected experience related to buying or moving furniture? Tell me what happened."
+            }
+          ]
+        },
+        {
+          "id": "furniture-auto-2026-07-09-furniture-5ii71",
+          "label": "Furniture",
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "object_description",
+              "text": "I'd like you to describe your favorite piece of furniture in your home. What is it, where is it located, and what does it look like in terms of material, color, and design? What makes it your favorite and why is it special to you? Please provide as many details as possible about this particular item."
+            },
+            {
+              "type": "first_experience",
+              "text": "Can you recall the first time you bought a significant piece of furniture for your own space, perhaps when you first moved out? What kind of furniture was it, what was the process like, and what challenges or excitement did you experience during that first purchase? Elaborate on the entire experience from selection to delivery."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Sometimes, unusual or memorable things happen involving furniture. Describe a memorable or unexpected incident you've had related to furniture, perhaps when moving it, assembling it, or something unexpected happening to it. What happened, and how did you deal with the situation? Tell me everything about that incident."
+            }
+          ]
         }
       ]
     },
@@ -541,6 +636,35 @@
             }
           ],
           "difficulty": "standard"
+        }
+      ]
+    },
+    {
+      "id": "cafe",
+      "label": "Going to Cafes",
+      "keywords": [
+        "cafe",
+        "going to cafes"
+      ],
+      "sets": [
+        {
+          "id": "cafe-auto-2026-07-09-going-to-cafes",
+          "label": "Going to Cafes",
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "preference_description",
+              "text": "I'd like to know about the type of cafe you prefer to visit. What kind of atmosphere do you enjoy, and what makes a cafe your ideal spot to relax or work? Please describe your preferred cafe in detail, including its typical appearance and menu offerings."
+            },
+            {
+              "type": "recent_experience",
+              "text": "Can you tell me about the most recent time you visited a cafe? Who did you go with, what did you do there, and what made that visit particularly memorable or different from your usual cafe trips? Provide as many details as possible about the experience from start to finish."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Everyone has had an unexpected incident while at a cafe. Tell me about a time you experienced a memorable or unusual event at a cafe, perhaps involving other customers or staff. What happened, how did you react, and what was the outcome of that situation? Tell me everything about that incident in detail."
+            }
+          ]
         }
       ]
     }
@@ -639,6 +763,25 @@
             }
           ],
           "difficulty": "standard"
+        },
+        {
+          "id": "hotel-auto-2026-07-09-hotel-reservation",
+          "label": "Hotel Reservation",
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "Imagine you want to book a hotel room for an upcoming trip. Call the hotel and ask three or four questions to gather information about their rooms, available amenities, and prices."
+            },
+            {
+              "type": "problem_solving",
+              "text": "There's a problem. The type of room you wanted is fully booked for your preferred dates. Call the hotel back, explain the situation, and suggest two or three alternative solutions."
+            },
+            {
+              "type": "similar_experience",
+              "text": "Have you ever had to change or cancel a reservation for a hotel or flight? Describe what happened and how you handled the situation."
+            }
+          ]
         }
       ]
     },
@@ -663,6 +806,25 @@
             }
           ],
           "difficulty": "standard"
+        },
+        {
+          "id": "appointment-auto-2026-07-09-appointment",
+          "label": "Appointment",
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "You need to make an appointment with a new doctor. Call the doctor's office and ask three or four questions to get details about scheduling, what to bring, and their office policies."
+            },
+            {
+              "type": "problem_solving",
+              "text": "Suddenly, something unexpected comes up, and you can no longer make your doctor's appointment. Call the office, politely explain the conflict, and suggest two or three options for rescheduling."
+            },
+            {
+              "type": "similar_experience",
+              "text": "Tell me about a time you had to reschedule or cancel an important appointment in your real life. What was the reason, and how did you manage the change?"
+            }
+          ]
         }
       ]
     }
@@ -685,6 +847,21 @@
             }
           ],
           "difficulty": "standard"
+        },
+        {
+          "id": "housing-auto-2026-07-09-housing-past-and-present",
+          "label": "Housing Past and Present",
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "past_present_comparison",
+              "text": "Housing has undergone many changes over time. Could you tell me about the differences between housing in the past and housing today in your country? Think about things like the types of homes, construction methods, or even how people used to acquire homes compared to now. What are the most significant changes you've noticed?"
+            },
+            {
+              "type": "issue_discussion",
+              "text": "Following up on housing, many countries face significant social issues related to it, such as rising housing costs, gentrification, or the challenges of urban development. Pick one pressing social issue concerning housing in your region or country. Describe what this issue is, why it has become a problem, and what kinds of efforts are being made to resolve it."
+            }
+          ]
         }
       ]
     },
