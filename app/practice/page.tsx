@@ -57,7 +57,19 @@ const CATEGORY_LABEL_KEY: Record<PracticeCategory, TranslationKey> = {
   comparison: "비교",
 };
 
-function TopicMenuItem({
+const CATEGORY_OPTION_KEY: Record<PracticeCategory, TranslationKey> = {
+  combo: "주제 세트 (3문항)",
+  roleplay: "롤플레이 (3문항)",
+  comparison: "비교 (2문항)",
+};
+
+const PRACTICE_CATEGORIES: PracticeCategory[] = [
+  "combo",
+  "roleplay",
+  "comparison",
+];
+
+function SelectMenuItem({
   label,
   selected,
   onSelect,
@@ -95,7 +107,7 @@ function TopicGroup({
     <DropdownMenuGroup>
       <DropdownMenuLabel>{label}</DropdownMenuLabel>
       {groupTopics.map((topic) => (
-        <TopicMenuItem
+        <SelectMenuItem
           key={topic.id}
           label={getTopicLabel(topic.id, locale, topic.topic)}
           selected={topicId === topic.id}
@@ -239,38 +251,66 @@ export default function PracticeHubPage() {
             >
               <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="practice-difficulty">{t("난이도")}</Label>
-                  <select
-                    id="practice-difficulty"
-                    value={difficulty}
-                    onChange={(e) =>
-                      handleDifficultyChange(e.target.value as DifficultyId)
-                    }
-                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-                  >
-                    {DIFFICULTIES.map((item) => (
-                      <option key={item.id} value={item.id}>
-                        {getDifficultyLabel(item.id, locale)}
-                      </option>
-                    ))}
-                  </select>
+                  <Label id="practice-difficulty-label">{t("난이도")}</Label>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between font-normal"
+                        aria-labelledby="practice-difficulty-label"
+                      >
+                        <span className="truncate">
+                          {getDifficultyLabel(difficulty, locale)}
+                        </span>
+                        <ChevronDown className="size-4 shrink-0 opacity-50" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="start"
+                      className="w-(--radix-dropdown-menu-trigger-width)"
+                    >
+                      {DIFFICULTIES.map((item) => (
+                        <SelectMenuItem
+                          key={item.id}
+                          label={getDifficultyLabel(item.id, locale)}
+                          selected={difficulty === item.id}
+                          onSelect={() => handleDifficultyChange(item.id)}
+                        />
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                   <p className="text-xs text-slate-500">{difficultyHelper}</p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="practice-category">{t("문제 유형")}</Label>
-                  <select
-                    id="practice-category"
-                    value={category}
-                    onChange={(e) =>
-                      handleCategoryChange(e.target.value as PracticeCategory)
-                    }
-                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-                  >
-                    <option value="combo">{t("주제 세트 (3문항)")}</option>
-                    <option value="roleplay">{t("롤플레이 (3문항)")}</option>
-                    <option value="comparison">{t("비교 (2문항)")}</option>
-                  </select>
+                  <Label id="practice-category-label">{t("문제 유형")}</Label>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between font-normal"
+                        aria-labelledby="practice-category-label"
+                      >
+                        <span className="truncate">
+                          {t(CATEGORY_OPTION_KEY[category])}
+                        </span>
+                        <ChevronDown className="size-4 shrink-0 opacity-50" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="start"
+                      className="w-(--radix-dropdown-menu-trigger-width)"
+                    >
+                      {PRACTICE_CATEGORIES.map((item) => (
+                        <SelectMenuItem
+                          key={item}
+                          label={t(CATEGORY_OPTION_KEY[item])}
+                          selected={category === item}
+                          onSelect={() => handleCategoryChange(item)}
+                        />
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                   {category === "combo" ? (
                     <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-3 space-y-2.5">
                       <p className="text-xs font-medium text-slate-700">
@@ -396,7 +436,7 @@ export default function PracticeHubPage() {
                       className="w-(--radix-dropdown-menu-trigger-width) max-h-72"
                     >
                       <DropdownMenuGroup>
-                        <TopicMenuItem
+                        <SelectMenuItem
                           label={t("랜덤 주제")}
                           selected={topicId === "random"}
                           onSelect={() => handleTopicChange("random")}
