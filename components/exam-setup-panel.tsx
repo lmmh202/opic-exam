@@ -13,6 +13,11 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useExamStore } from "@/lib/store";
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { useTranslation } from "@/components/i18n-provider";
@@ -23,6 +28,7 @@ interface ExamSetupPanelProps {
   startLabel: React.ReactNode;
   onStart: () => void;
   startDisabled?: boolean;
+  startDisabledReason?: string;
   showRecordingSettings?: boolean;
 }
 
@@ -31,6 +37,7 @@ export function ExamSetupPanel({
   startLabel,
   onStart,
   startDisabled = false,
+  startDisabledReason,
   showRecordingSettings = true,
 }: ExamSetupPanelProps) {
   const { t, locale } = useTranslation();
@@ -106,6 +113,12 @@ export function ExamSetupPanel({
   }, [audioUrl]);
 
   const micReady = micStatus === "success" && !!audioUrl;
+  const isStartDisabled = !micReady || startDisabled;
+  const disabledReason = !micReady
+    ? t("마이크 점검을 완료하세요.")
+    : startDisabled
+      ? (startDisabledReason ?? t("시작할 수 없습니다."))
+      : null;
 
   return (
     <div className="space-y-8">
@@ -264,13 +277,30 @@ export function ExamSetupPanel({
         </div>
       )}
 
-      <Button
-        className="w-full text-lg h-14 font-semibold shadow-lg shadow-blue-500/20"
-        onClick={handleStart}
-        disabled={!micReady || startDisabled}
-      >
-        {startLabel}
-      </Button>
+      {isStartDisabled && disabledReason ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="block w-full cursor-not-allowed">
+              <Button
+                className="w-full text-lg h-14 font-semibold shadow-lg shadow-blue-500/20 pointer-events-none"
+                disabled
+              >
+                {startLabel}
+              </Button>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="max-w-xs">
+            {disabledReason}
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        <Button
+          className="w-full text-lg h-14 font-semibold shadow-lg shadow-blue-500/20"
+          onClick={handleStart}
+        >
+          {startLabel}
+        </Button>
+      )}
     </div>
   );
 }

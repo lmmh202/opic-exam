@@ -202,6 +202,7 @@ export default function PracticeHubPage() {
               }
               onStart={handleStartSession}
               startDisabled={filteredTopics.length === 0}
+              startDisabledReason={t("연습할 주제가 없습니다.")}
               showRecordingSettings={false}
             >
               <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
