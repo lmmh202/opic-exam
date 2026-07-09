@@ -33,7 +33,8 @@ jobs:
         env:
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           GEMINI_MODEL: gemini-2.5-flash
-          DAILY_SET_COUNT: "5"
+          DAILY_COMBO_STANDARD_COUNT: "3"
+          DAILY_COMBO_CHALLENGING_COUNT: "3"
           DAILY_ROLEPLAY_SET_COUNT: "2"
           DAILY_COMPARISON_SET_COUNT: "1"
         run: pnpm run generate:question-bank
@@ -47,7 +48,8 @@ jobs:
           body: |
             Automated daily update via Gemini.
 
-            - combo: survey : surprise ~= 3 : 2, stages 1→2→3 (5 sets)
-            - roleplay: situation_questions → problem_solving → similar_experience (2 sets)
-            - comparison: comparison → issue_discussion (1 set)
+            - combo: 6 sets (standard 3 + challenging 3), survey : surprise ~= 3 : 2 overall, stages 1→2→3
+            - roleplay: situation_questions → problem_solving → similar_experience (2 sets, standard)
+            - comparison: comparison → issue_discussion (1 set, standard)
             - surprise=true only on surprise combo topics
+            - each set includes difficulty: standard | challenging

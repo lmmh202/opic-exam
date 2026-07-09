@@ -7,8 +7,11 @@ const ROOT = process.cwd();
 const QUESTION_BANK_PATH = path.join(ROOT, "public", "question-bank.json");
 const CONSTANTS_PATH = path.join(ROOT, "data", "opic-constants.json");
 
-const DAILY_COMBO_SET_COUNT = Number(
-  process.env.DAILY_SET_COUNT ?? process.env.DAILY_COMBO_SET_COUNT ?? 5,
+const DAILY_COMBO_STANDARD_COUNT = Number(
+  process.env.DAILY_COMBO_STANDARD_COUNT ?? 3,
+);
+const DAILY_COMBO_CHALLENGING_COUNT = Number(
+  process.env.DAILY_COMBO_CHALLENGING_COUNT ?? 3,
 );
 const DAILY_ROLEPLAY_SET_COUNT = Number(
   process.env.DAILY_ROLEPLAY_SET_COUNT ?? 2,
@@ -17,6 +20,7 @@ const DAILY_COMPARISON_SET_COUNT = Number(
   process.env.DAILY_COMPARISON_SET_COUNT ?? 1,
 );
 const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
+const VALID_DIFFICULTIES = new Set(["standard", "challenging"]);
 
 function normalize(text) {
   return String(text).toLowerCase().replace(/\s+/g, " ").trim();
@@ -52,6 +56,27 @@ function collectExistingTexts(bank) {
   return texts;
 }
 
+function difficultyWritingRules(difficulty, difficulties) {
+  const meta = (difficulties ?? []).find((d) => d.id === difficulty);
+  const guide = meta?.guide?.en ?? "";
+  if (difficulty === "challenging") {
+    return [
+      `Difficulty for ALL sets in this response: challenging.`,
+      guide ? `- Guide: ${guide}` : "",
+      "- Write exam-like prompts with multiple follow-up clauses in one question.",
+      "- Add concrete situations, constraints, or twists (who/when/where/what went wrong).",
+      "- Often end with requests like \"Provide as many details as possible\" or \"Tell me everything about that incident in detail.\"",
+      "- Example tone: \"I'd like to know about the bar you often go to. Where is your favorite bar? What does it look like? Please describe everything about that bar in detail.\"",
+    ].filter(Boolean);
+  }
+  return [
+    `Difficulty for ALL sets in this response: standard.`,
+    guide ? `- Guide: ${guide}` : "",
+    "- Write clear, focused OPIc prompts with light follow-ups.",
+    "- Keep wording natural but not overly stacked with constraints.",
+  ].filter(Boolean);
+}
+
 function makeComboPrompt({
   surveyCount,
   surpriseCount,
@@ -59,6 +84,8 @@ function makeComboPrompt({
   surpriseTopics,
   comboQuestionTypes,
   comboStages,
+  difficulty,
+  difficulties,
 }) {
   return [
     "You are generating OPIc combo question sets for an English speaking exam.",
@@ -76,6 +103,14 @@ function makeComboPrompt({
     `- Q1 type MUST be one of: ${comboStages["1"].join(", ")}`,
     `- Q2 type MUST be one of: ${comboStages["2"].join(", ")}`,
     `- Q3 type MUST be one of: ${comboStages["3"].join(", ")}`,
+    `- Every set MUST set difficulty to \"${difficulty}\".`,
+    "",
+    "Difficulty writing rules:",
+    ...difficultyWritingRules(difficulty, difficulties).map((line) =>
+      line.startsWith("-") || line.startsWith("Difficulty")
+        ? line
+        : `- ${line}`,
+    ),
     "",
     "Question writing rules:",
     "- Write natural OPIc-style English questions.",
@@ -84,12 +119,12 @@ function makeComboPrompt({
     "- Stage 3 should ask for a memorable/unexpected episode with what happened and how it was resolved.",
     "- For surprise sets, the questions must be about the surprise topic itself.",
     "- Example: if type=routine and topic=furniture, ask about the process of buying furniture.",
-    "- Prefer multi-part questions with follow-ups when natural.",
     "",
     "Output JSON fields:",
     "- sets[].targetTopicId",
     "- sets[].label (short English label)",
     "- sets[].isSurprise (boolean: true only for surprise topics)",
+    `- sets[].difficulty (must be \"${difficulty}\")`,
     "- sets[].questions[0..2]: {type, text}",
     "",
     "Survey topics:",
@@ -111,6 +146,8 @@ function makeRoleplayPrompt({
   roleplayTopics,
   roleplayQuestionTypes,
   roleplayStages,
+  difficulty = "standard",
+  difficulties,
 }) {
   return [
     "You are generating OPIc roleplay question sets for an English speaking exam (Q11–Q13).",
@@ -125,6 +162,10 @@ function makeRoleplayPrompt({
     `- Q1 type MUST be: ${roleplayStages["1"].join(", ")}`,
     `- Q2 type MUST be: ${roleplayStages["2"].join(", ")}`,
     `- Q3 type MUST be: ${roleplayStages["3"].join(", ")}`,
+    `- Every set MUST set difficulty to \"${difficulty}\".`,
+    "",
+    "Difficulty writing rules:",
+    ...difficultyWritingRules(difficulty, difficulties),
     "",
     "Question writing rules:",
     "- Write natural OPIc-style English roleplay prompts.",
@@ -132,11 +173,11 @@ function makeRoleplayPrompt({
     "- Q2 must introduce a problem that breaks the Q1 plan, require explaining the situation politely, and ask for 2–3 alternatives.",
     "- Q3 must leave the roleplay and ask about a real-life experience related to the Q2 problem (canceling, rescheduling, returns, lost items, etc.).",
     "- Keep Q1–Q3 on the same topic and storyline so Q3 clearly mirrors Q12.",
-    "- Prefer multi-part questions with follow-ups when natural.",
     "",
     "Output JSON fields:",
     "- sets[].targetTopicId",
     "- sets[].label (short English label)",
+    `- sets[].difficulty (must be \"${difficulty}\")`,
     "- sets[].questions[0..2]: {type, text}",
     "",
     "Roleplay topics:",
@@ -155,6 +196,8 @@ function makeComparisonPrompt({
   comparisonTopics,
   advancedQuestionTypes,
   comparisonStages,
+  difficulty = "standard",
+  difficulties,
 }) {
   return [
     "You are generating OPIc advanced/comparison question sets for an English speaking exam (Q14–Q15).",
@@ -167,6 +210,10 @@ function makeComparisonPrompt({
     "- targetTopicId MUST be from the provided comparison topics.",
     `- Q1 type MUST be one of: ${comparisonStages["1"].join(", ")}`,
     `- Q2 type MUST be: ${comparisonStages["2"].join(", ")}`,
+    `- Every set MUST set difficulty to \"${difficulty}\".`,
+    "",
+    "Difficulty writing rules:",
+    ...difficultyWritingRules(difficulty, difficulties),
     "",
     "Question writing rules:",
     "- Write natural OPIc-style English advanced prompts.",
@@ -174,11 +221,11 @@ function makeComparisonPrompt({
     "- Q14 with two_subject_comparison: compare two contemporaneous subjects (e.g. your country vs a neighboring country; old phones vs smartphones as products).",
     "- Q15 must ask about a recent social problem, news trend, or side effect related to the topic, including why it matters and how people respond.",
     "- Keep Q14 and Q15 on the same topic so the issue discussion follows naturally from the comparison.",
-    "- Prefer multi-part questions with follow-ups when natural.",
     "",
     "Output JSON fields:",
     "- sets[].targetTopicId",
     "- sets[].label (short English label)",
+    `- sets[].difficulty (must be \"${difficulty}\")`,
     "- sets[].questions[0..1]: {type, text}",
     "",
     "Comparison topics:",
@@ -198,6 +245,7 @@ const setItemSchema = {
     targetTopicId: { type: SchemaType.STRING },
     label: { type: SchemaType.STRING },
     isSurprise: { type: SchemaType.BOOLEAN },
+    difficulty: { type: SchemaType.STRING },
     questions: {
       type: SchemaType.ARRAY,
       items: {
@@ -210,18 +258,23 @@ const setItemSchema = {
       },
     },
   },
-  required: ["targetTopicId", "label", "questions"],
+  required: ["targetTopicId", "label", "difficulty", "questions"],
 };
 
 function stageCount(stages) {
   return Object.keys(stages).length;
 }
 
-function validateStagedSet(set, { stages, existingQuestionTexts, topicIds }) {
+function validateStagedSet(
+  set,
+  { stages, existingQuestionTexts, topicIds, expectedDifficulty },
+) {
   const expectedCount = stageCount(stages);
   if (!set || typeof set !== "object") return false;
   if (!set.targetTopicId || typeof set.targetTopicId !== "string") return false;
   if (!topicIds.includes(set.targetTopicId)) return false;
+  if (!VALID_DIFFICULTIES.has(set.difficulty)) return false;
+  if (expectedDifficulty && set.difficulty !== expectedDifficulty) return false;
   if (!Array.isArray(set.questions) || set.questions.length !== expectedCount) {
     return false;
   }
@@ -253,6 +306,7 @@ function validateComboSet(set, context) {
     topicIds: set.isSurprise
       ? context.surpriseTopicIds
       : context.surveyTopicIds,
+    expectedDifficulty: context.expectedDifficulty,
   });
 }
 
@@ -261,6 +315,7 @@ function validateRoleplaySet(set, context) {
     stages: context.roleplayStages,
     existingQuestionTexts: context.existingQuestionTexts,
     topicIds: context.roleplayTopicIds,
+    expectedDifficulty: context.expectedDifficulty ?? "standard",
   });
 }
 
@@ -269,6 +324,7 @@ function validateComparisonSet(set, context) {
     stages: context.comparisonStages,
     existingQuestionTexts: context.existingQuestionTexts,
     topicIds: context.comparisonTopicIds,
+    expectedDifficulty: context.expectedDifficulty ?? "standard",
   });
 }
 
@@ -320,6 +376,9 @@ function appendGeneratedSets({
     topic.sets.push({
       id: uniqueId,
       label: generatedSet.label,
+      difficulty: VALID_DIFFICULTIES.has(generatedSet.difficulty)
+        ? generatedSet.difficulty
+        : "standard",
       questions: generatedSet.questions,
     });
 
@@ -336,7 +395,13 @@ async function generateSets(client, prompt, { requireIsSurprise = false } = {}) 
   const itemSchema = requireIsSurprise
     ? {
         ...setItemSchema,
-        required: ["targetTopicId", "label", "isSurprise", "questions"],
+        required: [
+          "targetTopicId",
+          "label",
+          "isSurprise",
+          "difficulty",
+          "questions",
+        ],
       }
     : setItemSchema;
 
@@ -397,20 +462,27 @@ async function main() {
   const roleplayTopicIds = roleplayTopics.map((topic) => topic.id);
   const comparisonTopicIds = comparisonTopics.map((topic) => topic.id);
 
-  const { surveyCount, surpriseCount } = splitByRatio(
-    DAILY_COMBO_SET_COUNT,
-    constants.examComposition.surveyToSurpriseRatio,
-  );
-
+  const difficulties = constants.difficulties ?? [];
   const existingQuestionTexts = collectExistingTexts(bank);
   const client = new GoogleGenAI({ apiKey });
   const now = new Date().toISOString().slice(0, 10);
 
   let comboAdded = 0;
+  let comboStandardAdded = 0;
+  let comboChallengingAdded = 0;
   let roleplayAdded = 0;
   let comparisonAdded = 0;
+  const comboRatioParts = [];
 
-  if (DAILY_COMBO_SET_COUNT > 0) {
+  async function generateComboPass(difficulty, setCount) {
+    if (setCount <= 0) return 0;
+
+    const { surveyCount, surpriseCount } = splitByRatio(
+      setCount,
+      constants.examComposition.surveyToSurpriseRatio,
+    );
+    comboRatioParts.push(`${difficulty} ${surveyCount}:${surpriseCount}`);
+
     const comboSets = await generateSets(
       client,
       makeComboPrompt({
@@ -423,6 +495,8 @@ async function main() {
         ),
         comboQuestionTypes,
         comboStages,
+        difficulty,
+        difficulties,
       }),
       { requireIsSurprise: true },
     );
@@ -433,21 +507,36 @@ async function main() {
         surpriseTopicIds,
         comboStages,
         existingQuestionTexts,
+        expectedDifficulty: difficulty,
       }),
     );
 
-    comboAdded = appendGeneratedSets({
+    return appendGeneratedSets({
       bank,
       category: "combo",
       validSets: validComboSets,
       topicLookup: (generatedSet) =>
         generatedSet.isSurprise
-          ? surpriseTopics.find((topic) => topic.id === generatedSet.targetTopicId)
-          : surveyTopics.find((topic) => topic.id === generatedSet.targetTopicId),
+          ? surpriseTopics.find(
+              (topic) => topic.id === generatedSet.targetTopicId,
+            )
+          : surveyTopics.find(
+              (topic) => topic.id === generatedSet.targetTopicId,
+            ),
       existingQuestionTexts,
       now,
     });
   }
+
+  comboStandardAdded = await generateComboPass(
+    "standard",
+    DAILY_COMBO_STANDARD_COUNT,
+  );
+  comboChallengingAdded = await generateComboPass(
+    "challenging",
+    DAILY_COMBO_CHALLENGING_COUNT,
+  );
+  comboAdded = comboStandardAdded + comboChallengingAdded;
 
   if (DAILY_ROLEPLAY_SET_COUNT > 0 && roleplayTopics.length > 0) {
     const roleplaySets = await generateSets(
@@ -460,6 +549,8 @@ async function main() {
         ),
         roleplayQuestionTypes,
         roleplayStages,
+        difficulty: "standard",
+        difficulties,
       }),
     );
 
@@ -468,6 +559,7 @@ async function main() {
         roleplayTopicIds,
         roleplayStages,
         existingQuestionTexts,
+        expectedDifficulty: "standard",
       }),
     );
 
@@ -493,6 +585,8 @@ async function main() {
         ),
         advancedQuestionTypes,
         comparisonStages,
+        difficulty: "standard",
+        difficulties,
       }),
     );
 
@@ -501,6 +595,7 @@ async function main() {
         comparisonTopicIds,
         comparisonStages,
         existingQuestionTexts,
+        expectedDifficulty: "standard",
       }),
     );
 
@@ -524,7 +619,7 @@ async function main() {
 
   await fs.writeFile(QUESTION_BANK_PATH, `${JSON.stringify(bank, null, 2)}\n`);
   console.log(
-    `Added ${comboAdded} combo sets (survey:surprise ~= ${surveyCount}:${surpriseCount}), ${roleplayAdded} roleplay sets, and ${comparisonAdded} comparison sets.`,
+    `Added ${comboAdded} combo sets (standard ${comboStandardAdded} + challenging ${comboChallengingAdded}; survey:surprise per pass ~= ${comboRatioParts.join(", ") || "n/a"}), ${roleplayAdded} roleplay sets, and ${comparisonAdded} comparison sets.`,
   );
 }
 
