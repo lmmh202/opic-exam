@@ -263,15 +263,49 @@ export default function PracticeHubPage() {
                         </li>
                       </ol>
                     </div>
+                  ) : category === "roleplay" ? (
+                    <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-3 space-y-2.5">
+                      <p className="text-xs font-medium text-slate-700">
+                        {t("롤플레이는 3문항이 단계적으로 이어집니다.")}
+                      </p>
+                      <ol className="space-y-2 text-xs text-slate-600">
+                        <li>
+                          <span className="font-medium text-slate-800">
+                            {t("1단계 · 상황 질문")}
+                          </span>
+                          <span className="mt-0.5 block text-slate-500">
+                            {t(
+                              "주어진 상황에서 필요한 정보 3~4가지를 질문합니다.",
+                            )}
+                          </span>
+                        </li>
+                        <li>
+                          <span className="font-medium text-slate-800">
+                            {t("2단계 · 문제와 대안")}
+                          </span>
+                          <span className="mt-0.5 block text-slate-500">
+                            {t(
+                              "문제가 생기면 상황을 설명하고 대안 2~3가지를 제시합니다.",
+                            )}
+                          </span>
+                        </li>
+                        <li>
+                          <span className="font-medium text-slate-800">
+                            {t("3단계 · 유사 경험")}
+                          </span>
+                          <span className="mt-0.5 block text-slate-500">
+                            {t(
+                              "앞에서와 비슷한 실제 경험을 과거 시제로 이야기합니다.",
+                            )}
+                          </span>
+                        </li>
+                      </ol>
+                    </div>
                   ) : (
                     <p className="text-xs text-slate-500">
-                      {category === "roleplay"
-                        ? t(
-                            "롤플레이는 상황 질문 → 문제 해결 → 유사 경험 순으로 진행됩니다.",
-                          )
-                        : t(
-                            "비교는 과거와 현재의 차이, 이슈에 대한 의견을 묻는 2문항입니다.",
-                          )}
+                      {t(
+                        "비교는 과거와 현재의 차이, 이슈에 대한 의견을 묻는 2문항입니다.",
+                      )}
                     </p>
                   )}
                 </div>

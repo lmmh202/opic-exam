@@ -7,7 +7,12 @@ const ROOT = process.cwd();
 const QUESTION_BANK_PATH = path.join(ROOT, "public", "question-bank.json");
 const CONSTANTS_PATH = path.join(ROOT, "data", "opic-constants.json");
 
-const DAILY_SET_COUNT = Number(process.env.DAILY_SET_COUNT ?? 5);
+const DAILY_COMBO_SET_COUNT = Number(
+  process.env.DAILY_SET_COUNT ?? process.env.DAILY_COMBO_SET_COUNT ?? 5,
+);
+const DAILY_ROLEPLAY_SET_COUNT = Number(
+  process.env.DAILY_ROLEPLAY_SET_COUNT ?? 2,
+);
 const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
 
 function normalize(text) {
@@ -30,7 +35,21 @@ function splitByRatio(total, [surveyRatio, surpriseRatio]) {
   return { surveyCount, surpriseCount };
 }
 
-function makePrompt({
+function collectExistingTexts(bank) {
+  const texts = new Set();
+  for (const category of ["combo", "roleplay", "comparison"]) {
+    for (const topic of bank[category] ?? []) {
+      for (const set of topic.sets ?? []) {
+        for (const q of set.questions ?? []) {
+          texts.add(normalize(q.text));
+        }
+      }
+    }
+  }
+  return texts;
+}
+
+function makeComboPrompt({
   surveyCount,
   surpriseCount,
   surveyTopics,
@@ -84,22 +103,76 @@ function makePrompt({
   ].join("\n");
 }
 
-function validateGeneratedSet(set, {
-  surveyTopicIds,
-  surpriseTopicIds,
-  comboStages,
-  existingQuestionTexts,
+function makeRoleplayPrompt({
+  setCount,
+  roleplayTopics,
+  roleplayQuestionTypes,
+  roleplayStages,
 }) {
+  return [
+    "You are generating OPIc roleplay question sets for an English speaking exam (Q11–Q13).",
+    "",
+    "Composition rules:",
+    `- Generate exactly ${setCount} roleplay sets.`,
+    "- Each set has exactly 3 questions in a fixed progression:",
+    "  Q1 (Stage 1 / Q11): situation_questions — understand a scenario and ask 3–4 purposeful questions",
+    "  Q2 (Stage 2 / Q12): problem_solving — an intentional problem appears; explain it and suggest 2–3 realistic alternatives",
+    "  Q3 (Stage 3 / Q13): similar_experience — ask about a real past experience similar to the Q12 problem",
+    "- targetTopicId MUST be from the provided roleplay topics.",
+    `- Q1 type MUST be: ${roleplayStages["1"].join(", ")}`,
+    `- Q2 type MUST be: ${roleplayStages["2"].join(", ")}`,
+    `- Q3 type MUST be: ${roleplayStages["3"].join(", ")}`,
+    "",
+    "Question writing rules:",
+    "- Write natural OPIc-style English roleplay prompts.",
+    "- Q1 should set a clear situation (call a store/hotel/friend/etc.) and ask the examinee to inquire about 3–4 relevant details.",
+    "- Q2 must introduce a problem that breaks the Q1 plan, require explaining the situation politely, and ask for 2–3 alternatives.",
+    "- Q3 must leave the roleplay and ask about a real-life experience related to the Q2 problem (canceling, rescheduling, returns, lost items, etc.).",
+    "- Keep Q1–Q3 on the same topic and storyline so Q3 clearly mirrors Q12.",
+    "- Prefer multi-part questions with follow-ups when natural.",
+    "",
+    "Output JSON fields:",
+    "- sets[].targetTopicId",
+    "- sets[].label (short English label)",
+    "- sets[].questions[0..2]: {type, text}",
+    "",
+    "Roleplay topics:",
+    JSON.stringify(roleplayTopics, null, 2),
+    "",
+    "Roleplay question types:",
+    JSON.stringify(roleplayQuestionTypes, null, 2),
+    "",
+    "Roleplay stages:",
+    JSON.stringify(roleplayStages, null, 2),
+  ].join("\n");
+}
+
+const setItemSchema = {
+  type: SchemaType.OBJECT,
+  properties: {
+    targetTopicId: { type: SchemaType.STRING },
+    label: { type: SchemaType.STRING },
+    isSurprise: { type: SchemaType.BOOLEAN },
+    questions: {
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          type: { type: SchemaType.STRING },
+          text: { type: SchemaType.STRING },
+        },
+        required: ["type", "text"],
+      },
+    },
+  },
+  required: ["targetTopicId", "label", "questions"],
+};
+
+function validateStagedSet(set, { stages, existingQuestionTexts, topicIds }) {
   if (!set || typeof set !== "object") return false;
   if (!set.targetTopicId || typeof set.targetTopicId !== "string") return false;
-  if (typeof set.isSurprise !== "boolean") return false;
+  if (!topicIds.includes(set.targetTopicId)) return false;
   if (!Array.isArray(set.questions) || set.questions.length !== 3) return false;
-
-  if (set.isSurprise) {
-    if (!surpriseTopicIds.includes(set.targetTopicId)) return false;
-  } else if (!surveyTopicIds.includes(set.targetTopicId)) {
-    return false;
-  }
 
   for (let i = 0; i < 3; i += 1) {
     const q = set.questions[i];
@@ -107,7 +180,7 @@ function validateGeneratedSet(set, {
     if (!q || typeof q.text !== "string" || typeof q.type !== "string") {
       return false;
     }
-    if (!comboStages[stageKey].includes(q.type)) return false;
+    if (!stages[stageKey].includes(q.type)) return false;
     if (q.text.length < 30) return false;
     if (existingQuestionTexts.has(normalize(q.text))) return false;
   }
@@ -115,10 +188,35 @@ function validateGeneratedSet(set, {
   return true;
 }
 
-function ensureTopicExists(bank, topicConstant, isSurprise) {
-  let topic = bank.combo.find((item) => item.id === topicConstant.id);
+function validateComboSet(set, context) {
+  if (typeof set.isSurprise !== "boolean") return false;
+  if (set.isSurprise) {
+    if (!context.surpriseTopicIds.includes(set.targetTopicId)) return false;
+  } else if (!context.surveyTopicIds.includes(set.targetTopicId)) {
+    return false;
+  }
+  return validateStagedSet(set, {
+    stages: context.comboStages,
+    existingQuestionTexts: context.existingQuestionTexts,
+    topicIds: set.isSurprise
+      ? context.surpriseTopicIds
+      : context.surveyTopicIds,
+  });
+}
+
+function validateRoleplaySet(set, context) {
+  return validateStagedSet(set, {
+    stages: context.roleplayStages,
+    existingQuestionTexts: context.existingQuestionTexts,
+    topicIds: context.roleplayTopicIds,
+  });
+}
+
+function ensureTopicExists(bank, category, topicConstant, options = {}) {
+  const list = bank[category];
+  let topic = list.find((item) => item.id === topicConstant.id);
   if (topic) {
-    if (isSurprise) topic.surprise = true;
+    if (options.isSurprise) topic.surprise = true;
     return topic;
   }
 
@@ -126,135 +224,32 @@ function ensureTopicExists(bank, topicConstant, isSurprise) {
     id: topicConstant.id,
     label: topicConstant.label.en,
     keywords: [topicConstant.id, topicConstant.label.en.toLowerCase()],
-    ...(isSurprise ? { surprise: true } : {}),
+    ...(options.isSurprise ? { surprise: true } : {}),
     sets: [],
   };
-  bank.combo.push(topic);
+  list.push(topic);
   return topic;
 }
 
-async function main() {
-  const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-  if (!apiKey) {
-    throw new Error("GOOGLE_GENERATIVE_AI_API_KEY is required.");
-  }
-
-  const [bankRaw, constantsRaw] = await Promise.all([
-    fs.readFile(QUESTION_BANK_PATH, "utf8"),
-    fs.readFile(CONSTANTS_PATH, "utf8"),
-  ]);
-  const bank = JSON.parse(bankRaw);
-  const constants = JSON.parse(constantsRaw);
-
-  const surveyTopics = constants.surveyTopics;
-  const surpriseTopics = constants.surpriseTopics;
-  const comboQuestionTypes = constants.comboQuestionTypes;
-  const comboStages = constants.comboStages;
-  const surveyTopicIds = surveyTopics.map((topic) => topic.id);
-  const surpriseTopicIds = surpriseTopics.map((topic) => topic.id);
-
-  const { surveyCount, surpriseCount } = splitByRatio(
-    DAILY_SET_COUNT,
-    constants.examComposition.surveyToSurpriseRatio,
-  );
-
-  const existingQuestionTexts = new Set(
-    bank.combo.flatMap((topic) =>
-      topic.sets.flatMap((set) => set.questions.map((q) => normalize(q.text))),
-    ),
-  );
-
-  const client = new GoogleGenAI({ apiKey });
-  const response = await client.models.generateContent({
-    model: MODEL,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: SchemaType.OBJECT,
-        properties: {
-          sets: {
-            type: SchemaType.ARRAY,
-            items: {
-              type: SchemaType.OBJECT,
-              properties: {
-                targetTopicId: { type: SchemaType.STRING },
-                label: { type: SchemaType.STRING },
-                isSurprise: { type: SchemaType.BOOLEAN },
-                questions: {
-                  type: SchemaType.ARRAY,
-                  items: {
-                    type: SchemaType.OBJECT,
-                    properties: {
-                      type: { type: SchemaType.STRING },
-                      text: { type: SchemaType.STRING },
-                    },
-                    required: ["type", "text"],
-                  },
-                },
-              },
-              required: ["targetTopicId", "label", "isSurprise", "questions"],
-            },
-          },
-        },
-        required: ["sets"],
-      },
-    },
-    contents: [
-      {
-        role: "user",
-        parts: [
-          {
-            text: makePrompt({
-              surveyCount,
-              surpriseCount,
-              surveyTopics: randomPick(surveyTopics, Math.max(surveyCount, 4)),
-              surpriseTopics: randomPick(
-                surpriseTopics,
-                Math.max(surpriseCount, 4),
-              ),
-              comboQuestionTypes,
-              comboStages,
-            }),
-          },
-        ],
-      },
-    ],
-  });
-
-  const text = response.text;
-  if (!text) throw new Error("Gemini returned empty response.");
-  const parsed = JSON.parse(text);
-  const sets = Array.isArray(parsed?.sets) ? parsed.sets : [];
-
-  const validationContext = {
-    surveyTopicIds,
-    surpriseTopicIds,
-    comboStages,
-    existingQuestionTexts,
-  };
-
-  const validSets = sets.filter((set) =>
-    validateGeneratedSet(set, validationContext),
-  );
-
-  if (validSets.length === 0) {
-    console.log("No valid sets generated. Skipping update.");
-    return;
-  }
-
-  const now = new Date().toISOString().slice(0, 10);
+function appendGeneratedSets({
+  bank,
+  category,
+  validSets,
+  topicLookup,
+  existingQuestionTexts,
+  now,
+}) {
   let added = 0;
 
   for (const generatedSet of validSets) {
-    const topicConstant = generatedSet.isSurprise
-      ? surpriseTopics.find((topic) => topic.id === generatedSet.targetTopicId)
-      : surveyTopics.find((topic) => topic.id === generatedSet.targetTopicId);
+    const topicConstant = topicLookup(generatedSet);
     if (!topicConstant) continue;
 
     const topic = ensureTopicExists(
       bank,
+      category,
       topicConstant,
-      generatedSet.isSurprise,
+      category === "combo" ? { isSurprise: generatedSet.isSurprise } : {},
     );
     const idSeed = normalize(generatedSet.label).replace(/[^a-z0-9]+/g, "-");
     const newSetId = `${topic.id}-auto-${now}-${idSeed || "set"}`.slice(0, 80);
@@ -274,9 +269,162 @@ async function main() {
     added += 1;
   }
 
+  return added;
+}
+
+async function generateSets(client, prompt, { requireIsSurprise = false } = {}) {
+  const itemSchema = requireIsSurprise
+    ? {
+        ...setItemSchema,
+        required: ["targetTopicId", "label", "isSurprise", "questions"],
+      }
+    : setItemSchema;
+
+  const response = await client.models.generateContent({
+    model: MODEL,
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: SchemaType.OBJECT,
+        properties: {
+          sets: {
+            type: SchemaType.ARRAY,
+            items: itemSchema,
+          },
+        },
+        required: ["sets"],
+      },
+    },
+    contents: [
+      {
+        role: "user",
+        parts: [{ text: prompt }],
+      },
+    ],
+  });
+
+  const text = response.text;
+  if (!text) throw new Error("Gemini returned empty response.");
+  const parsed = JSON.parse(text);
+  return Array.isArray(parsed?.sets) ? parsed.sets : [];
+}
+
+async function main() {
+  const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+  if (!apiKey) {
+    throw new Error("GOOGLE_GENERATIVE_AI_API_KEY is required.");
+  }
+
+  const [bankRaw, constantsRaw] = await Promise.all([
+    fs.readFile(QUESTION_BANK_PATH, "utf8"),
+    fs.readFile(CONSTANTS_PATH, "utf8"),
+  ]);
+  const bank = JSON.parse(bankRaw);
+  const constants = JSON.parse(constantsRaw);
+
+  const surveyTopics = constants.surveyTopics;
+  const surpriseTopics = constants.surpriseTopics;
+  const roleplayTopics = constants.roleplayTopics ?? [];
+  const comboQuestionTypes = constants.comboQuestionTypes;
+  const comboStages = constants.comboStages;
+  const roleplayQuestionTypes = constants.roleplayQuestionTypes;
+  const roleplayStages = constants.roleplayStages;
+  const surveyTopicIds = surveyTopics.map((topic) => topic.id);
+  const surpriseTopicIds = surpriseTopics.map((topic) => topic.id);
+  const roleplayTopicIds = roleplayTopics.map((topic) => topic.id);
+
+  const { surveyCount, surpriseCount } = splitByRatio(
+    DAILY_COMBO_SET_COUNT,
+    constants.examComposition.surveyToSurpriseRatio,
+  );
+
+  const existingQuestionTexts = collectExistingTexts(bank);
+  const client = new GoogleGenAI({ apiKey });
+  const now = new Date().toISOString().slice(0, 10);
+
+  let comboAdded = 0;
+  let roleplayAdded = 0;
+
+  if (DAILY_COMBO_SET_COUNT > 0) {
+    const comboSets = await generateSets(
+      client,
+      makeComboPrompt({
+        surveyCount,
+        surpriseCount,
+        surveyTopics: randomPick(surveyTopics, Math.max(surveyCount, 4)),
+        surpriseTopics: randomPick(
+          surpriseTopics,
+          Math.max(surpriseCount, 4),
+        ),
+        comboQuestionTypes,
+        comboStages,
+      }),
+      { requireIsSurprise: true },
+    );
+
+    const validComboSets = comboSets.filter((set) =>
+      validateComboSet(set, {
+        surveyTopicIds,
+        surpriseTopicIds,
+        comboStages,
+        existingQuestionTexts,
+      }),
+    );
+
+    comboAdded = appendGeneratedSets({
+      bank,
+      category: "combo",
+      validSets: validComboSets,
+      topicLookup: (generatedSet) =>
+        generatedSet.isSurprise
+          ? surpriseTopics.find((topic) => topic.id === generatedSet.targetTopicId)
+          : surveyTopics.find((topic) => topic.id === generatedSet.targetTopicId),
+      existingQuestionTexts,
+      now,
+    });
+  }
+
+  if (DAILY_ROLEPLAY_SET_COUNT > 0 && roleplayTopics.length > 0) {
+    const roleplaySets = await generateSets(
+      client,
+      makeRoleplayPrompt({
+        setCount: DAILY_ROLEPLAY_SET_COUNT,
+        roleplayTopics: randomPick(
+          roleplayTopics,
+          Math.max(DAILY_ROLEPLAY_SET_COUNT, 4),
+        ),
+        roleplayQuestionTypes,
+        roleplayStages,
+      }),
+    );
+
+    const validRoleplaySets = roleplaySets.filter((set) =>
+      validateRoleplaySet(set, {
+        roleplayTopicIds,
+        roleplayStages,
+        existingQuestionTexts,
+      }),
+    );
+
+    roleplayAdded = appendGeneratedSets({
+      bank,
+      category: "roleplay",
+      validSets: validRoleplaySets,
+      topicLookup: (generatedSet) =>
+        roleplayTopics.find((topic) => topic.id === generatedSet.targetTopicId),
+      existingQuestionTexts,
+      now,
+    });
+  }
+
+  if (comboAdded === 0 && roleplayAdded === 0) {
+    console.log("No valid sets generated. Skipping update.");
+    return;
+  }
+
   await fs.writeFile(QUESTION_BANK_PATH, `${JSON.stringify(bank, null, 2)}\n`);
   console.log(
-    `Added ${added} generated combo sets (target ratio survey:surprise ~= ${surveyCount}:${surpriseCount}).`,
+    `Added ${comboAdded} combo sets (survey:surprise ~= ${surveyCount}:${surpriseCount}) and ${roleplayAdded} roleplay sets.`,
   );
 }
 

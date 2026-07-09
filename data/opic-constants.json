@@ -218,6 +218,40 @@
     "memorable_experience",
     "problem_experience"
   ],
+  "roleplayTopics": [
+    {
+      "id": "cellphone",
+      "label": { "ko": "휴대폰 구매", "en": "Cell Phone Purchase" }
+    },
+    {
+      "id": "travel_agency",
+      "label": { "ko": "여행사", "en": "Travel Agency" }
+    },
+    {
+      "id": "restaurant",
+      "label": { "ko": "식당", "en": "Restaurant" }
+    },
+    {
+      "id": "hotel",
+      "label": { "ko": "호텔 예약", "en": "Hotel Reservation" }
+    },
+    {
+      "id": "appointment",
+      "label": { "ko": "예약·약속", "en": "Appointment" }
+    },
+    {
+      "id": "cafe",
+      "label": { "ko": "카페", "en": "Cafe" }
+    },
+    {
+      "id": "delivery",
+      "label": { "ko": "배달", "en": "Delivery" }
+    },
+    {
+      "id": "gym",
+      "label": { "ko": "헬스장", "en": "Gym" }
+    }
+  ],
   "roleplayQuestionTypes": [
     {
       "id": "situation_questions",
@@ -232,6 +266,11 @@
       "label": { "ko": "비슷한 경험", "en": "Similar experience" }
     }
   ],
+  "roleplayStages": {
+    "1": ["situation_questions"],
+    "2": ["problem_solving"],
+    "3": ["similar_experience"]
+  },
   "advancedQuestionTypes": [
     {
       "id": "past_present_comparison",
@@ -244,6 +283,7 @@
   ],
   "examComposition": {
     "surveyToSurpriseRatio": [3, 2],
-    "comboQuestionsPerSet": 3
+    "comboQuestionsPerSet": 3,
+    "roleplayQuestionsPerSet": 3
   }
 }
