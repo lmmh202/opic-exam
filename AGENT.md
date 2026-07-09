@@ -90,22 +90,22 @@ OPIc의 핵심 구분입니다.
 
 ### Combo (Q2–Q10, 주제당 3문항)
 
-`comboQuestionTypes` — 각 세트는 정확히 3문항이며, **마지막 문항은 경험 회고형**이어야 합니다.
+각 세트는 정확히 3문항이며, **1→2→3 단계 고정 구조**를 따릅니다. `comboStages`에 슬롯별 허용 type이 정의되어 있습니다.
 
-| id | 한글 | English |
-|----|------|---------|
-| `activity_description` | 일상적인 활동 설명 | Describe a daily activity |
-| `experience_description` | 경험 설명 | Describe an experience |
-| `object_description` | 사물 설명 | Describe an object |
-| `person_introduction` | 인물 소개 | Introduce a person |
-| `place_description` | 공간 설명 | Describe a place |
-| `routine` | 나만의 루틴 | Describe your routine |
-| `first_motivation` | 첫 계기 설명 | Describe how it started |
-| `memorable_experience` | 기억에 남는 경험 | Describe a memorable experience |
+| 단계 | 의도 | 허용 type (`comboStages`) |
+|------|------|---------------------------|
+| 1 | 현재 상태 묘사 / 평소 루틴 (Description · Routine) | `place_description`, `routine`, `activity_description`, `object_description`, `person_description`, `person_introduction`, `preference_description`, `preparation` |
+| 2 | 과거 경험 · 최초/최근 기억 · 과거와 현재의 변화 | `first_experience`, `recent_experience`, `first_motivation`, `experience_description`, `past_present_change` |
+| 3 | 특별·인상적·돌발 사건 (Memorable / Unexpected) | `memorable_experience`, `problem_experience` |
 
-**마지막 문항 허용 타입** (`experienceEndingTypes`):
-- `experience_description`
-- `memorable_experience`
+**3단계 허용 타입**은 `experienceEndingTypes`와 동일합니다 (`memorable_experience`, `problem_experience`).
+
+카페 토픽 예시:
+1. "자주 가는 카페를 묘사해 주세요…" (Description) / "카페에 가면 보통 무엇을 하나요…" (Routine)
+2. "최초의 카페 방문은…" (First) / "가장 최근에 카페에 갔을 때…" (Recent) / "예전에 비해 카페 가는 습관이 어떻게 달라졌나요…" (Past–Present Change)
+3. "카페에서 황당했던 경험이 있나요? 상황을 설명하고 어떻게 해결했는지…" (Memorable / Unexpected)
+
+일일 생성 스크립트(`scripts/generate-question-bank.mjs`)는 Q1/Q2/Q3 type이 각 stage 허용 목록에 있는지 검증합니다.
 
 돌발 세트 작성 시: 문항 내용이 돌발 주제 자체에 관한 것이어야 함 (예: `routine` + `furniture` → 가구 구매 과정)
 
@@ -173,7 +173,7 @@ combo[] (Topic)
 
 | 경로 | 역할 |
 |------|------|
-| `data/opic-constants.json` | Survey/돌발 주제, 문항 유형, 출제 비율 |
+| `data/opic-constants.json` | Survey/돌발 주제, comboStages, 문항 유형, 출제 비율 |
 | `data/survey.json` | 배경 설문 Q&A (ko/en), `topicIds` 매핑 |
 | `lib/opic-constants.ts` | constants JSON의 TS export |
 | `lib/question-generator.ts` | 시험/연습 문항 생성 |
@@ -192,4 +192,5 @@ combo[] (Topic)
 2. **Survey/돌발은 Topic 레벨** `surprise` 플래그로 구분합니다. Set 레벨이 아닙니다.
 3. **같은 id가 category마다 존재할 수 있음** (예: `housing`이 `combo`와 `comparison`에 각각 있음). category별로 별도 배열입니다.
 4. **i18n**: UI 문자열은 `t()`, 설문/은행 영문 문항은 JSON의 locale 필드를 직접 사용합니다.
-5. **최소 변경 원칙**: 이 프로젝트는 도메인 지식이 코드 여러 곳에 분산되어 있으므로, 주제/유형 추가 시 `opic-constants.json` → `question-bank.json` → 필요 시 `survey.json` 순으로 일관되게 반영하세요.
+5. **최소 변경 원칙**: 이 프로젝트는 도메인 지식이 코드 여러 곳에 분산되어 있으므로, 주제/유형 추가 시 `opic-constants.json` (`comboStages` 포함) → `question-bank.json` → 필요 시 `survey.json` 순으로 일관되게 반영하세요.
+6. **Combo 세트는 1→2→3 단계**를 지켜야 합니다. Q1=현재 묘사/루틴, Q2=과거 경험, Q3=기억에 남는/돌발 사건.

@@ -36,24 +36,30 @@ function makePrompt({
   surveyTopics,
   surpriseTopics,
   comboQuestionTypes,
-  experienceEndingTypes,
+  comboStages,
 }) {
   return [
     "You are generating OPIc combo question sets for an English speaking exam.",
     "",
     "Composition rules:",
     `- Generate exactly ${surveyCount} survey sets and ${surpriseCount} surprise sets.`,
-    "- Each set has exactly 3 questions.",
+    "- Each set has exactly 3 questions in a fixed progression:",
+    "  Q1 (Stage 1): present-tense description or routine",
+    "  Q2 (Stage 2): past experience OR how the topic has changed from past to present",
+    "  Q3 (Stage 3): memorable or unexpected incident with storytelling",
     "- Survey sets: targetTopicId MUST be from survey topics. Topic-level surprise is false.",
     "- Surprise sets: targetTopicId MUST be from surprise topics. Topic-level surprise is true.",
     "- Never use a survey topic as a surprise topic.",
     "- Never use a surprise topic as a survey topic.",
-    "- Last question MUST use an experience ending type.",
-    `- Allowed question types: ${comboQuestionTypes.map((t) => t.id).join(", ")}`,
-    `- Experience ending types: ${experienceEndingTypes.join(", ")}`,
+    `- Q1 type MUST be one of: ${comboStages["1"].join(", ")}`,
+    `- Q2 type MUST be one of: ${comboStages["2"].join(", ")}`,
+    `- Q3 type MUST be one of: ${comboStages["3"].join(", ")}`,
     "",
     "Question writing rules:",
     "- Write natural OPIc-style English questions.",
+    "- Stage 1 should check present-tense description/routine vocabulary.",
+    "- Stage 2 should either (a) ask about a first/recent past experience, or (b) ask how habits, preferences, or the topic have changed compared to the past (past_present_change).",
+    "- Stage 3 should ask for a memorable/unexpected episode with what happened and how it was resolved.",
     "- For surprise sets, the questions must be about the surprise topic itself.",
     "- Example: if type=routine and topic=furniture, ask about the process of buying furniture.",
     "- Prefer multi-part questions with follow-ups when natural.",
@@ -72,14 +78,16 @@ function makePrompt({
     "",
     "Combo question types:",
     JSON.stringify(comboQuestionTypes, null, 2),
+    "",
+    "Combo stages:",
+    JSON.stringify(comboStages, null, 2),
   ].join("\n");
 }
 
 function validateGeneratedSet(set, {
   surveyTopicIds,
   surpriseTopicIds,
-  comboQuestionTypeIds,
-  experienceEndingTypes,
+  comboStages,
   existingQuestionTexts,
 }) {
   if (!set || typeof set !== "object") return false;
@@ -93,14 +101,13 @@ function validateGeneratedSet(set, {
     return false;
   }
 
-  const last = set.questions[2];
-  if (!experienceEndingTypes.includes(last?.type)) return false;
-
-  for (const q of set.questions) {
+  for (let i = 0; i < 3; i += 1) {
+    const q = set.questions[i];
+    const stageKey = String(i + 1);
     if (!q || typeof q.text !== "string" || typeof q.type !== "string") {
       return false;
     }
-    if (!comboQuestionTypeIds.includes(q.type)) return false;
+    if (!comboStages[stageKey].includes(q.type)) return false;
     if (q.text.length < 30) return false;
     if (existingQuestionTexts.has(normalize(q.text))) return false;
   }
@@ -142,10 +149,9 @@ async function main() {
   const surveyTopics = constants.surveyTopics;
   const surpriseTopics = constants.surpriseTopics;
   const comboQuestionTypes = constants.comboQuestionTypes;
-  const experienceEndingTypes = constants.experienceEndingTypes;
+  const comboStages = constants.comboStages;
   const surveyTopicIds = surveyTopics.map((topic) => topic.id);
   const surpriseTopicIds = surpriseTopics.map((topic) => topic.id);
-  const comboQuestionTypeIds = comboQuestionTypes.map((type) => type.id);
 
   const { surveyCount, surpriseCount } = splitByRatio(
     DAILY_SET_COUNT,
@@ -207,7 +213,7 @@ async function main() {
                 Math.max(surpriseCount, 4),
               ),
               comboQuestionTypes,
-              experienceEndingTypes,
+              comboStages,
             }),
           },
         ],
@@ -223,8 +229,7 @@ async function main() {
   const validationContext = {
     surveyTopicIds,
     surpriseTopicIds,
-    comboQuestionTypeIds,
-    experienceEndingTypes,
+    comboStages,
     existingQuestionTexts,
   };
 

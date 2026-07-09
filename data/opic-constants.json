@@ -135,10 +135,6 @@
       "label": { "ko": "일상적인 활동 설명", "en": "Describe a daily activity" }
     },
     {
-      "id": "experience_description",
-      "label": { "ko": "경험 설명", "en": "Describe an experience" }
-    },
-    {
       "id": "object_description",
       "label": { "ko": "사물 설명", "en": "Describe an object" }
     },
@@ -159,14 +155,6 @@
       "label": { "ko": "나만의 루틴", "en": "Describe your routine" }
     },
     {
-      "id": "first_motivation",
-      "label": { "ko": "첫 계기 설명", "en": "Describe how it started" }
-    },
-    {
-      "id": "first_experience",
-      "label": { "ko": "첫 경험 설명", "en": "Describe a first experience" }
-    },
-    {
       "id": "preference_description",
       "label": { "ko": "선호 설명", "en": "Describe a preference" }
     },
@@ -175,27 +163,60 @@
       "label": { "ko": "준비 과정 설명", "en": "Describe preparation" }
     },
     {
-      "id": "problem_experience",
-      "label": { "ko": "문제 경험 설명", "en": "Describe a problem experience" }
+      "id": "first_motivation",
+      "label": { "ko": "첫 계기 설명", "en": "Describe how it started" }
     },
     {
-      "id": "neighbor_experience",
-      "label": { "ko": "이웃 관련 경험", "en": "Describe a neighbor experience" }
+      "id": "first_experience",
+      "label": { "ko": "첫 경험 설명", "en": "Describe a first experience" }
     },
     {
       "id": "recent_experience",
       "label": { "ko": "최근 경험 설명", "en": "Describe a recent experience" }
     },
     {
+      "id": "experience_description",
+      "label": { "ko": "과거 경험 설명", "en": "Describe a past experience" }
+    },
+    {
+      "id": "past_present_change",
+      "label": { "ko": "과거와 현재의 변화", "en": "Describe how it has changed" }
+    },
+    {
       "id": "memorable_experience",
       "label": { "ko": "기억에 남는 경험", "en": "Describe a memorable experience" }
+    },
+    {
+      "id": "problem_experience",
+      "label": { "ko": "문제·돌발 경험", "en": "Describe an unexpected problem" }
     }
   ],
+  "comboStages": {
+    "1": [
+      "place_description",
+      "routine",
+      "activity_description",
+      "object_description",
+      "person_description",
+      "person_introduction",
+      "preference_description",
+      "preparation"
+    ],
+    "2": [
+      "first_experience",
+      "recent_experience",
+      "first_motivation",
+      "experience_description",
+      "past_present_change"
+    ],
+    "3": [
+      "memorable_experience",
+      "problem_experience"
+    ]
+  },
   "experienceEndingTypes": [
-    "experience_description",
     "memorable_experience",
-    "recent_experience",
-    "first_experience"
+    "problem_experience"
   ],
   "roleplayQuestionTypes": [
     {

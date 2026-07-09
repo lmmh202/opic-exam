@@ -225,6 +225,55 @@ export default function PracticeHubPage() {
                     <option value="roleplay">{t("롤플레이 (3문항)")}</option>
                     <option value="comparison">{t("비교 (2문항)")}</option>
                   </select>
+                  {category === "combo" ? (
+                    <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-3 space-y-2.5">
+                      <p className="text-xs font-medium text-slate-700">
+                        {t("주제 세트는 3문항이 단계적으로 이어집니다.")}
+                      </p>
+                      <ol className="space-y-2 text-xs text-slate-600">
+                        <li>
+                          <span className="font-medium text-slate-800">
+                            {t("1단계 · 현재 묘사 / 루틴")}
+                          </span>
+                          <span className="mt-0.5 block text-slate-500">
+                            {t(
+                              "장소·활동·평소 습관을 현재 시제로 설명합니다.",
+                            )}
+                          </span>
+                        </li>
+                        <li>
+                          <span className="font-medium text-slate-800">
+                            {t("2단계 · 과거 경험 / 변화")}
+                          </span>
+                          <span className="mt-0.5 block text-slate-500">
+                            {t(
+                              "처음·최근 경험이나, 예전과 달라진 점을 이야기합니다.",
+                            )}
+                          </span>
+                        </li>
+                        <li>
+                          <span className="font-medium text-slate-800">
+                            {t("3단계 · 기억에 남는 사건")}
+                          </span>
+                          <span className="mt-0.5 block text-slate-500">
+                            {t(
+                              "특별하거나 예상치 못한 일을 스토리로 풀어냅니다.",
+                            )}
+                          </span>
+                        </li>
+                      </ol>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-slate-500">
+                      {category === "roleplay"
+                        ? t(
+                            "롤플레이는 상황 질문 → 문제 해결 → 유사 경험 순으로 진행됩니다.",
+                          )
+                        : t(
+                            "비교는 과거와 현재의 차이, 이슈에 대한 의견을 묻는 2문항입니다.",
+                          )}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">

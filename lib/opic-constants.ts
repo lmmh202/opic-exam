@@ -16,12 +16,18 @@ export type QuestionTypeConstant = {
   label: LocalizedLabel;
 };
 
+export type ComboStage = 1 | 2 | 3;
+
 export const SURVEY_TOPICS = opicConstants.surveyTopics as TopicConstant[];
 export const SURPRISE_TOPICS = opicConstants.surpriseTopics as TopicConstant[];
 export const INTRO_QUESTION_TYPES =
   opicConstants.introQuestionTypes as QuestionTypeConstant[];
 export const COMBO_QUESTION_TYPES =
   opicConstants.comboQuestionTypes as QuestionTypeConstant[];
+export const COMBO_STAGES = opicConstants.comboStages as Record<
+  "1" | "2" | "3",
+  string[]
+>;
 export const EXPERIENCE_ENDING_TYPES =
   opicConstants.experienceEndingTypes as string[];
 export const ROLEPLAY_QUESTION_TYPES =
@@ -55,6 +61,13 @@ const TOPIC_BY_LABEL = new Map<string, TopicConstant>();
 for (const topic of ALL_TOPICS) {
   TOPIC_BY_LABEL.set(topic.label.en.toLowerCase(), topic);
   TOPIC_BY_LABEL.set(topic.label.ko.toLowerCase(), topic);
+}
+
+const TYPE_TO_STAGE = new Map<string, ComboStage>();
+for (const stage of [1, 2, 3] as const) {
+  for (const typeId of COMBO_STAGES[String(stage) as "1" | "2" | "3"]) {
+    TYPE_TO_STAGE.set(typeId, stage);
+  }
 }
 
 export function isSurpriseTopic(topicId: string): boolean {
@@ -96,4 +109,24 @@ export function getQuestionTypeLabel(
   const type = QUESTION_TYPE_BY_ID.get(typeId);
   if (!type) return typeId;
   return type.label[locale] ?? type.label.ko ?? typeId;
+}
+
+export function getComboStage(typeId: string): ComboStage | undefined {
+  return TYPE_TO_STAGE.get(typeId);
+}
+
+export function isComboTypeForStage(
+  typeId: string,
+  stage: ComboStage,
+): boolean {
+  return COMBO_STAGES[String(stage) as "1" | "2" | "3"].includes(typeId);
+}
+
+export function isValidComboTypeSequence(types: string[]): boolean {
+  if (types.length !== 3) return false;
+  return (
+    isComboTypeForStage(types[0], 1) &&
+    isComboTypeForStage(types[1], 2) &&
+    isComboTypeForStage(types[2], 3)
+  );
 }

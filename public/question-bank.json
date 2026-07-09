@@ -27,12 +27,12 @@
               "text": "Tell me about the geography in your country. What are some notable geographical features?"
             },
             {
-              "type": "activity_description",
-              "text": "Tell me about the outdoor activities you do in your country. What do you enjoy doing outside?"
+              "type": "recent_experience",
+              "text": "Tell me about the last place you visited in your country and its geographical features. When did you go, and what did you see there?"
             },
             {
-              "type": "recent_experience",
-              "text": "Tell me about the last place you visited in your country and its geographical features. What did you see there?"
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable outdoor experience related to the geography of your country. What happened, and why do you still remember it?"
             }
           ]
         }
@@ -84,8 +84,8 @@
               "text": "I would like to know about your favorite actor. Was he or she mentioned in the media recently? What was it about? Tell me some background about that actor."
             },
             {
-              "type": "routine",
-              "text": "Please tell me what you normally do when you go to the movie theater. What do you do before and after the movie?"
+              "type": "past_present_change",
+              "text": "How has the way you watch movies changed compared to the past? Do you go to theaters less or more often now, and what is different about your movie habits?"
             },
             {
               "type": "memorable_experience",
@@ -113,8 +113,8 @@
               "text": "You indicated that you like listening to music. What kind of music do you like? Who is your favorite singer or composer? Why do you like that music?"
             },
             {
-              "type": "routine",
-              "text": "When and where do you usually listen to music? Do you listen to music when you are travelling or when you are resting at home? Tell me about your routine for listening to music."
+              "type": "past_present_change",
+              "text": "How has your taste in music changed over the years? What did you listen to in the past, and what do you prefer now? Why do you think it changed?"
             },
             {
               "type": "memorable_experience",
@@ -141,8 +141,8 @@
               "text": "Describe a concert venue you have been to. What does it look like? What facilities does it have?"
             },
             {
-              "type": "routine",
-              "text": "What do you usually do when you go to a concert? Tell me about your routine from arriving to leaving."
+              "type": "recent_experience",
+              "text": "Tell me about the most recent concert you attended. Who was performing, when was it, and what did you do there?"
             },
             {
               "type": "memorable_experience",
@@ -170,8 +170,8 @@
               "text": "What kind of performances do you enjoy watching? Tell me about the types of shows you like."
             },
             {
-              "type": "routine",
-              "text": "How do you usually prepare when going to see a performance? What do you do before, during, and after?"
+              "type": "recent_experience",
+              "text": "Tell me about the last performance you watched. When was it, what kind of show was it, and what did you think of it?"
             },
             {
               "type": "memorable_experience",
@@ -199,8 +199,8 @@
               "text": "Describe your favorite camping spot. What does it look like and what facilities are available?"
             },
             {
-              "type": "activity_description",
-              "text": "What do you usually do when you go camping? Tell me about your typical camping activities."
+              "type": "recent_experience",
+              "text": "Tell me about your most recent camping trip. When did you go, who did you go with, and what did you do?"
             },
             {
               "type": "memorable_experience",
@@ -228,8 +228,8 @@
               "text": "Describe a beach you like to visit. What does it look like? What can you see and do there?"
             },
             {
-              "type": "activity_description",
-              "text": "What do you usually do when you go to the beach? Tell me about your beach activities."
+              "type": "recent_experience",
+              "text": "Tell me about the last time you went to the beach. When was it, who were you with, and what did you do there?"
             },
             {
               "type": "memorable_experience",
@@ -246,8 +246,8 @@
               "text": "What do you usually do when you go to the beach? Describe your favorite activities there."
             },
             {
-              "type": "object_description",
-              "text": "What items do you usually bring with you when you go to the beach? Please describe some of them in detail."
+              "type": "recent_experience",
+              "text": "Tell me about a recent trip to the beach. When did you go, what did you bring, and how did you spend your time?"
             },
             {
               "type": "memorable_experience",
@@ -275,8 +275,8 @@
               "text": "You indicated that you enjoy jogging. How often do you go jogging? Where do you go and who do you go with? Tell me about your jogging routine."
             },
             {
-              "type": "preparation",
-              "text": "What do you prepare before you go jogging? Do you wear special clothes or shoes? Do you take anything with you?"
+              "type": "past_present_change",
+              "text": "How has your jogging habit changed over time? How often did you jog in the past compared to now, and what made your routine different?"
             },
             {
               "type": "memorable_experience",
@@ -303,8 +303,8 @@
               "text": "Tell me about your walking habits. Where do you usually walk? How often and for how long?"
             },
             {
-              "type": "place_description",
-              "text": "Describe your favorite place to walk. What do you see along the way?"
+              "type": "recent_experience",
+              "text": "Tell me about a recent walk you took. Where did you go, when was it, and what did you see along the way?"
             },
             {
               "type": "memorable_experience",
@@ -332,12 +332,12 @@
               "text": "You indicated in the survey that you live alone in an apartment. Please describe your home in detail. What does it look like? How many rooms are there?"
             },
             {
-              "type": "problem_experience",
-              "text": "Tell me about the problems you have experienced in your home. Have you ever had anything broken or not working properly? What was the problem and how did you solve it?"
+              "type": "recent_experience",
+              "text": "Tell me about a recent problem you had at home. What broke or stopped working, and what did you do about it?"
             },
             {
-              "type": "neighbor_experience",
-              "text": "Tell me about your neighbors. Have you ever had any issues or memorable interactions with them?"
+              "type": "problem_experience",
+              "text": "Tell me about an unexpected or awkward situation involving your neighbors or your home. What happened, and how did you handle it?"
             }
           ]
         },
@@ -350,12 +350,12 @@
               "text": "Can you describe your current home? What does it look like, and what are some of the rooms you like the most?"
             },
             {
-              "type": "routine",
-              "text": "What is your typical routine when you clean your house? Walk me through the steps you take."
+              "type": "experience_description",
+              "text": "Have you ever had to move homes? Describe the experience of moving, including when it was and what challenges you faced."
             },
             {
-              "type": "experience_description",
-              "text": "Have you ever had to move homes? Describe the experience of moving, including any challenges or interesting moments."
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable moment related to your home or a move. What happened, and why do you still remember it?"
             }
           ]
         }
@@ -380,12 +380,12 @@
               "text": "What do you usually do on the internet? Tell me about your online activities."
             },
             {
-              "type": "preference_description",
-              "text": "What is your favorite website or online service? Why do you like it? How often do you use it?"
+              "type": "past_present_change",
+              "text": "How has the way you use the internet changed compared to when you first started? What did you mainly do online before, and what do you do now?"
             },
             {
-              "type": "first_experience",
-              "text": "How did you first start using the internet? When was it and what did you do online at first?"
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable experience online. Did something unexpected happen while using the internet? What was it, and how did you deal with it?"
             }
           ]
         }
@@ -409,8 +409,8 @@
               "text": "Tell me about a domestic destination you have visited. What was the place like?"
             },
             {
-              "type": "activity_description",
-              "text": "What do you usually do when traveling domestically? Tell me about your typical travel activities."
+              "type": "recent_experience",
+              "text": "Tell me about your most recent domestic trip. Where did you go, when was it, and what did you do there?"
             },
             {
               "type": "memorable_experience",
@@ -427,8 +427,8 @@
               "text": "Describe your usual routine when you plan a domestic trip. What steps do you typically take from start to finish?"
             },
             {
-              "type": "activity_description",
-              "text": "What kind of activities do you typically do during your domestic travels? Please describe them in detail."
+              "type": "recent_experience",
+              "text": "Tell me about a recent domestic trip you took. Where did you go, what activities did you do, and how was the trip overall?"
             },
             {
               "type": "memorable_experience",
@@ -456,12 +456,12 @@
               "text": "What do you usually do during a staycation? How do you spend your time at home during vacation?"
             },
             {
-              "type": "routine",
-              "text": "Describe a typical day during your staycation. What is your routine like?"
+              "type": "past_present_change",
+              "text": "How have your staycation habits changed compared to a few years ago? What did you usually do at home during vacation then, and what do you do differently now?"
             },
             {
               "type": "memorable_experience",
-              "text": "Tell me about a memorable staycation experience. What did you do that made it enjoyable?"
+              "text": "Tell me about a memorable staycation experience. What did you do that made it enjoyable or unexpected?"
             }
           ]
         }
@@ -485,12 +485,12 @@
               "text": "Describe a piece of furniture you own that is particularly important or interesting to you. What is it, and why is it special?"
             },
             {
-              "type": "routine",
-              "text": "What is your process when you need to buy new furniture? Walk me through the steps you take from deciding what to buy to getting it home."
+              "type": "recent_experience",
+              "text": "Tell me about the last time you bought furniture. When was it, what did you buy, and how did you choose it?"
             },
             {
-              "type": "experience_description",
-              "text": "Have you ever had an experience where you assembled furniture yourself or had a problem with a piece of furniture? Tell me about that experience."
+              "type": "problem_experience",
+              "text": "Have you ever had a problem assembling furniture or receiving damaged furniture? Tell me what happened and how you resolved it."
             }
           ]
         }
@@ -514,8 +514,8 @@
               "text": "How does the weather typically influence your daily activities and plans? Give me some examples."
             },
             {
-              "type": "place_description",
-              "text": "Describe the typical weather patterns in your hometown throughout the year. What are the seasons like?"
+              "type": "recent_experience",
+              "text": "Tell me about a recent day when the weather changed your plans. When was it, and what did you end up doing instead?"
             },
             {
               "type": "memorable_experience",
