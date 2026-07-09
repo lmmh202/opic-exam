@@ -236,6 +236,24 @@
               "text": "Tell me about a memorable experience at the beach. What happened and why was it special?"
             }
           ]
+        },
+        {
+          "id": "beach-auto-2026-07-09-going-to-the-beach",
+          "label": "Going to the Beach",
+          "questions": [
+            {
+              "type": "activity_description",
+              "text": "What do you usually do when you go to the beach? Describe your favorite activities there."
+            },
+            {
+              "type": "object_description",
+              "text": "What items do you usually bring with you when you go to the beach? Please describe some of them in detail."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable time you went to the beach. What happened, and what made it so special?"
+            }
+          ]
         }
       ]
     },
@@ -322,6 +340,24 @@
               "text": "Tell me about your neighbors. Have you ever had any issues or memorable interactions with them?"
             }
           ]
+        },
+        {
+          "id": "housing-auto-2026-07-09-housing",
+          "label": "Housing",
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Can you describe your current home? What does it look like, and what are some of the rooms you like the most?"
+            },
+            {
+              "type": "routine",
+              "text": "What is your typical routine when you clean your house? Walk me through the steps you take."
+            },
+            {
+              "type": "experience_description",
+              "text": "Have you ever had to move homes? Describe the experience of moving, including any challenges or interesting moments."
+            }
+          ]
         }
       ]
     },
@@ -381,6 +417,24 @@
               "text": "Tell me about a memorable domestic trip. Where did you go and what made it special?"
             }
           ]
+        },
+        {
+          "id": "domestic_travel-auto-2026-07-09-domestic-travel",
+          "label": "Domestic Travel",
+          "questions": [
+            {
+              "type": "routine",
+              "text": "Describe your usual routine when you plan a domestic trip. What steps do you typically take from start to finish?"
+            },
+            {
+              "type": "activity_description",
+              "text": "What kind of activities do you typically do during your domestic travels? Please describe them in detail."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a particularly memorable domestic trip you've taken. What made it so special and why do you remember it?"
+            }
+          ]
         }
       ]
     },
@@ -408,6 +462,64 @@
             {
               "type": "memorable_experience",
               "text": "Tell me about a memorable staycation experience. What did you do that made it enjoyable?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "furniture",
+      "label": "Furniture",
+      "keywords": [
+        "furniture",
+        "furniture"
+      ],
+      "surprise": true,
+      "sets": [
+        {
+          "id": "furniture-auto-2026-07-09-furniture",
+          "label": "Furniture",
+          "questions": [
+            {
+              "type": "object_description",
+              "text": "Describe a piece of furniture you own that is particularly important or interesting to you. What is it, and why is it special?"
+            },
+            {
+              "type": "routine",
+              "text": "What is your process when you need to buy new furniture? Walk me through the steps you take from deciding what to buy to getting it home."
+            },
+            {
+              "type": "experience_description",
+              "text": "Have you ever had an experience where you assembled furniture yourself or had a problem with a piece of furniture? Tell me about that experience."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weather",
+      "label": "Weather",
+      "keywords": [
+        "weather",
+        "weather"
+      ],
+      "surprise": true,
+      "sets": [
+        {
+          "id": "weather-auto-2026-07-09-weather",
+          "label": "Weather",
+          "questions": [
+            {
+              "type": "activity_description",
+              "text": "How does the weather typically influence your daily activities and plans? Give me some examples."
+            },
+            {
+              "type": "place_description",
+              "text": "Describe the typical weather patterns in your hometown throughout the year. What are the seasons like?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable experience you had that was heavily affected by the weather. What happened?"
             }
           ]
         }
