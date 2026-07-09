@@ -33,6 +33,7 @@ import {
 import { ExamSetupPanel } from "@/components/exam-setup-panel";
 import { useExamStore } from "@/lib/store";
 import {
+  countPracticeSets,
   generatePracticeExam,
   listPracticeQuestionSets,
   listPracticeTopics,
@@ -40,11 +41,15 @@ import {
   type PracticeTopic,
 } from "@/lib/question-generator";
 import { examPath } from "@/lib/exam-mode";
-import { getTopicLabel } from "@/lib/opic-constants";
+import {
+  DIFFICULTIES,
+  getDifficultyGuide,
+  getDifficultyLabel,
+  type DifficultyId,
+  getTopicLabel,
+} from "@/lib/opic-constants";
 import { useTranslation } from "@/components/i18n-provider";
 import type { TranslationKey } from "@/lib/i18n/dictionaries";
-
-const topics = listPracticeTopics();
 
 const CATEGORY_LABEL_KEY: Record<PracticeCategory, TranslationKey> = {
   combo: "주제 세트",
@@ -106,16 +111,22 @@ export default function PracticeHubPage() {
   const { t, locale } = useTranslation();
   const { switchExamMode, setExamQuestions, resetExam } = useExamStore();
   const [category, setCategory] = useState<PracticeCategory>("combo");
+  const [difficulty, setDifficulty] = useState<DifficultyId>("standard");
   const [topicId, setTopicId] = useState<string>("random");
   const [setId, setSetId] = useState<string>("random");
 
+  const topics = listPracticeTopics(difficulty);
   const filteredTopics = topics.filter((item) => item.category === category);
+  const matchingSetCount = countPracticeSets(category, difficulty);
   const surveyTopics = filteredTopics.filter((item) => !item.surprise);
   const surpriseTopics = filteredTopics.filter((item) => item.surprise);
   const selectedTopic = filteredTopics.find((item) => item.id === topicId);
   const questionSets =
-    topicId !== "random" ? listPracticeQuestionSets(category, topicId) : [];
+    topicId !== "random"
+      ? listPracticeQuestionSets(category, topicId, difficulty)
+      : [];
   const selectedSet = questionSets.find((s) => s.id === setId);
+  const noMatchingSets = matchingSetCount === 0;
 
   const topicLabel =
     topicId === "random"
@@ -124,8 +135,19 @@ export default function PracticeHubPage() {
         ? getTopicLabel(selectedTopic.id, locale, selectedTopic.topic)
         : t("주제를 선택하세요");
 
+  const difficultyHelper =
+    difficulty === "challenging"
+      ? t("도전 난이도는 기출형 다층 질문입니다.")
+      : getDifficultyGuide("standard", locale);
+
   const handleCategoryChange = (value: PracticeCategory) => {
     setCategory(value);
+    setTopicId("random");
+    setSetId("random");
+  };
+
+  const handleDifficultyChange = (value: DifficultyId) => {
+    setDifficulty(value);
     setTopicId("random");
     setSetId("random");
   };
@@ -141,6 +163,7 @@ export default function PracticeHubPage() {
       category,
       topicId: topicId === "random" ? "random" : topicId,
       setId: topicId === "random" ? undefined : setId,
+      difficulty,
     });
     setExamQuestions(questions);
     resetExam();
@@ -206,11 +229,34 @@ export default function PracticeHubPage() {
                 </>
               }
               onStart={handleStartSession}
-              startDisabled={filteredTopics.length === 0}
-              startDisabledReason={t("연습할 주제가 없습니다.")}
+              startDisabled={noMatchingSets}
+              startDisabledReason={
+                noMatchingSets
+                  ? t("선택한 난이도에 맞는 문항 세트가 없습니다.")
+                  : t("연습할 주제가 없습니다.")
+              }
               showRecordingSettings={false}
             >
               <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="practice-difficulty">{t("난이도")}</Label>
+                  <select
+                    id="practice-difficulty"
+                    value={difficulty}
+                    onChange={(e) =>
+                      handleDifficultyChange(e.target.value as DifficultyId)
+                    }
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                  >
+                    {DIFFICULTIES.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {getDifficultyLabel(item.id, locale)}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-slate-500">{difficultyHelper}</p>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="practice-category">{t("문제 유형")}</Label>
                   <select
@@ -400,6 +446,7 @@ export default function PracticeHubPage() {
                             name: set.label,
                             count: set.questionCount,
                           })}
+                          {` · ${getDifficultyLabel(set.difficulty, locale)}`}
                         </option>
                       ))}
                     </select>
