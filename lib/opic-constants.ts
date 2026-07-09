@@ -19,6 +19,13 @@ export type QuestionTypeConstant = {
 export type ComboStage = 1 | 2 | 3;
 export type RoleplayStage = 1 | 2 | 3;
 export type ComparisonStage = 1 | 2;
+export type DifficultyId = "standard" | "challenging";
+
+export type DifficultyConstant = {
+  id: DifficultyId;
+  label: LocalizedLabel;
+  guide: LocalizedLabel;
+};
 
 export const SURVEY_TOPICS = opicConstants.surveyTopics as TopicConstant[];
 export const SURPRISE_TOPICS = opicConstants.surpriseTopics as TopicConstant[];
@@ -47,7 +54,12 @@ export const COMPARISON_STAGES = opicConstants.comparisonStages as Record<
   "1" | "2",
   string[]
 >;
+export const DIFFICULTIES =
+  opicConstants.difficulties as DifficultyConstant[];
 export const EXAM_COMPOSITION = opicConstants.examComposition;
+
+export const DIFFICULTY_IDS = DIFFICULTIES.map((d) => d.id);
+export const DEFAULT_DIFFICULTY: DifficultyId = "standard";
 
 export const ALL_QUESTION_TYPES: QuestionTypeConstant[] = [
   ...INTRO_QUESTION_TYPES,
@@ -143,6 +155,28 @@ export function getQuestionTypeLabel(
   const type = QUESTION_TYPE_BY_ID.get(typeId);
   if (!type) return typeId;
   return type.label[locale] ?? type.label.ko ?? typeId;
+}
+
+export function isDifficultyId(value: string | undefined | null): value is DifficultyId {
+  return value === "standard" || value === "challenging";
+}
+
+export function getDifficultyLabel(
+  difficultyId: DifficultyId,
+  locale: Locale = "ko",
+): string {
+  const difficulty = DIFFICULTIES.find((d) => d.id === difficultyId);
+  if (!difficulty) return difficultyId;
+  return difficulty.label[locale] ?? difficulty.label.ko ?? difficultyId;
+}
+
+export function getDifficultyGuide(
+  difficultyId: DifficultyId,
+  locale: Locale = "ko",
+): string {
+  const difficulty = DIFFICULTIES.find((d) => d.id === difficultyId);
+  if (!difficulty) return "";
+  return difficulty.guide[locale] ?? difficulty.guide.ko ?? "";
 }
 
 export function getComboStage(typeId: string): ComboStage | undefined {

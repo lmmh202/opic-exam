@@ -35,6 +35,7 @@ import {
   type ExamMode,
 } from "@/lib/exam-mode";
 import {
+  getDifficultyLabel,
   getQuestionTypeLabel,
   getTopicLabel,
 } from "@/lib/opic-constants";
@@ -446,6 +447,12 @@ function ExamPageContent() {
                 <Badge variant="secondary">
                   {t("유형")}:{" "}
                   {getQuestionTypeLabel(currentQuestion.type, locale)}
+                </Badge>
+              )}
+              {mode === "practice" && currentQuestion.difficulty && (
+                <Badge variant="outline">
+                  {t("난이도")}:{" "}
+                  {getDifficultyLabel(currentQuestion.difficulty, locale)}
                 </Badge>
               )}
               {currentQuestion.surprise && (

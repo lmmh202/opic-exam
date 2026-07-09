@@ -323,6 +323,24 @@
     "1": ["past_present_comparison", "two_subject_comparison"],
     "2": ["issue_discussion"]
   },
+  "difficulties": [
+    {
+      "id": "standard",
+      "label": { "ko": "기본", "en": "Standard" },
+      "guide": {
+        "ko": "명확한 단일 초점 질문과 가벼운 후속 질문",
+        "en": "Clear single-focus prompts with light follow-ups"
+      }
+    },
+    {
+      "id": "challenging",
+      "label": { "ko": "도전", "en": "Challenging" },
+      "guide": {
+        "ko": "다층 후속질문, 구체적 상황·제약, 상세 서술 요구 (기출형)",
+        "en": "Multi-part follow-ups, concrete constraints/scenarios, ask for full detail (exam-like)"
+      }
+    }
+  ],
   "examComposition": {
     "surveyToSurpriseRatio": [3, 2],
     "comboQuestionsPerSet": 3,
