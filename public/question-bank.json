@@ -34,7 +34,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a memorable outdoor experience related to the geography of your country. What happened, and why do you still remember it?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -62,7 +63,8 @@
               "type": "memorable_experience",
               "text": "Tell me about an interesting thing that has happened at a park. What happened? Why was it so memorable?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -91,7 +93,8 @@
               "type": "memorable_experience",
               "text": "Tell me about the most memorable movie you watched in the past. What was it about and why was it memorable?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -120,7 +123,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a memorable experience related to music. Did you go to a concert or did you listen to a song that made you feel happy or sad? What happened and why was it memorable?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -148,7 +152,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a memorable concert you attended. Who was performing and what made it special?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -177,7 +182,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a performance that left a strong impression on you. What was it and why was it memorable?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -206,7 +212,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a memorable camping experience. What happened and why do you remember it?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -235,7 +242,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a memorable experience at the beach. What happened and why was it special?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         },
         {
           "id": "beach-auto-2026-07-09-going-to-the-beach",
@@ -253,7 +261,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a memorable time you went to the beach. What happened, and what made it so special?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -282,7 +291,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a memorable experience while jogging. Did you see something interesting or did something unexpected happen?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -310,7 +320,8 @@
               "type": "memorable_experience",
               "text": "Tell me about something interesting that happened while you were walking. What did you see or experience?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -339,7 +350,8 @@
               "type": "problem_experience",
               "text": "Tell me about an unexpected or awkward situation involving your neighbors or your home. What happened, and how did you handle it?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         },
         {
           "id": "housing-auto-2026-07-09-housing",
@@ -357,7 +369,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a memorable moment related to your home or a move. What happened, and why do you still remember it?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -387,7 +400,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a memorable experience online. Did something unexpected happen while using the internet? What was it, and how did you deal with it?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -416,7 +430,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a memorable domestic trip. Where did you go and what made it special?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         },
         {
           "id": "domestic_travel-auto-2026-07-09-domestic-travel",
@@ -434,7 +449,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a particularly memorable domestic trip you've taken. What made it so special and why do you remember it?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -463,7 +479,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a memorable staycation experience. What did you do that made it enjoyable or unexpected?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -492,7 +509,8 @@
               "type": "problem_experience",
               "text": "Have you ever had a problem assembling furniture or receiving damaged furniture? Tell me what happened and how you resolved it."
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -521,7 +539,8 @@
               "type": "memorable_experience",
               "text": "Tell me about a memorable experience you had that was heavily affected by the weather. What happened?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     }
@@ -546,7 +565,8 @@
               "type": "similar_experience",
               "text": "That's the end of the situation. Have you ever ordered anything to your home and was not satisfied with the product or service? Tell me what the problem was and how you dealt with the situation."
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -569,7 +589,8 @@
               "type": "similar_experience",
               "text": "That's the end of the situation. Have you ever experienced a problem while traveling? What happened and how did you solve it?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -592,7 +613,8 @@
               "type": "similar_experience",
               "text": "That's the end of the situation. Have you ever lost something at a restaurant or store? Tell me what happened and how you resolved the situation."
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -615,7 +637,8 @@
               "type": "similar_experience",
               "text": "That's the end of the situation. Have you ever had a problem with a hotel reservation or during your stay at a hotel? What happened and how did you handle it?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -638,7 +661,8 @@
               "type": "similar_experience",
               "text": "That's the end of the situation. Have you ever had to cancel or reschedule an important appointment? Tell me what happened and how you dealt with it."
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     }
@@ -659,7 +683,8 @@
               "type": "issue_discussion",
               "text": "People face with various problems when they rent a house. What is a major issue they experience in your country, and how do people deal with that problem?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -678,7 +703,8 @@
               "type": "issue_discussion",
               "text": "What are some issues people face with technology today? How do they deal with problems like privacy, addiction, or security?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -697,7 +723,8 @@
               "type": "issue_discussion",
               "text": "What are some issues that travelers discuss among friends these days? What topics related to travel are people talking about?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -716,7 +743,8 @@
               "type": "issue_discussion",
               "text": "What are some current issues or trends in entertainment that people discuss? What concerns do people have about modern entertainment?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     },
@@ -735,7 +763,8 @@
               "type": "issue_discussion",
               "text": "What health-related issues are people concerned about these days? How do people try to address these health concerns?"
             }
-          ]
+          ],
+          "difficulty": "standard"
         }
       ]
     }
