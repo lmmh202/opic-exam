@@ -3,7 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, Volume2, Layers } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  ChevronDown,
+  Layers,
+  Volume2,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -12,7 +19,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ExamSetupPanel } from "@/components/exam-setup-panel";
 import { useExamStore } from "@/lib/store";
 import {
@@ -20,6 +37,7 @@ import {
   listPracticeQuestionSets,
   listPracticeTopics,
   type PracticeCategory,
+  type PracticeTopic,
 } from "@/lib/question-generator";
 import { examPath } from "@/lib/exam-mode";
 import { useTranslation } from "@/components/i18n-provider";
@@ -33,6 +51,53 @@ const CATEGORY_LABEL_KEY: Record<PracticeCategory, TranslationKey> = {
   comparison: "비교",
 };
 
+function TopicMenuItem({
+  label,
+  selected,
+  onSelect,
+}: {
+  label: string;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <DropdownMenuItem onClick={onSelect} className="gap-2">
+      <Check
+        className={`size-4 shrink-0 ${selected ? "opacity-100" : "opacity-0"}`}
+      />
+      <span className="truncate">{label}</span>
+    </DropdownMenuItem>
+  );
+}
+
+function TopicGroup({
+  label,
+  topics: groupTopics,
+  topicId,
+  onSelect,
+}: {
+  label: string;
+  topics: PracticeTopic[];
+  topicId: string;
+  onSelect: (value: string) => void;
+}) {
+  if (groupTopics.length === 0) return null;
+
+  return (
+    <DropdownMenuGroup>
+      <DropdownMenuLabel>{label}</DropdownMenuLabel>
+      {groupTopics.map((topic) => (
+        <TopicMenuItem
+          key={topic.id}
+          label={topic.topic}
+          selected={topicId === topic.id}
+          onSelect={() => onSelect(topic.id)}
+        />
+      ))}
+    </DropdownMenuGroup>
+  );
+}
+
 export default function PracticeHubPage() {
   const router = useRouter();
   const { t } = useTranslation();
@@ -41,11 +106,18 @@ export default function PracticeHubPage() {
   const [topicId, setTopicId] = useState<string>("random");
   const [setId, setSetId] = useState<string>("random");
 
-  const filteredTopics = topics.filter((t) => t.category === category);
-  const selectedTopic = filteredTopics.find((t) => t.id === topicId);
+  const filteredTopics = topics.filter((item) => item.category === category);
+  const surveyTopics = filteredTopics.filter((item) => !item.surprise);
+  const surpriseTopics = filteredTopics.filter((item) => item.surprise);
+  const selectedTopic = filteredTopics.find((item) => item.id === topicId);
   const questionSets =
     topicId !== "random" ? listPracticeQuestionSets(category, topicId) : [];
   const selectedSet = questionSets.find((s) => s.id === setId);
+
+  const topicLabel =
+    topicId === "random"
+      ? t("랜덤 주제")
+      : (selectedTopic?.topic ?? t("주제를 선택하세요"));
 
   const handleCategoryChange = (value: PracticeCategory) => {
     setCategory(value);
@@ -150,20 +222,53 @@ export default function PracticeHubPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="practice-topic">{t("주제")}</Label>
-                  <select
-                    id="practice-topic"
-                    value={topicId}
-                    onChange={(e) => handleTopicChange(e.target.value)}
-                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-                  >
-                    <option value="random">{t("랜덤 주제")}</option>
-                    {filteredTopics.map((topic) => (
-                      <option key={topic.id} value={topic.id}>
-                        {topic.topic}
-                      </option>
-                    ))}
-                  </select>
+                  <Label id="practice-topic-label">{t("주제")}</Label>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between font-normal"
+                        aria-labelledby="practice-topic-label"
+                      >
+                        <span className="truncate">{topicLabel}</span>
+                        <ChevronDown className="size-4 shrink-0 opacity-50" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="start"
+                      className="w-(--radix-dropdown-menu-trigger-width) max-h-72"
+                    >
+                      <DropdownMenuGroup>
+                        <TopicMenuItem
+                          label={t("랜덤 주제")}
+                          selected={topicId === "random"}
+                          onSelect={() => handleTopicChange("random")}
+                        />
+                      </DropdownMenuGroup>
+                      {surveyTopics.length > 0 && (
+                        <>
+                          <DropdownMenuSeparator />
+                          <TopicGroup
+                            label={t("Survey 주제")}
+                            topics={surveyTopics}
+                            topicId={topicId}
+                            onSelect={handleTopicChange}
+                          />
+                        </>
+                      )}
+                      {surpriseTopics.length > 0 && (
+                        <>
+                          <DropdownMenuSeparator />
+                          <TopicGroup
+                            label={t("돌발 주제")}
+                            topics={surpriseTopics}
+                            topicId={topicId}
+                            onSelect={handleTopicChange}
+                          />
+                        </>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
 
                 {topicId !== "random" && (

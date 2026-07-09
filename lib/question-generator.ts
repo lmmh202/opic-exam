@@ -166,6 +166,7 @@ export interface PracticeTopic {
   id: string;
   category: PracticeCategory;
   topic: string;
+  surprise: boolean;
   questionCount: number;
   setCount: number;
 }
@@ -192,6 +193,7 @@ export function listPracticeTopics(): PracticeTopic[] {
         id: topic.id,
         category,
         topic: topic.label,
+        surprise: topic.surprise ?? false,
         questionCount: firstSet?.questions.length ?? 0,
         setCount: topic.sets.length,
       });
