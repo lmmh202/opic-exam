@@ -5,26 +5,10 @@ import { GoogleGenAI, Type as SchemaType } from "@google/genai";
 
 const ROOT = process.cwd();
 const QUESTION_BANK_PATH = path.join(ROOT, "public", "question-bank.json");
-const SURVEY_PATH = path.join(ROOT, "public", "survey.json");
+const CONSTANTS_PATH = path.join(ROOT, "data", "opic-constants.json");
 
-const DAILY_SET_COUNT = Number(process.env.DAILY_SET_COUNT ?? 3);
+const DAILY_SET_COUNT = Number(process.env.DAILY_SET_COUNT ?? 5);
 const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
-
-const ALLOWED_COMBO_TYPES = [
-  "activity_description",
-  "experience_description",
-  "object_description",
-  "person_introduction",
-  "place_description",
-  "routine",
-  "first_motivation",
-  "memorable_experience",
-];
-
-const EXPERIENCE_ENDING_TYPES = [
-  "experience_description",
-  "memorable_experience",
-];
 
 function normalize(text) {
   return String(text).toLowerCase().replace(/\s+/g, " ").trim();
@@ -36,77 +20,106 @@ function randomPick(array, count) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
-  return shuffled.slice(0, count);
+  return shuffled.slice(0, Math.min(count, shuffled.length));
 }
 
-function inferSurveyTopicIds(bank, surveyText) {
-  const text = surveyText.toLowerCase();
-  const matched = bank.combo
-    .filter((topic) =>
-      (topic.keywords ?? []).some((keyword) =>
-        text.includes(String(keyword).toLowerCase()),
-      ),
-    )
-    .map((topic) => topic.id);
-
-  return [...new Set(matched)];
+function splitByRatio(total, [surveyRatio, surpriseRatio]) {
+  const parts = surveyRatio + surpriseRatio;
+  const surpriseCount = Math.max(1, Math.round((total * surpriseRatio) / parts));
+  const surveyCount = Math.max(1, total - surpriseCount);
+  return { surveyCount, surpriseCount };
 }
 
-function makePrompt({ surveyTopicIds, surpriseTopicIds, comboTopics }) {
+function makePrompt({
+  surveyCount,
+  surpriseCount,
+  surveyTopics,
+  surpriseTopics,
+  comboQuestionTypes,
+  experienceEndingTypes,
+}) {
   return [
-    "You are generating OPIc combo question sets.",
+    "You are generating OPIc combo question sets for an English speaking exam.",
     "",
-    "Rules:",
-    `- Generate ${DAILY_SET_COUNT} sets.`,
+    "Composition rules:",
+    `- Generate exactly ${surveyCount} survey sets and ${surpriseCount} surprise sets.`,
     "- Each set has exactly 3 questions.",
-    "- Each set is surprise=true.",
-    "- Use exactly 2 survey topics and 1 surprise topic in concept.",
-    "- Last question MUST be an experience question.",
-    `- Allowed question types: ${ALLOWED_COMBO_TYPES.join(", ")}`,
-    `- Last question type must be one of: ${EXPERIENCE_ENDING_TYPES.join(", ")}`,
+    "- Survey sets: surprise=false, targetTopicId MUST be from survey topics.",
+    "- Surprise sets: surprise=true, targetTopicId MUST be from surprise topics.",
+    "- Never mark a survey topic as surprise=true.",
+    "- Never mark a surprise topic as surprise=false.",
+    "- Last question MUST use an experience ending type.",
+    `- Allowed question types: ${comboQuestionTypes.map((t) => t.id).join(", ")}`,
+    `- Experience ending types: ${experienceEndingTypes.join(", ")}`,
+    "",
+    "Question writing rules:",
+    "- Write natural OPIc-style English questions.",
+    "- For surprise sets, the questions must be about the surprise topic itself.",
+    "- Example: if type=routine and topic=furniture, ask about the process of buying furniture.",
+    "- Prefer multi-part questions with follow-ups when natural.",
     "",
     "Output JSON fields:",
-    "- sets[].targetTopicId: one topic id from combo topics list below",
-    "- sets[].label: short label",
-    "- sets[].surprise: true",
+    "- sets[].targetTopicId",
+    "- sets[].label (short English label)",
+    "- sets[].surprise (boolean)",
     "- sets[].questions[0..2]: {type, text}",
     "",
-    `Survey topic ids: ${surveyTopicIds.join(", ") || "(none)"}`,
-    `Surprise candidate topic ids: ${surpriseTopicIds.join(", ") || "(none)"}`,
+    "Survey topics:",
+    JSON.stringify(surveyTopics, null, 2),
     "",
-    "Combo topics catalog:",
-    JSON.stringify(
-      comboTopics.map((t) => ({
-        id: t.id,
-        label: t.label,
-        keywords: t.keywords ?? [],
-      })),
-      null,
-      2,
-    ),
+    "Surprise topics:",
+    JSON.stringify(surpriseTopics, null, 2),
+    "",
+    "Combo question types:",
+    JSON.stringify(comboQuestionTypes, null, 2),
   ].join("\n");
 }
 
-function validateGeneratedSet(set, bank, existingQuestionTexts) {
+function validateGeneratedSet(set, {
+  surveyTopicIds,
+  surpriseTopicIds,
+  comboQuestionTypeIds,
+  experienceEndingTypes,
+  existingQuestionTexts,
+}) {
   if (!set || typeof set !== "object") return false;
   if (!set.targetTopicId || typeof set.targetTopicId !== "string") return false;
-  if (!bank.combo.some((t) => t.id === set.targetTopicId)) return false;
-  if (set.surprise !== true) return false;
+  if (typeof set.surprise !== "boolean") return false;
   if (!Array.isArray(set.questions) || set.questions.length !== 3) return false;
 
+  if (set.surprise) {
+    if (!surpriseTopicIds.includes(set.targetTopicId)) return false;
+  } else if (!surveyTopicIds.includes(set.targetTopicId)) {
+    return false;
+  }
+
   const last = set.questions[2];
-  if (!EXPERIENCE_ENDING_TYPES.includes(last?.type)) return false;
+  if (!experienceEndingTypes.includes(last?.type)) return false;
 
   for (const q of set.questions) {
     if (!q || typeof q.text !== "string" || typeof q.type !== "string") {
       return false;
     }
-    if (!ALLOWED_COMBO_TYPES.includes(q.type)) return false;
+    if (!comboQuestionTypeIds.includes(q.type)) return false;
     if (q.text.length < 30) return false;
     if (existingQuestionTexts.has(normalize(q.text))) return false;
   }
 
   return true;
+}
+
+function ensureTopicExists(bank, topicConstant, surprise) {
+  let topic = bank.combo.find((item) => item.id === topicConstant.id);
+  if (topic) return topic;
+
+  topic = {
+    id: topicConstant.id,
+    label: topicConstant.label.en,
+    keywords: [topicConstant.id, topicConstant.label.en.toLowerCase()],
+    sets: [],
+  };
+  bank.combo.push(topic);
+  return topic;
 }
 
 async function main() {
@@ -115,20 +128,26 @@ async function main() {
     throw new Error("GOOGLE_GENERATIVE_AI_API_KEY is required.");
   }
 
-  const [bankRaw, surveyRaw] = await Promise.all([
+  const [bankRaw, constantsRaw] = await Promise.all([
     fs.readFile(QUESTION_BANK_PATH, "utf8"),
-    fs.readFile(SURVEY_PATH, "utf8"),
+    fs.readFile(CONSTANTS_PATH, "utf8"),
   ]);
   const bank = JSON.parse(bankRaw);
-  const survey = JSON.parse(surveyRaw);
+  const constants = JSON.parse(constantsRaw);
 
-  const surveyText = survey
-    .map((item) => `${item.label}: ${item.value}`)
-    .join("\n");
-  const surveyTopicIds = inferSurveyTopicIds(bank, surveyText);
+  const surveyTopics = constants.surveyTopics;
+  const surpriseTopics = constants.surpriseTopics;
+  const comboQuestionTypes = constants.comboQuestionTypes;
+  const experienceEndingTypes = constants.experienceEndingTypes;
+  const surveyTopicIds = surveyTopics.map((topic) => topic.id);
+  const surpriseTopicIds = surpriseTopics.map((topic) => topic.id);
+  const comboQuestionTypeIds = comboQuestionTypes.map((type) => type.id);
 
-  const allTopicIds = bank.combo.map((t) => t.id);
-  const surpriseTopicIds = allTopicIds.filter((id) => !surveyTopicIds.includes(id));
+  const { surveyCount, surpriseCount } = splitByRatio(
+    DAILY_SET_COUNT,
+    constants.examComposition.surveyToSurpriseRatio,
+  );
+
   const existingQuestionTexts = new Set(
     bank.combo.flatMap((topic) =>
       topic.sets.flatMap((set) => set.questions.map((q) => normalize(q.text))),
@@ -173,7 +192,21 @@ async function main() {
     contents: [
       {
         role: "user",
-        parts: [{ text: makePrompt({ surveyTopicIds, surpriseTopicIds, comboTopics: bank.combo }) }],
+        parts: [
+          {
+            text: makePrompt({
+              surveyCount,
+              surpriseCount,
+              surveyTopics: randomPick(surveyTopics, Math.max(surveyCount, 4)),
+              surpriseTopics: randomPick(
+                surpriseTopics,
+                Math.max(surpriseCount, 4),
+              ),
+              comboQuestionTypes,
+              experienceEndingTypes,
+            }),
+          },
+        ],
       },
     ],
   });
@@ -183,8 +216,16 @@ async function main() {
   const parsed = JSON.parse(text);
   const sets = Array.isArray(parsed?.sets) ? parsed.sets : [];
 
+  const validationContext = {
+    surveyTopicIds,
+    surpriseTopicIds,
+    comboQuestionTypeIds,
+    experienceEndingTypes,
+    existingQuestionTexts,
+  };
+
   const validSets = sets.filter((set) =>
-    validateGeneratedSet(set, bank, existingQuestionTexts),
+    validateGeneratedSet(set, validationContext),
   );
 
   if (validSets.length === 0) {
@@ -193,31 +234,38 @@ async function main() {
   }
 
   const now = new Date().toISOString().slice(0, 10);
-  for (const generatedSet of validSets) {
-    const topic = bank.combo.find((t) => t.id === generatedSet.targetTopicId);
-    if (!topic) continue;
+  let added = 0;
 
+  for (const generatedSet of validSets) {
+    const topicConstant = generatedSet.surprise
+      ? surpriseTopics.find((topic) => topic.id === generatedSet.targetTopicId)
+      : surveyTopics.find((topic) => topic.id === generatedSet.targetTopicId);
+    if (!topicConstant) continue;
+
+    const topic = ensureTopicExists(bank, topicConstant, generatedSet.surprise);
     const idSeed = normalize(generatedSet.label).replace(/[^a-z0-9]+/g, "-");
     const newSetId = `${topic.id}-auto-${now}-${idSeed || "set"}`.slice(0, 80);
-    const uniqueId =
-      topic.sets.some((s) => s.id === newSetId)
-        ? `${newSetId}-${Math.random().toString(36).slice(2, 7)}`
-        : newSetId;
+    const uniqueId = topic.sets.some((s) => s.id === newSetId)
+      ? `${newSetId}-${Math.random().toString(36).slice(2, 7)}`
+      : newSetId;
 
     topic.sets.push({
       id: uniqueId,
       label: generatedSet.label,
-      surprise: true,
+      surprise: generatedSet.surprise,
       questions: generatedSet.questions,
     });
 
     for (const q of generatedSet.questions) {
       existingQuestionTexts.add(normalize(q.text));
     }
+    added += 1;
   }
 
   await fs.writeFile(QUESTION_BANK_PATH, `${JSON.stringify(bank, null, 2)}\n`);
-  console.log(`Added ${validSets.length} generated combo sets.`);
+  console.log(
+    `Added ${added} generated combo sets (target ratio survey:surprise ~= ${surveyCount}:${surpriseCount}).`,
+  );
 }
 
 main().catch((error) => {

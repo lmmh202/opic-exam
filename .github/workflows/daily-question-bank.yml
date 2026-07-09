@@ -33,18 +33,19 @@ jobs:
         env:
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           GEMINI_MODEL: gemini-2.5-flash
-          DAILY_SET_COUNT: "3"
+          DAILY_SET_COUNT: "5"
         run: pnpm run generate:question-bank
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v6
         with:
           branch: chore/daily-question-bank-${{ github.run_id }}
-          title: "chore(question-bank): add daily generated combo sets"
-          commit-message: "chore(question-bank): add daily generated combo sets"
+          title: "Add daily generated combo sets"
+          commit-message: "Add daily generated combo sets"
           body: |
             Automated daily update via Gemini.
 
             - category: combo
-            - composition: 2 survey topics + 1 surprise context
+            - composition: survey topics : surprise topics ~= 3 : 2
+            - surprise=true only for surprise-topic sets
             - validation: 3 questions per set, final question is experience type

@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { useExamStore } from "@/lib/store";
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { useTranslation } from "@/components/i18n-provider";
-import surveyData from "@/public/survey.json";
+import surveyData from "@/data/survey.json";
 
 interface ExamSetupPanelProps {
   children?: React.ReactNode;
@@ -33,7 +33,7 @@ export function ExamSetupPanel({
   startDisabled = false,
   showRecordingSettings = true,
 }: ExamSetupPanelProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { skipEnabled, minRecordingDuration } = useExamStore();
   const [localSkipEnabled, setLocalSkipEnabled] = useState(skipEnabled);
   const [localDuration, setLocalDuration] = useState(minRecordingDuration);
@@ -116,13 +116,13 @@ export function ExamSetupPanel({
           <CheckCircle2 className="w-5 h-5 text-green-600" />
           {t("적용된 설문 설정")}
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-600">
+        <div className="grid grid-cols-1 gap-4 text-sm text-slate-600">
           {surveyData.map((item) => (
-            <div key={item.label} className="space-y-1">
+            <div key={item.id} className="space-y-1">
               <span className="font-medium text-slate-900 block">
-                {item.label}
+                {item.number}. {item.question[locale] ?? item.question.ko}
               </span>
-              {item.value}
+              <span>{item.answer[locale] ?? item.answer.ko}</span>
             </div>
           ))}
         </div>

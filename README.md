@@ -89,9 +89,11 @@ opic-exam/
 │   ├── question-generator.ts # Question generation logic
 │   ├── store.ts           # Zustand state management
 │   └── db.ts              # IndexedDB utilities
+├── data/
+│   ├── survey.json        # Background survey Q&A (i18n)
+│   └── opic-constants.json # Survey/surprise topics + question types
 └── public/
-    ├── question-bank.json # Question bank (combo/roleplay/comparison)
-    └── survey.json        # Background survey data
+    └── question-bank.json # Question bank (combo/roleplay/comparison)
 ```
 
 ## 🛠️ Tech Stack

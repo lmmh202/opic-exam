@@ -1,0 +1,106 @@
+[
+  {
+    "id": "work",
+    "number": "1",
+    "question": {
+      "ko": "현재 귀하는 어떤 분야에 종사하고 계십니까?",
+      "en": "What field are you currently working in?"
+    },
+    "answer": {
+      "ko": "일 경험 없음",
+      "en": "No work experience"
+    },
+    "topicIds": []
+  },
+  {
+    "id": "student",
+    "number": "2",
+    "question": {
+      "ko": "현재 귀하는 학생이십니까?",
+      "en": "Are you currently a student?"
+    },
+    "answer": {
+      "ko": "아니오",
+      "en": "No"
+    },
+    "topicIds": []
+  },
+  {
+    "id": "courses",
+    "number": "2.1",
+    "question": {
+      "ko": "최근 어떤 강의를 수강했습니까?",
+      "en": "What courses have you taken recently?"
+    },
+    "answer": {
+      "ko": "수강 후 5년이상 지남",
+      "en": "More than 5 years since last course"
+    },
+    "topicIds": []
+  },
+  {
+    "id": "housing",
+    "number": "3",
+    "question": {
+      "ko": "현재 귀하는 어디에 살고 계십니까?",
+      "en": "Where do you currently live?"
+    },
+    "answer": {
+      "ko": "개인 주택이나 아파트에 홀로 거주",
+      "en": "Living alone in a house or apartment"
+    },
+    "topicIds": ["housing"]
+  },
+  {
+    "id": "leisure",
+    "number": "4",
+    "question": {
+      "ko": "귀하는 여가 활동으로 주로 무엇을 하십니까?",
+      "en": "What do you usually do for leisure?"
+    },
+    "answer": {
+      "ko": "영화보기, 공연보기, 콘서트보기, 공원가기, 해변가기, 카페가기",
+      "en": "Watching movies, performances, concerts; going to parks, the beach, cafes"
+    },
+    "topicIds": ["movies", "performances", "concerts", "park", "beach", "cafe"]
+  },
+  {
+    "id": "hobbies",
+    "number": "5",
+    "question": {
+      "ko": "귀하의 취미나 관심사는 무엇입니까?",
+      "en": "What are your hobbies or interests?"
+    },
+    "answer": {
+      "ko": "음악 감상",
+      "en": "Listening to music"
+    },
+    "topicIds": ["music"]
+  },
+  {
+    "id": "sports",
+    "number": "6",
+    "question": {
+      "ko": "귀하는 주로 어떤 운동을 즐기십니까?",
+      "en": "What sports or exercise do you usually enjoy?"
+    },
+    "answer": {
+      "ko": "조깅, 걷기, 운동 안함",
+      "en": "Jogging, walking, no exercise"
+    },
+    "topicIds": ["jogging", "walking"]
+  },
+  {
+    "id": "travel",
+    "number": "7",
+    "question": {
+      "ko": "당신은 어떤 휴가나 출장을 다녀온 경험이 있습니까?",
+      "en": "What kind of vacation or business trip experience do you have?"
+    },
+    "answer": {
+      "ko": "집에서 보내는 휴가, 국내여행",
+      "en": "Staycation, domestic travel"
+    },
+    "topicIds": ["staycation", "domestic_travel"]
+  }
+]

@@ -1,0 +1,188 @@
+{
+  "surveyTopics": [
+    {
+      "id": "movies",
+      "label": { "ko": "영화보기", "en": "Watching Movies" }
+    },
+    {
+      "id": "performances",
+      "label": { "ko": "공연보기", "en": "Watching Performances" }
+    },
+    {
+      "id": "concerts",
+      "label": { "ko": "콘서트보기", "en": "Going to Concerts" }
+    },
+    {
+      "id": "park",
+      "label": { "ko": "공원가기", "en": "Going to Parks" }
+    },
+    {
+      "id": "beach",
+      "label": { "ko": "해변가기", "en": "Going to the Beach" }
+    },
+    {
+      "id": "cafe",
+      "label": { "ko": "카페가기", "en": "Going to Cafes" }
+    },
+    {
+      "id": "music",
+      "label": { "ko": "음악 감상", "en": "Listening to Music" }
+    },
+    {
+      "id": "jogging",
+      "label": { "ko": "조깅", "en": "Jogging" }
+    },
+    {
+      "id": "walking",
+      "label": { "ko": "걷기", "en": "Walking" }
+    },
+    {
+      "id": "staycation",
+      "label": { "ko": "집에서 보내는 휴가", "en": "Staycation" }
+    },
+    {
+      "id": "domestic_travel",
+      "label": { "ko": "국내여행", "en": "Domestic Travel" }
+    },
+    {
+      "id": "housing",
+      "label": { "ko": "주거", "en": "Housing" }
+    }
+  ],
+  "surpriseTopics": [
+    {
+      "id": "geography",
+      "label": { "ko": "지형", "en": "Geography" }
+    },
+    {
+      "id": "gathering",
+      "label": { "ko": "모임", "en": "Gatherings" }
+    },
+    {
+      "id": "free_time",
+      "label": { "ko": "자유시간", "en": "Free Time" }
+    },
+    {
+      "id": "hotel",
+      "label": { "ko": "호텔", "en": "Hotel" }
+    },
+    {
+      "id": "weather",
+      "label": { "ko": "날씨", "en": "Weather" }
+    },
+    {
+      "id": "holiday",
+      "label": { "ko": "명절", "en": "Holidays" }
+    },
+    {
+      "id": "health",
+      "label": { "ko": "건강", "en": "Health" }
+    },
+    {
+      "id": "internet",
+      "label": { "ko": "인터넷", "en": "Internet" }
+    },
+    {
+      "id": "phone",
+      "label": { "ko": "전화", "en": "Phone" }
+    },
+    {
+      "id": "restaurant",
+      "label": { "ko": "식당", "en": "Restaurant" }
+    },
+    {
+      "id": "furniture",
+      "label": { "ko": "가구", "en": "Furniture" }
+    },
+    {
+      "id": "appliances",
+      "label": { "ko": "가전", "en": "Home Appliances" }
+    },
+    {
+      "id": "technology",
+      "label": { "ko": "기술", "en": "Technology" }
+    },
+    {
+      "id": "fashion",
+      "label": { "ko": "패션", "en": "Fashion" }
+    },
+    {
+      "id": "neighborhood",
+      "label": { "ko": "동네", "en": "Neighborhood" }
+    },
+    {
+      "id": "bank",
+      "label": { "ko": "은행", "en": "Bank" }
+    },
+    {
+      "id": "reservation",
+      "label": { "ko": "예약", "en": "Reservations" }
+    }
+  ],
+  "comboQuestionTypes": [
+    {
+      "id": "activity_description",
+      "label": { "ko": "일상적인 활동 설명", "en": "Describe a daily activity" }
+    },
+    {
+      "id": "experience_description",
+      "label": { "ko": "경험 설명", "en": "Describe an experience" }
+    },
+    {
+      "id": "object_description",
+      "label": { "ko": "사물 설명", "en": "Describe an object" }
+    },
+    {
+      "id": "person_introduction",
+      "label": { "ko": "인물 소개", "en": "Introduce a person" }
+    },
+    {
+      "id": "place_description",
+      "label": { "ko": "공간 설명", "en": "Describe a place" }
+    },
+    {
+      "id": "routine",
+      "label": { "ko": "나만의 루틴", "en": "Describe your routine" }
+    },
+    {
+      "id": "first_motivation",
+      "label": { "ko": "첫 계기 설명", "en": "Describe how it started" }
+    },
+    {
+      "id": "memorable_experience",
+      "label": { "ko": "기억에 남는 경험", "en": "Describe a memorable experience" }
+    }
+  ],
+  "experienceEndingTypes": [
+    "experience_description",
+    "memorable_experience"
+  ],
+  "roleplayQuestionTypes": [
+    {
+      "id": "situation_questions",
+      "label": { "ko": "3,4가지 질문하기", "en": "Ask 3-4 questions" }
+    },
+    {
+      "id": "problem_solving",
+      "label": { "ko": "문제 대안 제시하기", "en": "Suggest alternatives" }
+    },
+    {
+      "id": "similar_experience",
+      "label": { "ko": "비슷한 경험", "en": "Similar experience" }
+    }
+  ],
+  "advancedQuestionTypes": [
+    {
+      "id": "past_present_comparison",
+      "label": { "ko": "차이점 비교하기", "en": "Compare differences" }
+    },
+    {
+      "id": "issue_discussion",
+      "label": { "ko": "이슈 설명", "en": "Discuss an issue" }
+    }
+  ],
+  "examComposition": {
+    "surveyToSurpriseRatio": [3, 2],
+    "comboQuestionsPerSet": 3
+  }
+}
