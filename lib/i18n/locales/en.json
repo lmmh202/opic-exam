@@ -100,6 +100,8 @@
   "피드백이 준비되었습니다!": "Feedback ready!",
   "분석 결과를 찾을 수 없습니다.": "Analysis result not found.",
   "분석에 실패했습니다": "Analysis failed",
+  "AI 서버가 일시적으로 혼잡합니다. 잠시 후 다시 시도해 주세요.": "The AI service is temporarily busy. Please try again in a moment.",
+  "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.": "Too many requests. Please try again in a moment.",
   "답변 분석 중 오류가 발생했습니다": "Error analyzing your answer",
   "최소 {seconds}초 이상 녹음해야 합니다.": "You must record for at least {seconds} seconds.",
   "녹음을 완료해 주세요. (최소 {seconds}초)": "Please complete the recording. (Min {seconds} seconds)",

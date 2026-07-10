@@ -41,6 +41,7 @@ import {
   getTopicLabel,
 } from "@/lib/opic-constants";
 import { useTranslation } from "@/components/i18n-provider";
+import type { TranslationKey } from "@/lib/i18n/dictionaries";
 
 function ExamPageContent() {
   const router = useRouter();
@@ -268,7 +269,12 @@ function ExamPageContent() {
           toast.error(t("분석 결과를 찾을 수 없습니다."));
         }
       } else {
-        toast.error(result.error || t("분석에 실패했습니다"));
+        toast.error(
+          t(
+            (result.error as TranslationKey) ||
+              "분석에 실패했습니다",
+          ),
+        );
       }
     } catch (error) {
       console.error(error);

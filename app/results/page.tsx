@@ -37,6 +37,7 @@ import {
   type ExamMode,
 } from "@/lib/exam-mode";
 import { useTranslation } from "@/components/i18n-provider";
+import type { TranslationKey } from "@/lib/i18n/dictionaries";
 
 function ResultsPageContent() {
   const { t } = useTranslation();
@@ -128,7 +129,12 @@ function ResultsPageContent() {
         setAnalysisComplete(true);
         toast.success(t("모든 문항 분석이 완료되었습니다!"));
       } else {
-        toast.error(result.error || t("분석에 실패했습니다"));
+        toast.error(
+          t(
+            (result.error as TranslationKey) ||
+              "분석에 실패했습니다",
+          ),
+        );
       }
     } catch (e) {
       console.error(e);
