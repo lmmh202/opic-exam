@@ -6,6 +6,7 @@ import {
   isDifficultyId,
   isSurveyTopic,
   isSurpriseTopic,
+  getLocalizedLabel,
   SURVEY_TOPIC_IDS,
   SURPRISE_TOPIC_IDS,
 } from "@/lib/opic-constants";
@@ -108,5 +109,13 @@ describe("topic and difficulty helpers", () => {
     expect(isDifficultyId("challenging")).toBe(true);
     expect(isDifficultyId("hard")).toBe(false);
     expect(isDifficultyId(undefined)).toBe(false);
+  });
+
+  it("resolves localized labels by locale", () => {
+    const label = { ko: "중요한 가구", en: "Important furniture" };
+    expect(getLocalizedLabel(label, "ko")).toBe("중요한 가구");
+    expect(getLocalizedLabel(label, "en")).toBe("Important furniture");
+    expect(getLocalizedLabel("plain string", "ko")).toBe("plain string");
+    expect(getLocalizedLabel(undefined, "ko", "fallback")).toBe("fallback");
   });
 });

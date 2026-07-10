@@ -20,6 +20,7 @@ type BankTopic = {
   surprise?: boolean;
   sets: Array<{
     id: string;
+    label?: { ko: string; en: string };
     difficulty?: string;
     questions: Array<{ type: string; text: string }>;
   }>;
@@ -116,5 +117,22 @@ describe("question-bank integrity", () => {
     }
 
     expect(duplicates).toEqual([]);
+  });
+
+  it("keeps set labels localized with ko and en", () => {
+    for (const category of ["combo", "roleplay", "comparison"] as const) {
+      for (const topic of bank[category]) {
+        for (const set of topic.sets) {
+          expect(set.label).toEqual(
+            expect.objectContaining({
+              ko: expect.any(String),
+              en: expect.any(String),
+            }),
+          );
+          expect(set.label!.ko.trim().length).toBeGreaterThan(0);
+          expect(set.label!.en.trim().length).toBeGreaterThan(0);
+        }
+      }
+    }
   });
 });

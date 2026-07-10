@@ -135,7 +135,7 @@ export default function PracticeHubPage() {
   const selectedTopic = filteredTopics.find((item) => item.id === topicId);
   const questionSets =
     topicId !== "random"
-      ? listPracticeQuestionSets(category, topicId, difficulty)
+      ? listPracticeQuestionSets(category, topicId, difficulty, locale)
       : [];
   const selectedSet = questionSets.find((s) => s.id === setId);
   const noMatchingSets = matchingSetCount === 0;
@@ -146,6 +146,16 @@ export default function PracticeHubPage() {
       : selectedTopic
         ? getTopicLabel(selectedTopic.id, locale, selectedTopic.topic)
         : t("주제를 선택하세요");
+
+  const setLabel =
+    setId === "random"
+      ? t("랜덤 세트")
+      : selectedSet
+        ? t("{name} ({count}문항)", {
+            name: selectedSet.label,
+            count: selectedSet.questionCount,
+          })
+        : t("랜덤 세트");
 
   const difficultyHelper =
     difficulty === "challenging"
@@ -472,24 +482,40 @@ export default function PracticeHubPage() {
 
                 {topicId !== "random" && (
                   <div className="space-y-2">
-                    <Label htmlFor="practice-set">{t("문항 세트")}</Label>
-                    <select
-                      id="practice-set"
-                      value={setId}
-                      onChange={(e) => setSetId(e.target.value)}
-                      className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-                    >
-                      <option value="random">{t("랜덤 세트")}</option>
-                      {questionSets.map((set) => (
-                        <option key={set.id} value={set.id}>
-                          {t("{name} ({count}문항)", {
-                            name: set.label,
-                            count: set.questionCount,
-                          })}
-                          {` · ${getDifficultyLabel(set.difficulty, locale)}`}
-                        </option>
-                      ))}
-                    </select>
+                    <Label id="practice-set-label">{t("문항 세트")}</Label>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between font-normal"
+                          aria-labelledby="practice-set-label"
+                        >
+                          <span className="truncate">{setLabel}</span>
+                          <ChevronDown className="size-4 shrink-0 opacity-50" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="start"
+                        className="w-(--radix-dropdown-menu-trigger-width) max-h-72"
+                      >
+                        <SelectMenuItem
+                          label={t("랜덤 세트")}
+                          selected={setId === "random"}
+                          onSelect={() => setSetId("random")}
+                        />
+                        {questionSets.map((set) => (
+                          <SelectMenuItem
+                            key={set.id}
+                            label={t("{name} ({count}문항)", {
+                              name: set.label,
+                              count: set.questionCount,
+                            })}
+                            selected={setId === set.id}
+                            onSelect={() => setSetId(set.id)}
+                          />
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 )}
 

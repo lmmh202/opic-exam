@@ -122,5 +122,21 @@ describe("practice listing helpers", () => {
     expect(sets.length).toBeGreaterThan(0);
     expect(sets.every((s) => s.difficulty === "standard")).toBe(true);
     expect(countPracticeSets("combo", "standard")).toBeGreaterThan(0);
+
+    const furnitureKo = listPracticeQuestionSets(
+      "combo",
+      "furniture",
+      "standard",
+      "ko",
+    );
+    const furnitureEn = listPracticeQuestionSets(
+      "combo",
+      "furniture",
+      "standard",
+      "en",
+    );
+    expect(furnitureKo[0]?.label).toMatch(/[가-힣]/);
+    expect(furnitureEn[0]?.label).toMatch(/[A-Za-z]/);
+    expect(furnitureKo[0]?.label).not.toBe(furnitureEn[0]?.label);
   });
 });

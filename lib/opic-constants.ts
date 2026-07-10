@@ -148,6 +148,16 @@ export function getTopicLabel(
   return topic.label[locale] ?? topic.label.ko ?? fallback ?? topicId ?? "";
 }
 
+export function getLocalizedLabel(
+  label: LocalizedLabel | string | undefined | null,
+  locale: Locale = "ko",
+  fallback = "",
+): string {
+  if (!label) return fallback;
+  if (typeof label === "string") return label;
+  return label[locale] ?? label.ko ?? label.en ?? fallback;
+}
+
 export function getQuestionTypeLabel(
   typeId: string,
   locale: Locale = "ko",

@@ -1,9 +1,12 @@
 import questionBank from "@/public/question-bank.json";
 import {
   DEFAULT_DIFFICULTY,
+  getLocalizedLabel,
   type DifficultyId,
+  type LocalizedLabel,
   isDifficultyId,
 } from "@/lib/opic-constants";
+import type { Locale } from "@/lib/i18n/config";
 
 export interface Question {
   id: number;
@@ -22,7 +25,7 @@ interface QuestionItem {
 
 interface QuestionSet {
   id: string;
-  label?: string;
+  label?: LocalizedLabel | string;
   difficulty?: DifficultyId;
   questions: QuestionItem[];
 }
@@ -249,12 +252,13 @@ export function listPracticeQuestionSets(
   category: PracticeCategory,
   topicId: string,
   difficulty?: DifficultyId | "random",
+  locale: Locale = "ko",
 ): PracticeQuestionSet[] {
   const topic = findTopic(category, topicId);
   return filterSetsByDifficulty(topic.sets, difficulty).map((set, index) => ({
     id: set.id,
     topicId: topic.id,
-    label: set.label ?? `Set ${index + 1}`,
+    label: getLocalizedLabel(set.label, locale, `Set ${index + 1}`),
     questionCount: set.questions.length,
     difficulty: normalizeDifficulty(set.difficulty),
   }));

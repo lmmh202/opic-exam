@@ -111,7 +111,7 @@ function makeComboPrompt({
     "",
     "Output JSON fields:",
     "- sets[].targetTopicId",
-    "- sets[].label (short English label)",
+    "- sets[].label ({ko, en} short labels that summarize the question arc, e.g. {\"ko\":\"중요한 가구, 최근 구매와 조립 문제\",\"en\":\"Important furniture, last purchase & assembly issue\"} — not just the topic name)",
     "- sets[].isSurprise (boolean: true only for surprise topics)",
     `- sets[].difficulty (must be \"${difficulty}\")`,
     "- sets[].questions[0..2]: {type, text}",
@@ -165,7 +165,7 @@ function makeRoleplayPrompt({
     "",
     "Output JSON fields:",
     "- sets[].targetTopicId",
-    "- sets[].label (short English label)",
+    "- sets[].label ({ko, en} short labels that summarize the roleplay situation, e.g. {\"ko\":\"저녁 식사 예약하기\",\"en\":\"Making a dinner reservation\"} — not just the topic name)",
     `- sets[].difficulty (must be \"${difficulty}\")`,
     "- sets[].questions[0..2]: {type, text}",
     "",
@@ -213,7 +213,7 @@ function makeComparisonPrompt({
     "",
     "Output JSON fields:",
     "- sets[].targetTopicId",
-    "- sets[].label (short English label)",
+    "- sets[].label ({ko, en} short labels that summarize the comparison focus, e.g. {\"ko\":\"과거와 현재 주거 비교, 사회 이슈\",\"en\":\"Housing then vs now & social issues\"} — not just the topic name)",
     `- sets[].difficulty (must be \"${difficulty}\")`,
     "- sets[].questions[0..1]: {type, text}",
     "",
@@ -232,7 +232,14 @@ const setItemSchema = {
   type: SchemaType.OBJECT,
   properties: {
     targetTopicId: { type: SchemaType.STRING },
-    label: { type: SchemaType.STRING },
+    label: {
+      type: SchemaType.OBJECT,
+      properties: {
+        ko: { type: SchemaType.STRING },
+        en: { type: SchemaType.STRING },
+      },
+      required: ["ko", "en"],
+    },
     isSurprise: { type: SchemaType.BOOLEAN },
     difficulty: { type: SchemaType.STRING },
     questions: {
@@ -289,7 +296,18 @@ function appendGeneratedSets({
       topicConstant,
       category === "combo" ? { isSurprise: generatedSet.isSurprise } : {},
     );
-    const idSeed = normalize(generatedSet.label).replace(/[^a-z0-9]+/g, "-");
+    const labelEn =
+      typeof generatedSet.label === "string"
+        ? generatedSet.label
+        : generatedSet.label?.en;
+    const labelKo =
+      typeof generatedSet.label === "string"
+        ? generatedSet.label
+        : generatedSet.label?.ko;
+    const idSeed = normalize(labelEn || labelKo || "set").replace(
+      /[^a-z0-9]+/g,
+      "-",
+    );
     const newSetId = `${topic.id}-auto-${now}-${idSeed || "set"}`.slice(0, 80);
     const uniqueId = topic.sets.some((s) => s.id === newSetId)
       ? `${newSetId}-${Math.random().toString(36).slice(2, 7)}`
@@ -297,7 +315,10 @@ function appendGeneratedSets({
 
     topic.sets.push({
       id: uniqueId,
-      label: generatedSet.label,
+      label: {
+        ko: labelKo || labelEn || "세트",
+        en: labelEn || labelKo || "Set",
+      },
       difficulty: VALID_DIFFICULTIES.has(generatedSet.difficulty)
         ? generatedSet.difficulty
         : "standard",

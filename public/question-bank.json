@@ -35,7 +35,11 @@
               "text": "Tell me about a memorable outdoor experience related to the geography of your country. What happened, and why do you still remember it?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "지역 지형, 최근 여행과 기억에 남는 장소",
+            "en": "Local geography, recent trip & memorable place"
+          }
         }
       ]
     },
@@ -64,7 +68,11 @@
               "text": "Tell me about an interesting thing that has happened at a park. What happened? Why was it so memorable?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "공원 활동, 첫 방문과 기억에 남는 하루",
+            "en": "Park activities, first visit & memorable day"
+          }
         }
       ]
     },
@@ -94,7 +102,11 @@
               "text": "Tell me about the most memorable movie you watched in the past. What was it about and why was it memorable?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "좋아하는 배우, 영화 취향 변화와 기억에 남는 영화",
+            "en": "Favorite actor, how movies changed & memorable film"
+          }
         }
       ]
     },
@@ -124,7 +136,11 @@
               "text": "Tell me about a memorable experience related to music. Did you go to a concert or did you listen to a song that made you feel happy or sad? What happened and why was it memorable?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "음악 취향, 변화와 기억에 남는 순간",
+            "en": "Music taste, how it changed & memorable moment"
+          }
         }
       ]
     },
@@ -153,7 +169,11 @@
               "text": "Tell me about a memorable concert you attended. Who was performing and what made it special?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "공연장, 최근 공연과 기억에 남는 밤",
+            "en": "Concert venue, recent show & memorable night"
+          }
         }
       ]
     },
@@ -183,11 +203,18 @@
               "text": "Tell me about a performance that left a strong impression on you. What was it and why was it memorable?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "공연 종류, 최근 관람과 기억에 남는 경험",
+            "en": "Performance types, recent show & memorable experience"
+          }
         },
         {
           "id": "performances-auto-2026-07-09-watching-performances",
-          "label": "Watching Performances",
+          "label": {
+            "ko": "공연 취향, 변화와 문제 경험",
+            "en": "Performance tastes, how they changed & a problem"
+          },
           "difficulty": "challenging",
           "questions": [
             {
@@ -232,7 +259,11 @@
               "text": "Tell me about a memorable camping experience. What happened and why do you remember it?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "캠핑 장소, 최근 여행과 기억에 남는 나들이",
+            "en": "Camping spot, recent trip & memorable outing"
+          }
         }
       ]
     },
@@ -262,11 +293,18 @@
               "text": "Tell me about a memorable experience at the beach. What happened and why was it special?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "좋아하는 해변, 최근 방문과 기억에 남는 하루",
+            "en": "Favorite beach, recent visit & memorable day"
+          }
         },
         {
           "id": "beach-auto-2026-07-09-going-to-the-beach",
-          "label": "Going to the Beach",
+          "label": {
+            "ko": "해변 활동, 최근 방문과 기억에 남는 하루",
+            "en": "Beach activities, recent visit & memorable day"
+          },
           "questions": [
             {
               "type": "activity_description",
@@ -285,7 +323,10 @@
         },
         {
           "id": "beach-auto-2026-07-09-going-to-the-beach-oj04m",
-          "label": "Going to the Beach",
+          "label": {
+            "ko": "해변 루틴, 최근 방문과 기억에 남는 하루",
+            "en": "Beach routine, recent visit & memorable day"
+          },
           "difficulty": "standard",
           "questions": [
             {
@@ -330,7 +371,11 @@
               "text": "Tell me about a memorable experience while jogging. Did you see something interesting or did something unexpected happen?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "조깅 루틴, 변화와 기억에 남는 러닝",
+            "en": "Jogging routine, how it changed & memorable run"
+          }
         }
       ]
     },
@@ -359,11 +404,18 @@
               "text": "Tell me about something interesting that happened while you were walking. What did you see or experience?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "걷기 습관, 최근 산책과 기억에 남는 나들이",
+            "en": "Walking habits, recent walk & memorable outing"
+          }
         },
         {
           "id": "walking-auto-2026-07-09-walking",
-          "label": "Walking",
+          "label": {
+            "ko": "걷기 루틴, 변화와 문제 경험",
+            "en": "Walking routine, how it changed & a problem"
+          },
           "difficulty": "standard",
           "questions": [
             {
@@ -382,7 +434,10 @@
         },
         {
           "id": "walking-auto-2026-07-09-walking-utswm",
-          "label": "Walking",
+          "label": {
+            "ko": "걷기 루틴, 변화와 기억에 남는 산책",
+            "en": "Walking routine, how it changed & memorable walk"
+          },
           "difficulty": "challenging",
           "questions": [
             {
@@ -427,11 +482,18 @@
               "text": "Tell me about an unexpected or awkward situation involving your neighbors or your home. What happened, and how did you handle it?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "아파트 묘사, 최근 이사와 주거 문제",
+            "en": "Apartment description, recent move & housing problem"
+          }
         },
         {
           "id": "housing-auto-2026-07-09-housing",
-          "label": "Housing",
+          "label": {
+            "ko": "현재 집, 과거 주거 경험과 기억에 남는 이야기",
+            "en": "Current home, past housing experience & memorable story"
+          },
           "questions": [
             {
               "type": "place_description",
@@ -450,7 +512,10 @@
         },
         {
           "id": "housing-auto-2026-07-09-housing-g0nw1",
-          "label": "Housing",
+          "label": {
+            "ko": "현재 집, 변화와 주거 문제",
+            "en": "Current home, how it changed & a housing problem"
+          },
           "difficulty": "standard",
           "questions": [
             {
@@ -496,7 +561,11 @@
               "text": "Tell me about a memorable experience online. Did something unexpected happen while using the internet? What was it, and how did you deal with it?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "인터넷 습관, 변화와 기억에 남는 순간",
+            "en": "Online habits, how they changed & memorable moment"
+          }
         }
       ]
     },
@@ -526,11 +595,18 @@
               "text": "Tell me about a memorable domestic trip. Where did you go and what made it special?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "국내 여행지, 최근 여행과 기억에 남는 경험",
+            "en": "Domestic destination, recent trip & memorable travel"
+          }
         },
         {
           "id": "domestic_travel-auto-2026-07-09-domestic-travel",
-          "label": "Domestic Travel",
+          "label": {
+            "ko": "여행 준비 루틴, 최근 여행과 기억에 남는 경험",
+            "en": "Trip planning routine, recent trip & memorable travel"
+          },
           "questions": [
             {
               "type": "routine",
@@ -549,7 +625,10 @@
         },
         {
           "id": "domestic_travel-auto-2026-07-09-domestic-travel-ihjwc",
-          "label": "Domestic Travel",
+          "label": {
+            "ko": "여행 취향, 최근 여행과 기억에 남는 경험",
+            "en": "Travel preferences, recent trip & memorable travel"
+          },
           "difficulty": "standard",
           "questions": [
             {
@@ -594,7 +673,11 @@
               "text": "Tell me about a memorable staycation experience. What did you do that made it enjoyable or unexpected?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "집콕 휴가 활동, 변화와 기억에 남는 하루",
+            "en": "Staycation activities, how they changed & memorable day"
+          }
         }
       ]
     },
@@ -609,7 +692,10 @@
       "sets": [
         {
           "id": "furniture-auto-2026-07-09-furniture",
-          "label": "Furniture",
+          "label": {
+            "ko": "중요한 가구, 최근 구매와 조립 문제",
+            "en": "Important furniture, last purchase & assembly issue"
+          },
           "questions": [
             {
               "type": "object_description",
@@ -628,7 +714,10 @@
         },
         {
           "id": "furniture-auto-2026-07-09-furniture-himvq",
-          "label": "Furniture",
+          "label": {
+            "ko": "자주 쓰는 가구, 첫 구매와 이사 이야기",
+            "en": "Everyday furniture, first purchase & moving story"
+          },
           "difficulty": "standard",
           "questions": [
             {
@@ -647,7 +736,10 @@
         },
         {
           "id": "furniture-auto-2026-07-09-furniture-5ii71",
-          "label": "Furniture",
+          "label": {
+            "ko": "좋아하는 가구, 첫 구매와 예상치 못한 일",
+            "en": "Favorite furniture, first purchase & unexpected incident"
+          },
           "difficulty": "challenging",
           "questions": [
             {
@@ -666,7 +758,10 @@
         },
         {
           "id": "furniture-auto-2026-07-09-furniture-3umni",
-          "label": "Furniture",
+          "label": {
+            "ko": "가구 취향, 최근 구매와 문제 경험",
+            "en": "Furniture preferences, recent buy & a problem"
+          },
           "difficulty": "standard",
           "questions": [
             {
@@ -696,7 +791,10 @@
       "sets": [
         {
           "id": "weather-auto-2026-07-09-weather",
-          "label": "Weather",
+          "label": {
+            "ko": "날씨와 일상 계획, 최근 하루와 기억에 남는 날씨",
+            "en": "Weather and daily plans, recent day & memorable weather"
+          },
           "questions": [
             {
               "type": "activity_description",
@@ -725,7 +823,10 @@
       "sets": [
         {
           "id": "cafe-auto-2026-07-09-going-to-cafes",
-          "label": "Going to Cafes",
+          "label": {
+            "ko": "카페 취향, 최근 방문과 기억에 남는 카페",
+            "en": "Cafe preferences, recent visit & memorable cafe"
+          },
           "difficulty": "challenging",
           "questions": [
             {
@@ -744,7 +845,10 @@
         },
         {
           "id": "cafe-auto-2026-07-09-going-to-cafes-tt5tx",
-          "label": "Going to Cafes",
+          "label": {
+            "ko": "좋아하는 카페, 최근 방문과 카페 문제",
+            "en": "Favorite cafe, recent visit & a cafe problem"
+          },
           "difficulty": "challenging",
           "questions": [
             {
@@ -774,7 +878,10 @@
       "sets": [
         {
           "id": "technology-auto-2026-07-09-technology",
-          "label": "Technology",
+          "label": {
+            "ko": "일상 속 기술 사용, 변화와 기술 문제",
+            "en": "Daily tech use, how it changed & a tech problem"
+          },
           "difficulty": "challenging",
           "questions": [
             {
@@ -815,7 +922,11 @@
               "text": "That's the end of the situation. Have you ever ordered anything to your home and was not satisfied with the product or service? Tell me what the problem was and how you dealt with the situation."
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "새 휴대폰 구매하기",
+            "en": "Buying a new cellphone"
+          }
         }
       ]
     },
@@ -839,7 +950,11 @@
               "text": "That's the end of the situation. Have you ever experienced a problem while traveling? What happened and how did you solve it?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "여행사로 해외여행 계획하기",
+            "en": "Planning overseas travel with an agency"
+          }
         }
       ]
     },
@@ -863,11 +978,18 @@
               "text": "That's the end of the situation. Have you ever lost something at a restaurant or store? Tell me what happened and how you resolved the situation."
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "근처 가게에 대해 직원에게 묻기",
+            "en": "Asking staff about a nearby store"
+          }
         },
         {
           "id": "restaurant-auto-2026-07-09-restaurant-reservation",
-          "label": "Restaurant Reservation",
+          "label": {
+            "ko": "저녁 식사 예약하기",
+            "en": "Making a dinner reservation"
+          },
           "difficulty": "standard",
           "questions": [
             {
@@ -906,11 +1028,18 @@
               "text": "That's the end of the situation. Have you ever had a problem with a hotel reservation or during your stay at a hotel? What happened and how did you handle it?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "휴가용 호텔 객실 예약하기",
+            "en": "Booking a hotel room for vacation"
+          }
         },
         {
           "id": "hotel-auto-2026-07-09-hotel-reservation",
-          "label": "Hotel Reservation",
+          "label": {
+            "ko": "전화로 호텔 객실 예약하기",
+            "en": "Calling to book a hotel room"
+          },
           "difficulty": "standard",
           "questions": [
             {
@@ -949,11 +1078,18 @@
               "text": "That's the end of the situation. Have you ever had to cancel or reschedule an important appointment? Tell me what happened and how you dealt with it."
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "병원 예약하기",
+            "en": "Making a clinic appointment"
+          }
         },
         {
           "id": "appointment-auto-2026-07-09-appointment",
-          "label": "Appointment",
+          "label": {
+            "ko": "전화로 의사 진료 예약하기",
+            "en": "Calling for a doctor's appointment"
+          },
           "difficulty": "standard",
           "questions": [
             {
@@ -982,7 +1118,10 @@
       "sets": [
         {
           "id": "gym-auto-2026-07-09-joining-a-gym",
-          "label": "Joining a Gym",
+          "label": {
+            "ko": "새 헬스장 등록하기",
+            "en": "Joining a new gym"
+          },
           "difficulty": "standard",
           "questions": [
             {
@@ -1019,11 +1158,18 @@
               "text": "People face with various problems when they rent a house. What is a major issue they experience in your country, and how do people deal with that problem?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "어린 시절과 현재 집 비교, 주거 이슈",
+            "en": "Childhood vs current home & housing issues"
+          }
         },
         {
           "id": "housing-auto-2026-07-09-housing-past-and-present",
-          "label": "Housing Past and Present",
+          "label": {
+            "ko": "과거와 현재 주거 비교, 사회 이슈",
+            "en": "Housing then vs now & social issues"
+          },
           "difficulty": "standard",
           "questions": [
             {
@@ -1054,11 +1200,18 @@
               "text": "What are some issues people face with technology today? How do they deal with problems like privacy, addiction, or security?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "과거와 현재 소통 방식 비교, 기술 이슈",
+            "en": "Communication then vs now & tech issues"
+          }
         },
         {
           "id": "technology-auto-2026-07-09-communication-tech-evolution",
-          "label": "Communication Tech Evolution",
+          "label": {
+            "ko": "소통 기술 변화와 부작용",
+            "en": "How communication tech evolved & side effects"
+          },
           "difficulty": "standard",
           "questions": [
             {
@@ -1089,7 +1242,11 @@
               "text": "What are some issues that travelers discuss among friends these days? What topics related to travel are people talking about?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "과거와 현재 여행 비교, 여행 이슈",
+            "en": "Travel then vs now & travel issues"
+          }
         }
       ]
     },
@@ -1109,7 +1266,11 @@
               "text": "What are some current issues or trends in entertainment that people discuss? What concerns do people have about modern entertainment?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "과거와 현재 여가 비교, 미디어 이슈",
+            "en": "Entertainment then vs now & media issues"
+          }
         }
       ]
     },
@@ -1129,7 +1290,11 @@
               "text": "What health-related issues are people concerned about these days? How do people try to address these health concerns?"
             }
           ],
-          "difficulty": "standard"
+          "difficulty": "standard",
+          "label": {
+            "ko": "과거와 현재 건강 인식 비교, 피트니스 이슈",
+            "en": "Health attitudes then vs now & fitness issues"
+          }
         }
       ]
     }
