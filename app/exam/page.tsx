@@ -11,6 +11,7 @@ import type {
   QuestionAnalysis,
 } from "@/app/api/analyze/route";
 import { PracticeAnswerPanel } from "@/components/practice-answer-panel";
+import { PronunciationPracticePanel } from "@/components/pronunciation-practice-panel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -568,6 +569,22 @@ function ExamPageContent() {
                 onPlayAnswer={handlePlayMyAnswer}
                 onAnalyze={handleAnalyzeQuestion}
               />
+            )}
+
+            {mode === "practice" && (
+              <div className="w-full max-w-2xl mx-auto rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3 text-left">
+                <div>
+                  <h3 className="font-semibold text-slate-900">
+                    {t("발음 연습")}
+                  </h3>
+                  <p className="text-sm text-slate-600 mt-1">
+                    {t(
+                      "영어 문장을 입력하면 브라우저 TTS로 발음을 들려줍니다.",
+                    )}
+                  </p>
+                </div>
+                <PronunciationPracticePanel />
+              </div>
             )}
           </div>
         </CardContent>
