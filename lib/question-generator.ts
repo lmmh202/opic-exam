@@ -284,7 +284,7 @@ export function generatePracticeExam(
   const { category } = options;
   const difficulty = options.difficulty ?? "random";
   let topicId = options.topicId;
-  let setId = options.setId;
+  const setId = options.setId;
 
   const topicsWithSets = getTopicsForCategory(category).filter(
     (topic) => filterSetsByDifficulty(topic.sets, difficulty).length > 0,
