@@ -9,6 +9,50 @@ Next.js 기반 OPIc 모의시험 시뮬레이터. 사용자는 배경 설문(Sur
 - 패키지 매니저: `pnpm`
 - i18n: 쿠키 기반 (`NEXT_LOCALE`), URL prefix 없음 (`/ko`, `/en` 없음)
 - 번역: `t("한글키")` + `lib/i18n/locales/{ko,en}.json`
+- 테스트: Vitest (`pnpm run test`)
+
+---
+
+## 커밋 메시지
+
+커밋 메시지는 **짧은 한 줄 요약**으로 작성합니다.
+
+- 명령형(imperative) 현재형으로 시작: `Add`, `Fix`, `Update`, `Extract`, `Remove` 등
+- **끝에 마침표를 찍지 않음**
+- 가능하면 무엇을/왜인지 한 줄에 담기
+- 파일·심볼은 백틱으로 감싸도 됨
+
+예시:
+
+```text
+Add `AGENT.md` for agent
+Add Vitest for unit testing
+Extract question-bank generation validators
+Fix implicit any in generated-set validator tests
+```
+
+피하기:
+
+```text
+Added AGENT.md for agent.
+fix: something broke.
+wip
+```
+
+---
+
+## 테스트
+
+작업(코드·데이터·스크립트 변경)을 마친 뒤에는 **항상** 아래를 실행하고, 실패하면 통과할 때까지 고칩니다.
+
+```bash
+pnpm run test
+```
+
+- 러너: Vitest (`vitest.config.ts`)
+- 주요 범위: `lib/opic-constants`, `lib/question-generator`, `public/question-bank.json` 무결성, `scripts/lib/validate-generated-sets.mjs`
+- PR CI(`.github/workflows/ci.yml`)도 `pnpm test`를 실행하므로, 로컬에서 통과시킨 뒤 푸시하는 것을 기본으로 합니다
+- 테스트가 깨지는 변경은 커밋/PR 완료로 보지 않습니다
 
 ---
 
