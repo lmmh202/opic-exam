@@ -910,6 +910,50 @@
       ],
       "sets": [
         {
+          "id": "cafe-standard-place-recent-problem",
+          "difficulty": "standard",
+          "label": {
+            "ko": "자주 가는 카페, 최근 방문과 문제 경험",
+            "en": "Favorite cafe, recent visit & a problem"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Describe a cafe you like to visit. What does it look like, and what kind of atmosphere does it have?"
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about the last time you went to a cafe. Who did you go with, what did you order, and what did you do there?"
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever had a problem or an unexpected situation at a cafe, such as a wrong order or a long wait? What happened and how did you handle it?"
+            }
+          ]
+        },
+        {
+          "id": "cafe-default",
+          "difficulty": "standard",
+          "label": {
+            "ko": "카페 루틴, 첫 방문과 기억에 남는 경험",
+            "en": "Cafe routine, first visit & memorable experience"
+          },
+          "questions": [
+            {
+              "type": "routine",
+              "text": "You indicated that you enjoy going to cafes. Tell me about your usual cafe routine. How often do you go, and what do you typically do there?"
+            },
+            {
+              "type": "first_experience",
+              "text": "How did you first start going to cafes? When was your first memorable cafe visit, and why did you go there at that time?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable experience you had at a cafe. What happened, and why do you still remember it?"
+            }
+          ]
+        },
+        {
           "id": "cafe-auto-2026-07-09-going-to-cafes",
           "label": {
             "ko": "카페 취향, 최근 방문과 기억에 남는 카페",
@@ -1279,6 +1323,34 @@
             {
               "type": "similar_experience",
               "text": "Tell me about a time you had to reschedule or cancel an important appointment in your real life. What was the reason, and how did you manage the change?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cafe",
+      "label": "Cafe",
+      "sets": [
+        {
+          "id": "cafe-default",
+          "difficulty": "standard",
+          "label": {
+            "ko": "새 카페에 전화해 정보 묻기",
+            "en": "Calling a new cafe for information"
+          },
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "I'd like to give you a situation to act out. You want to visit a new cafe with a friend this weekend. Call the cafe and ask three or four questions about their location, opening hours, menu, or seating options."
+            },
+            {
+              "type": "problem_solving",
+              "text": "I'm sorry, but there is a problem. Your friend just called and said they can't meet at the planned time. Call your friend back, explain the situation, and suggest two or three alternatives, such as changing the time, meeting on another day, or choosing a different place."
+            },
+            {
+              "type": "similar_experience",
+              "text": "That's the end of the situation. Have you ever had to change or cancel cafe plans with a friend at the last minute? Tell me what happened and how you handled it."
             }
           ]
         }
