@@ -2,6 +2,14 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { GoogleGenAI, Type as SchemaType } from "@google/genai";
+import {
+  VALID_DIFFICULTIES,
+  collectExistingTexts,
+  normalize,
+  validateComboSet,
+  validateComparisonSet,
+  validateRoleplaySet,
+} from "./lib/validate-generated-sets.mjs";
 
 const ROOT = process.cwd();
 const QUESTION_BANK_PATH = path.join(ROOT, "public", "question-bank.json");
@@ -20,11 +28,6 @@ const DAILY_COMPARISON_SET_COUNT = Number(
   process.env.DAILY_COMPARISON_SET_COUNT ?? 1,
 );
 const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
-const VALID_DIFFICULTIES = new Set(["standard", "challenging"]);
-
-function normalize(text) {
-  return String(text).toLowerCase().replace(/\s+/g, " ").trim();
-}
 
 function randomPick(array, count) {
   const shuffled = [...array];
@@ -40,20 +43,6 @@ function splitByRatio(total, [surveyRatio, surpriseRatio]) {
   const surpriseCount = Math.max(1, Math.round((total * surpriseRatio) / parts));
   const surveyCount = Math.max(1, total - surpriseCount);
   return { surveyCount, surpriseCount };
-}
-
-function collectExistingTexts(bank) {
-  const texts = new Set();
-  for (const category of ["combo", "roleplay", "comparison"]) {
-    for (const topic of bank[category] ?? []) {
-      for (const set of topic.sets ?? []) {
-        for (const q of set.questions ?? []) {
-          texts.add(normalize(q.text));
-        }
-      }
-    }
-  }
-  return texts;
 }
 
 function difficultyWritingRules(difficulty, difficulties) {
@@ -260,73 +249,6 @@ const setItemSchema = {
   },
   required: ["targetTopicId", "label", "difficulty", "questions"],
 };
-
-function stageCount(stages) {
-  return Object.keys(stages).length;
-}
-
-function validateStagedSet(
-  set,
-  { stages, existingQuestionTexts, topicIds, expectedDifficulty },
-) {
-  const expectedCount = stageCount(stages);
-  if (!set || typeof set !== "object") return false;
-  if (!set.targetTopicId || typeof set.targetTopicId !== "string") return false;
-  if (!topicIds.includes(set.targetTopicId)) return false;
-  if (!VALID_DIFFICULTIES.has(set.difficulty)) return false;
-  if (expectedDifficulty && set.difficulty !== expectedDifficulty) return false;
-  if (!Array.isArray(set.questions) || set.questions.length !== expectedCount) {
-    return false;
-  }
-
-  for (let i = 0; i < expectedCount; i += 1) {
-    const q = set.questions[i];
-    const stageKey = String(i + 1);
-    if (!q || typeof q.text !== "string" || typeof q.type !== "string") {
-      return false;
-    }
-    if (!stages[stageKey].includes(q.type)) return false;
-    if (q.text.length < 30) return false;
-    if (existingQuestionTexts.has(normalize(q.text))) return false;
-  }
-
-  return true;
-}
-
-function validateComboSet(set, context) {
-  if (typeof set.isSurprise !== "boolean") return false;
-  if (set.isSurprise) {
-    if (!context.surpriseTopicIds.includes(set.targetTopicId)) return false;
-  } else if (!context.surveyTopicIds.includes(set.targetTopicId)) {
-    return false;
-  }
-  return validateStagedSet(set, {
-    stages: context.comboStages,
-    existingQuestionTexts: context.existingQuestionTexts,
-    topicIds: set.isSurprise
-      ? context.surpriseTopicIds
-      : context.surveyTopicIds,
-    expectedDifficulty: context.expectedDifficulty,
-  });
-}
-
-function validateRoleplaySet(set, context) {
-  return validateStagedSet(set, {
-    stages: context.roleplayStages,
-    existingQuestionTexts: context.existingQuestionTexts,
-    topicIds: context.roleplayTopicIds,
-    expectedDifficulty: context.expectedDifficulty ?? "standard",
-  });
-}
-
-function validateComparisonSet(set, context) {
-  return validateStagedSet(set, {
-    stages: context.comparisonStages,
-    existingQuestionTexts: context.existingQuestionTexts,
-    topicIds: context.comparisonTopicIds,
-    expectedDifficulty: context.expectedDifficulty ?? "standard",
-  });
-}
 
 function ensureTopicExists(bank, category, topicConstant, options = {}) {
   const list = bank[category];
