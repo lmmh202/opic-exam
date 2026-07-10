@@ -340,6 +340,7 @@ function ExamPageContent() {
       stopRecording();
       setIsRecording(false);
     } else {
+      setRecordingDuration(0);
       await startRecording();
       setIsRecording(true);
     }
@@ -524,13 +525,23 @@ function ExamPageContent() {
                 )}
               </div>
 
-              {isStoreRecording && config.enforceMinRecording && (
+              {isStoreRecording && (
                 <span
-                  className={`text-sm font-medium ${needsMinRecording() && !skipEnabled ? "text-red-500" : "text-green-600"}`}
+                  className={`text-sm font-medium tabular-nums ${
+                    config.enforceMinRecording &&
+                    needsMinRecording() &&
+                    !skipEnabled
+                      ? "text-red-500"
+                      : "text-slate-700"
+                  }`}
                 >
                   {Math.floor(recordingDuration / 60)}:
                   {(recordingDuration % 60).toString().padStart(2, "0")}
-                  {needsMinRecording() &&
+                  <span className="ml-1.5 text-slate-500 font-normal">
+                    ({t("{seconds}초", { seconds: recordingDuration })})
+                  </span>
+                  {config.enforceMinRecording &&
+                    needsMinRecording() &&
                     !skipEnabled &&
                     ` ${t("(최소 {seconds}초)", { seconds: minRecordingDuration })}`}
                 </span>
@@ -539,6 +550,11 @@ function ExamPageContent() {
               {hasRecording && !isStoreRecording && (
                 <span className="text-sm text-green-600 font-medium">
                   {t("답변이 녹음되었습니다")}
+                  {recordingDuration > 0 && (
+                    <span className="ml-1.5 tabular-nums text-slate-500 font-normal">
+                      ({t("{seconds}초", { seconds: recordingDuration })})
+                    </span>
+                  )}
                 </span>
               )}
             </div>
