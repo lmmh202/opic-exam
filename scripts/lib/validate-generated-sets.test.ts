@@ -1,6 +1,5 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
 import { describe, expect, it } from "vitest";
+import constants from "@/data/opic-constants.json";
 import {
   collectExistingTexts,
   normalize,
@@ -9,24 +8,19 @@ import {
   validateRoleplaySet,
 } from "./validate-generated-sets.mjs";
 
-const root = path.resolve(__dirname, "../..");
-const constants = JSON.parse(
-  readFileSync(path.join(root, "data/opic-constants.json"), "utf8"),
-);
-
 const LONG_TEXT =
   "Please describe this topic in detail with enough words for validation.";
 
 function baseContext() {
   return {
-    surveyTopicIds: constants.surveyTopics.map((t) => t.id),
-    surpriseTopicIds: constants.surpriseTopics.map((t) => t.id),
-    roleplayTopicIds: (constants.roleplayTopics ?? []).map((t) => t.id),
-    comparisonTopicIds: (constants.comparisonTopics ?? []).map((t) => t.id),
+    surveyTopicIds: constants.surveyTopics.map((topic) => topic.id),
+    surpriseTopicIds: constants.surpriseTopics.map((topic) => topic.id),
+    roleplayTopicIds: constants.roleplayTopics.map((topic) => topic.id),
+    comparisonTopicIds: constants.comparisonTopics.map((topic) => topic.id),
     comboStages: constants.comboStages,
     roleplayStages: constants.roleplayStages,
     comparisonStages: constants.comparisonStages,
-    existingQuestionTexts: new Set(),
+    existingQuestionTexts: new Set<string>(),
   };
 }
 
