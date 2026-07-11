@@ -12,6 +12,24 @@ import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { useTranslation } from "@/components/i18n-provider";
 import surveyData from "@/data/survey.json";
 
+const MIC_CHECK_STORAGE_KEY = "opic-mic-check-completed";
+
+function readStoredMicCheck(): boolean {
+  try {
+    return localStorage.getItem(MIC_CHECK_STORAGE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function writeStoredMicCheck() {
+  try {
+    localStorage.setItem(MIC_CHECK_STORAGE_KEY, "1");
+  } catch {
+    // ignore quota / private mode
+  }
+}
+
 interface ExamSetupPanelProps {
   children?: React.ReactNode;
   startLabel: React.ReactNode;
@@ -37,16 +55,64 @@ export function ExamSetupPanel({
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [micStatus, setMicStatus] = useState<"idle" | "testing" | "success">("idle");
+  const [micAccessReady, setMicAccessReady] = useState(() =>
+    typeof window !== "undefined" ? readStoredMicCheck() : false,
+  );
 
   const { startRecording, stopRecording, isRecording, visualizerData } = useAudioRecorder({
     onStop: (blob) => {
       const url = URL.createObjectURL(blob);
       setAudioUrl(url);
       setMicStatus("success");
+      writeStoredMicCheck();
+      setMicAccessReady(true);
     },
   });
 
   const { setSkipSettings } = useExamStore();
+
+  useEffect(() => {
+    let cancelled = false;
+    let permissionStatus: PermissionStatus | null = null;
+
+    const markReady = () => {
+      if (!cancelled) setMicAccessReady(true);
+    };
+
+    if (readStoredMicCheck()) {
+      markReady();
+    }
+
+    async function checkPermission() {
+      try {
+        if (!navigator.permissions?.query) return;
+        permissionStatus = await navigator.permissions.query({
+          name: "microphone" as PermissionName,
+        });
+        if (cancelled) return;
+        if (permissionStatus.state === "granted") {
+          markReady();
+        }
+        permissionStatus.onchange = () => {
+          if (permissionStatus?.state === "granted") {
+            markReady();
+            writeStoredMicCheck();
+          }
+        };
+      } catch {
+        // Permissions API unsupported (e.g. some Safari versions)
+      }
+    }
+
+    void checkPermission();
+
+    return () => {
+      cancelled = true;
+      if (permissionStatus) {
+        permissionStatus.onchange = null;
+      }
+    };
+  }, []);
 
   const handleStart = () => {
     if (showRecordingSettings) {
@@ -98,7 +164,8 @@ export function ExamSetupPanel({
     };
   }, [audioUrl]);
 
-  const micReady = micStatus === "success" && !!audioUrl;
+  const micTestedThisVisit = micStatus === "success" && !!audioUrl;
+  const micReady = micAccessReady || micTestedThisVisit;
   const isStartDisabled = !micReady || startDisabled;
   const disabledReason = !micReady
     ? t("마이크 점검을 완료하세요.")
@@ -149,16 +216,18 @@ export function ExamSetupPanel({
           {micReady && (
             <div className="flex items-center gap-2">
               <span className="text-green-600 text-sm font-medium flex items-center gap-1">
-                <CheckCircle2 className="w-4 h-4" /> {t("소리 감지됨")}
+                <CheckCircle2 className="w-4 h-4" /> {micTestedThisVisit ? t("소리 감지됨") : t("마이크 권한 허용됨")}
               </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleRetry}
-                className="text-slate-500 hover:text-slate-900 h-8 px-2 text-xs"
-              >
-                <RotateCcw className="w-3 h-3 mr-1" /> {t("다시 시도")}
-              </Button>
+              {micTestedThisVisit && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleRetry}
+                  className="text-slate-500 hover:text-slate-900 h-8 px-2 text-xs"
+                >
+                  <RotateCcw className="w-3 h-3 mr-1" /> {t("다시 시도")}
+                </Button>
+              )}
             </div>
           )}
         </div>
@@ -203,7 +272,9 @@ export function ExamSetupPanel({
             ? t("듣는 중... 말해서 테스트하세요.")
             : audioUrl
               ? t("재생을 눌러 목소리를 확인하세요.")
-              : t("마이크를 눌러 테스트를 시작하세요.")}
+              : micAccessReady
+                ? t("선택 사항: 마이크를 눌러 소리를 확인해 보세요.")
+                : t("마이크를 눌러 테스트를 시작하세요.")}
         </p>
       </div>
 
