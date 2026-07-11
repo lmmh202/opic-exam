@@ -1,18 +1,7 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
-import {
-  DEFAULT_LOCALE,
-  LOCALE_COOKIE,
-  LOCALE_MAX_AGE,
-  type Locale,
-} from "@/lib/i18n/config";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { DEFAULT_LOCALE, LOCALE_COOKIE, LOCALE_MAX_AGE, type Locale } from "@/lib/i18n/config";
 import { dictionaries, type TranslationKey } from "@/lib/i18n/dictionaries";
 import { createTranslator, type TranslationParams } from "@/lib/i18n/translate";
 
@@ -40,15 +29,9 @@ export function I18nProvider({ locale: initialLocale, children }: I18nProviderPr
     setLocaleState(next);
   }, []);
 
-  const t = useMemo<TranslateFn>(
-    () => createTranslator(dictionaries[locale]) as TranslateFn,
-    [locale],
-  );
+  const t = useMemo<TranslateFn>(() => createTranslator(dictionaries[locale]) as TranslateFn, [locale]);
 
-  const value = useMemo<I18nContextValue>(
-    () => ({ locale, setLocale, t }),
-    [locale, setLocale, t],
-  );
+  const value = useMemo<I18nContextValue>(() => ({ locale, setLocale, t }), [locale, setLocale, t]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }

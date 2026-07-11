@@ -79,8 +79,7 @@ export const useExamStore = create<ExamState>()(
 
       setTimeLeft: (seconds) => set({ timeLeft: seconds }),
 
-      decrementTime: () =>
-        set((state) => ({ timeLeft: Math.max(0, state.timeLeft - 1) })),
+      decrementTime: () => set((state) => ({ timeLeft: Math.max(0, state.timeLeft - 1) })),
 
       setIsRecording: (isRecording) => set({ isRecording }),
 
@@ -99,8 +98,7 @@ export const useExamStore = create<ExamState>()(
           return { answers };
         }),
 
-      setSkipSettings: (skipEnabled, duration) =>
-        set({ skipEnabled, minRecordingDuration: duration }),
+      setSkipSettings: (skipEnabled, duration) => set({ skipEnabled, minRecordingDuration: duration }),
 
       setExamQuestions: (questions) => set({ examQuestions: questions }),
 

@@ -67,9 +67,7 @@ export function PracticeAnswerPanel({
         <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-4 text-left animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-center justify-between gap-2">
             <h3 className="font-semibold text-slate-900">{t("AI 피드백")}</h3>
-            <Badge className="bg-emerald-600 hover:bg-emerald-700">
-              {analysis.grade}
-            </Badge>
+            <Badge className="bg-emerald-600 hover:bg-emerald-700">{analysis.grade}</Badge>
           </div>
 
           <div className="grid grid-cols-3 gap-2 text-center text-sm">
@@ -89,15 +87,11 @@ export function PracticeAnswerPanel({
 
           <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
             <h4 className="font-semibold text-blue-900 mb-2">{t("피드백")}</h4>
-            <p className="text-sm text-blue-800 whitespace-pre-wrap">
-              {analysis.feedback}
-            </p>
+            <p className="text-sm text-blue-800 whitespace-pre-wrap">{analysis.feedback}</p>
           </div>
 
           <div className="bg-green-50 p-4 rounded-lg border border-green-100">
-            <h4 className="font-semibold text-green-900 mb-2">
-              {t("교정된 스크립트")}
-            </h4>
+            <h4 className="font-semibold text-green-900 mb-2">{t("교정된 스크립트")}</h4>
             <p className="text-sm text-green-800">{analysis.corrected_script}</p>
           </div>
         </div>

@@ -5,11 +5,7 @@ function audioKey(mode: ExamMode, questionId: number): string {
   return `opic_exam_${mode}_audio_${questionId}`;
 }
 
-export const saveAudio = async (
-  mode: ExamMode,
-  questionId: number,
-  blob: Blob,
-): Promise<void> => {
+export const saveAudio = async (mode: ExamMode, questionId: number, blob: Blob): Promise<void> => {
   try {
     await set(audioKey(mode, questionId), blob);
   } catch (error) {
@@ -18,10 +14,7 @@ export const saveAudio = async (
   }
 };
 
-export const getAudio = async (
-  mode: ExamMode,
-  questionId: number,
-): Promise<Blob | undefined> => {
+export const getAudio = async (mode: ExamMode, questionId: number): Promise<Blob | undefined> => {
   try {
     return await get<Blob>(audioKey(mode, questionId));
   } catch (error) {
@@ -30,10 +23,7 @@ export const getAudio = async (
   }
 };
 
-export const deleteAudio = async (
-  mode: ExamMode,
-  questionId: number,
-): Promise<void> => {
+export const deleteAudio = async (mode: ExamMode, questionId: number): Promise<void> => {
   try {
     await del(audioKey(mode, questionId));
   } catch (error) {
@@ -41,9 +31,6 @@ export const deleteAudio = async (
   }
 };
 
-export const clearModeAudio = async (
-  mode: ExamMode,
-  questionIds: number[],
-): Promise<void> => {
+export const clearModeAudio = async (mode: ExamMode, questionIds: number[]): Promise<void> => {
   await Promise.all(questionIds.map((id) => deleteAudio(mode, id)));
 };

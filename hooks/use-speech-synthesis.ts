@@ -1,10 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { loadVoices, pickVoice, preloadVoices, stopSpeech } from "@/lib/tts";
 
 interface UseSpeechSynthesisOptions {

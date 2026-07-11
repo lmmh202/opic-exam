@@ -58,12 +58,12 @@ pnpm run test
 
 ## OPIc 시험 구조 (15문항)
 
-| 문항 | 유형 | 설명 |
-|------|------|------|
-| Q1 | 자기소개 (Self-Introduction) | 고정 문항 |
-| Q2–Q10 | 주제 세트 (Combo) | 3개 주제 × 주제당 3문항 = 9문항 |
-| Q11–Q13 | 롤플레이 (Roleplay) | 1개 주제 × 3문항 |
-| Q14–Q15 | 심화 (Comparison) | 1개 주제 × 2문항 |
+| 문항    | 유형                         | 설명                            |
+| ------- | ---------------------------- | ------------------------------- |
+| Q1      | 자기소개 (Self-Introduction) | 고정 문항                       |
+| Q2–Q10  | 주제 세트 (Combo)            | 3개 주제 × 주제당 3문항 = 9문항 |
+| Q11–Q13 | 롤플레이 (Roleplay)          | 1개 주제 × 3문항                |
+| Q14–Q15 | 심화 (Comparison)            | 1개 주제 × 2문항                |
 
 구현: `lib/question-generator.ts` → `generateExam()`
 
@@ -77,20 +77,20 @@ OPIc의 핵심 구분입니다.
 
 사용자가 사전 설문에서 고른 활동/관심사에 기반한 문항입니다. `data/opic-constants.json`의 `surveyTopics`에 정의되어 있습니다.
 
-| id | 한글 | English |
-|----|------|---------|
-| `movies` | 영화보기 | Watching Movies |
-| `performances` | 공연보기 | Watching Performances |
-| `concerts` | 콘서트보기 | Going to Concerts |
-| `park` | 공원가기 | Going to Parks |
-| `beach` | 해변가기 | Going to the Beach |
-| `cafe` | 카페가기 | Going to Cafes |
-| `music` | 음악 감상 | Listening to Music |
-| `jogging` | 조깅 | Jogging |
-| `walking` | 걷기 | Walking |
-| `staycation` | 집에서 보내는 휴가 | Staycation |
-| `domestic_travel` | 국내여행 | Domestic Travel |
-| `housing` | 주거 | Housing |
+| id                | 한글               | English               |
+| ----------------- | ------------------ | --------------------- |
+| `movies`          | 영화보기           | Watching Movies       |
+| `performances`    | 공연보기           | Watching Performances |
+| `concerts`        | 콘서트보기         | Going to Concerts     |
+| `park`            | 공원가기           | Going to Parks        |
+| `beach`           | 해변가기           | Going to the Beach    |
+| `cafe`            | 카페가기           | Going to Cafes        |
+| `music`           | 음악 감상          | Listening to Music    |
+| `jogging`         | 조깅               | Jogging               |
+| `walking`         | 걷기               | Walking               |
+| `staycation`      | 집에서 보내는 휴가 | Staycation            |
+| `domestic_travel` | 국내여행           | Domestic Travel       |
+| `housing`         | 주거               | Housing               |
 
 설문 매핑: `data/survey.json`의 각 항목 `topicIds`가 위 id와 연결됩니다.
 
@@ -98,25 +98,25 @@ OPIc의 핵심 구분입니다.
 
 설문에서 **선택하지 않은** 주제에서 추가 출제되는 문항입니다. `surpriseTopics`에 정의됩니다.
 
-| id | 한글 | English |
-|----|------|---------|
-| `geography` | 지형 | Geography |
-| `gathering` | 모임 | Gatherings |
-| `free_time` | 자유시간 | Free Time |
-| `hotel` | 호텔 | Hotel |
-| `weather` | 날씨 | Weather |
-| `holiday` | 명절 | Holidays |
-| `health` | 건강 | Health |
-| `internet` | 인터넷 | Internet |
-| `phone` | 전화 | Phone |
-| `restaurant` | 식당 | Restaurant |
-| `furniture` | 가구 | Furniture |
-| `appliances` | 가전 | Home Appliances |
-| `technology` | 기술 | Technology |
-| `fashion` | 패션 | Fashion |
-| `neighborhood` | 동네 | Neighborhood |
-| `bank` | 은행 | Bank |
-| `reservation` | 예약 | Reservations |
+| id             | 한글     | English         |
+| -------------- | -------- | --------------- |
+| `geography`    | 지형     | Geography       |
+| `gathering`    | 모임     | Gatherings      |
+| `free_time`    | 자유시간 | Free Time       |
+| `hotel`        | 호텔     | Hotel           |
+| `weather`      | 날씨     | Weather         |
+| `holiday`      | 명절     | Holidays        |
+| `health`       | 건강     | Health          |
+| `internet`     | 인터넷   | Internet        |
+| `phone`        | 전화     | Phone           |
+| `restaurant`   | 식당     | Restaurant      |
+| `furniture`    | 가구     | Furniture       |
+| `appliances`   | 가전     | Home Appliances |
+| `technology`   | 기술     | Technology      |
+| `fashion`      | 패션     | Fashion         |
+| `neighborhood` | 동네     | Neighborhood    |
+| `bank`         | 은행     | Bank            |
+| `reservation`  | 예약     | Reservations    |
 
 - Survey 주제와 돌발 주제는 **겹치지 않음**
 - `question-bank.json`에서 돌발 주제는 Topic 레벨 `surprise: true`로 표시
@@ -136,15 +136,16 @@ OPIc의 핵심 구분입니다.
 
 각 세트는 정확히 3문항이며, **1→2→3 단계 고정 구조**를 따릅니다. `comboStages`에 슬롯별 허용 type이 정의되어 있습니다.
 
-| 단계 | 의도 | 허용 type (`comboStages`) |
-|------|------|---------------------------|
-| 1 | 현재 상태 묘사 / 평소 루틴 (Description · Routine) | `place_description`, `routine`, `activity_description`, `object_description`, `person_description`, `person_introduction`, `preference_description`, `preparation` |
-| 2 | 과거 경험 · 최초/최근 기억 · 과거와 현재의 변화 | `first_experience`, `recent_experience`, `first_motivation`, `experience_description`, `past_present_change` |
-| 3 | 특별·인상적·돌발 사건 (Memorable / Unexpected) | `memorable_experience`, `problem_experience` |
+| 단계 | 의도                                               | 허용 type (`comboStages`)                                                                                                                                          |
+| ---- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1    | 현재 상태 묘사 / 평소 루틴 (Description · Routine) | `place_description`, `routine`, `activity_description`, `object_description`, `person_description`, `person_introduction`, `preference_description`, `preparation` |
+| 2    | 과거 경험 · 최초/최근 기억 · 과거와 현재의 변화    | `first_experience`, `recent_experience`, `first_motivation`, `experience_description`, `past_present_change`                                                       |
+| 3    | 특별·인상적·돌발 사건 (Memorable / Unexpected)     | `memorable_experience`, `problem_experience`                                                                                                                       |
 
 **3단계 허용 타입**은 `experienceEndingTypes`와 동일합니다 (`memorable_experience`, `problem_experience`).
 
 카페 토픽 예시:
+
 1. "자주 가는 카페를 묘사해 주세요…" (Description) / "카페에 가면 보통 무엇을 하나요…" (Routine)
 2. "최초의 카페 방문은…" (First) / "가장 최근에 카페에 갔을 때…" (Recent) / "예전에 비해 카페 가는 습관이 어떻게 달라졌나요…" (Past–Present Change)
 3. "카페에서 황당했던 경험이 있나요? 상황을 설명하고 어떻게 해결했는지…" (Memorable / Unexpected)
@@ -157,13 +158,14 @@ OPIc의 핵심 구분입니다.
 
 각 세트는 정확히 3문항이며, **1→2→3 단계 고정 구조**입니다. `roleplayStages`에 정의됩니다.
 
-| 단계 (시험 문항) | 의도 | 허용 type |
-|------------------|------|-----------|
-| 1 (Q11) | 상황 인식 및 정보 조사 — 3~4가지 질문 | `situation_questions` |
-| 2 (Q12) | 위기 관리 및 대안 제시 — 문제 설명 + 대안 2~3가지 | `problem_solving` |
-| 3 (Q13) | 실제 유사 경험 회상 — Q12와 관련된 과거 경험 | `similar_experience` |
+| 단계 (시험 문항) | 의도                                              | 허용 type             |
+| ---------------- | ------------------------------------------------- | --------------------- |
+| 1 (Q11)          | 상황 인식 및 정보 조사 — 3~4가지 질문             | `situation_questions` |
+| 2 (Q12)          | 위기 관리 및 대안 제시 — 문제 설명 + 대안 2~3가지 | `problem_solving`     |
+| 3 (Q13)          | 실제 유사 경험 회상 — Q12와 관련된 과거 경험      | `similar_experience`  |
 
 카페 토픽 예시:
+
 1. 새 카페에 전화해 위치·영업시간·주차 등 3~4가지 문의
 2. 급한 일로 못 가게 됨 → 친구에게 설명하고 시간/날짜 변경 등 대안 제시
 3. 실제로 약속을 취소·변경했던 경험 이야기
@@ -174,10 +176,10 @@ OPIc의 핵심 구분입니다.
 
 각 세트는 정확히 2문항이며, **1→2 단계 고정 구조**입니다. `comparisonStages`에 정의됩니다.
 
-| 단계 (시험 문항) | 의도 | 허용 type |
-|------------------|------|-----------|
-| 1 (Q14) | 두 대상 비교·대조 (과거↔현재 또는 동시대 두 대상) | `past_present_comparison`, `two_subject_comparison` |
-| 2 (Q15) | 관련 사회 이슈·최신 문제 | `issue_discussion` |
+| 단계 (시험 문항) | 의도                                              | 허용 type                                           |
+| ---------------- | ------------------------------------------------- | --------------------------------------------------- |
+| 1 (Q14)          | 두 대상 비교·대조 (과거↔현재 또는 동시대 두 대상) | `past_present_comparison`, `two_subject_comparison` |
+| 2 (Q15)          | 관련 사회 이슈·최신 문제                          | `issue_discussion`                                  |
 
 주제 목록: `comparisonTopics`. 일일 생성은 `DAILY_COMPARISON_SET_COUNT` (기본/워크플로 1세트).
 
@@ -234,18 +236,18 @@ combo[] (Topic)
 
 ## 핵심 파일 맵
 
-| 경로 | 역할 |
-|------|------|
-| `data/opic-constants.json` | Survey/돌발/roleplay/comparison 주제, stages, difficulties, 문항 유형 |
-| `data/survey.json` | 배경 설문 Q&A (ko/en), `topicIds` 매핑 |
-| `lib/opic-constants.ts` | constants JSON의 TS export |
-| `lib/question-generator.ts` | 시험/연습 문항 생성 |
-| `public/question-bank.json` | 실제 문항 은행 |
-| `scripts/generate-question-bank.mjs` | Gemini 일일 combo + roleplay + comparison set 생성 |
-| `components/exam-setup-panel.tsx` | 설문 표시 + 마이크 설정 |
-| `app/exam/page.tsx` | 시험 UI (돌발 배지 포함) |
-| `app/practice/page.tsx` | 유형별 연습 모드 |
-| `lib/i18n/` | i18n 코어 (config, translate, locales) |
+| 경로                                 | 역할                                                                  |
+| ------------------------------------ | --------------------------------------------------------------------- |
+| `data/opic-constants.json`           | Survey/돌발/roleplay/comparison 주제, stages, difficulties, 문항 유형 |
+| `data/survey.json`                   | 배경 설문 Q&A (ko/en), `topicIds` 매핑                                |
+| `lib/opic-constants.ts`              | constants JSON의 TS export                                            |
+| `lib/question-generator.ts`          | 시험/연습 문항 생성                                                   |
+| `public/question-bank.json`          | 실제 문항 은행                                                        |
+| `scripts/generate-question-bank.mjs` | Gemini 일일 combo + roleplay + comparison set 생성                    |
+| `components/exam-setup-panel.tsx`    | 설문 표시 + 마이크 설정                                               |
+| `app/exam/page.tsx`                  | 시험 UI (돌발 배지 포함)                                              |
+| `app/practice/page.tsx`              | 유형별 연습 모드                                                      |
+| `lib/i18n/`                          | i18n 코어 (config, translate, locales)                                |
 
 ---
 

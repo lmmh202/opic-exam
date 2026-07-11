@@ -6,40 +6,18 @@ import { useExamStore } from "@/lib/store";
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { useSpeechSynthesis } from "@/hooks/use-speech-synthesis";
 import { saveAudio, deleteAudio, getAudio } from "@/lib/db";
-import type {
-  BatchAnalysisResult,
-  QuestionAnalysis,
-} from "@/app/api/analyze/route";
+import type { BatchAnalysisResult, QuestionAnalysis } from "@/app/api/analyze/route";
 import { PracticeAnswerPanel } from "@/components/practice-answer-panel";
 import { PronunciationPracticePanel } from "@/components/pronunciation-practice-panel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Play,
-  Pause,
-  ChevronRight,
-  ChevronLeft,
-  Mic,
-  RotateCcw,
-} from "lucide-react";
+import { Play, Pause, ChevronRight, ChevronLeft, Mic, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
-import {
-  EXAM_MODE_CONFIG,
-  parseExamMode,
-  type ExamMode,
-} from "@/lib/exam-mode";
-import {
-  getDifficultyLabel,
-  getQuestionTypeLabel,
-  getTopicLabel,
-} from "@/lib/opic-constants";
+import { EXAM_MODE_CONFIG, parseExamMode, type ExamMode } from "@/lib/exam-mode";
+import { getDifficultyLabel, getQuestionTypeLabel, getTopicLabel } from "@/lib/opic-constants";
 import { useTranslation } from "@/components/i18n-provider";
 import type { TranslationKey } from "@/lib/i18n/dictionaries";
 
@@ -71,9 +49,7 @@ function ExamPageContent() {
 
   const [playCount, setPlayCount] = useState(0);
   const [recordingDuration, setRecordingDuration] = useState(0);
-  const [questionFeedback, setQuestionFeedback] = useState<
-    Record<number, QuestionAnalysis>
-  >({});
+  const [questionFeedback, setQuestionFeedback] = useState<Record<number, QuestionAnalysis>>({});
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isPlayingAnswer, setIsPlayingAnswer] = useState(false);
   const answerAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -100,21 +76,13 @@ function ExamPageContent() {
   const currentQuestion = examQuestions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex >= examQuestions.length - 1;
   const isFirstQuestion = currentQuestionIndex === 0;
-  const currentAnswer = currentQuestion
-    ? answers[currentQuestion.id]
-    : undefined;
+  const currentAnswer = currentQuestion ? answers[currentQuestion.id] : undefined;
   const hasRecording = !!currentAnswer?.submitted;
 
-  const maxReplays =
-    config.maxQuestionReplays === Infinity
-      ? Number.POSITIVE_INFINITY
-      : config.maxQuestionReplays;
-  const replaysExhausted =
-    Number.isFinite(maxReplays) && playCount >= maxReplays;
+  const maxReplays = config.maxQuestionReplays === Infinity ? Number.POSITIVE_INFINITY : config.maxQuestionReplays;
+  const replaysExhausted = Number.isFinite(maxReplays) && playCount >= maxReplays;
 
-  const currentAnalysis = currentQuestion
-    ? questionFeedback[currentQuestion.id]
-    : undefined;
+  const currentAnalysis = currentQuestion ? questionFeedback[currentQuestion.id] : undefined;
 
   const stopAnswerPlayback = useCallback(() => {
     answerAudioRef.current?.pause();
@@ -240,11 +208,7 @@ function ExamPageContent() {
       }
 
       const formData = new FormData();
-      formData.append(
-        `audio_${currentQuestion.id}`,
-        blob,
-        `recording_${currentQuestion.id}.webm`,
-      );
+      formData.append(`audio_${currentQuestion.id}`, blob, `recording_${currentQuestion.id}.webm`);
       formData.append(`questionText_${currentQuestion.id}`, currentQuestion.text);
 
       const response = await fetch("/api/analyze", {
@@ -255,9 +219,7 @@ function ExamPageContent() {
 
       if (result.success && result.data) {
         const batchResult = result.data as BatchAnalysisResult;
-        const analysis = batchResult.questions.find(
-          (item) => Number(item.question_id) === currentQuestion.id,
-        );
+        const analysis = batchResult.questions.find((item) => Number(item.question_id) === currentQuestion.id);
 
         if (analysis) {
           setQuestionFeedback((prev) => ({
@@ -269,12 +231,7 @@ function ExamPageContent() {
           toast.error(t("분석 결과를 찾을 수 없습니다."));
         }
       } else {
-        toast.error(
-          t(
-            (result.error as TranslationKey) ||
-              "분석에 실패했습니다",
-          ),
-        );
+        toast.error(t((result.error as TranslationKey) || "분석에 실패했습니다"));
       }
     } catch (error) {
       console.error(error);
@@ -388,8 +345,7 @@ function ExamPageContent() {
         <div className="flex items-center gap-4">
           {config.totalTimeSeconds !== null && (
             <Badge variant="secondary" className="text-base px-3 py-1">
-              {Math.floor(timeLeft / 60)}:
-              {(timeLeft % 60).toString().padStart(2, "0")}
+              {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
             </Badge>
           )}
           <div className="text-sm font-medium text-slate-500">
@@ -403,9 +359,7 @@ function ExamPageContent() {
           <div className="flex flex-col items-center justify-center gap-4 py-8 bg-slate-50 rounded-xl border border-slate-200">
             <Avatar className="w-32 h-32 border-4 border-white shadow-md">
               <AvatarImage src="/eva-placeholder.png" alt="Eva" />
-              <AvatarFallback className="bg-blue-100 text-blue-600 text-3xl font-bold">
-                EVA
-              </AvatarFallback>
+              <AvatarFallback className="bg-blue-100 text-blue-600 text-3xl font-bold">EVA</AvatarFallback>
             </Avatar>
 
             <div className="flex flex-col items-center gap-2">
@@ -415,11 +369,7 @@ function ExamPageContent() {
                 className="rounded-full w-14 h-14"
                 disabled={!isSpeaking && replaysExhausted}
               >
-                {isSpeaking ? (
-                  <Pause className="fill-current" />
-                ) : (
-                  <Play className="fill-current ml-1" />
-                )}
+                {isSpeaking ? <Pause className="fill-current" /> : <Play className="fill-current ml-1" />}
               </Button>
               <span className="text-sm text-slate-500 text-center">
                 {isSpeaking
@@ -445,47 +395,33 @@ function ExamPageContent() {
                 {t("주제")}:{" "}
                 {currentQuestion.type === "self_introduction"
                   ? t("자기소개")
-                  : getTopicLabel(
-                      currentQuestion.topicId,
-                      locale,
-                      currentQuestion.topic,
-                    )}
+                  : getTopicLabel(currentQuestion.topicId, locale, currentQuestion.topic)}
               </Badge>
               {mode === "practice" && (
                 <Badge variant="secondary">
-                  {t("유형")}:{" "}
-                  {getQuestionTypeLabel(currentQuestion.type, locale)}
+                  {t("유형")}: {getQuestionTypeLabel(currentQuestion.type, locale)}
                 </Badge>
               )}
               {mode === "practice" && currentQuestion.difficulty && (
                 <Badge variant="outline">
-                  {t("난이도")}:{" "}
-                  {getDifficultyLabel(currentQuestion.difficulty, locale)}
+                  {t("난이도")}: {getDifficultyLabel(currentQuestion.difficulty, locale)}
                 </Badge>
               )}
               {currentQuestion.surprise && (
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Badge
-                      variant="destructive"
-                      className="cursor-help"
-                      tabIndex={0}
-                    >
+                    <Badge variant="destructive" className="cursor-help" tabIndex={0}>
                       {t("돌발")}
                     </Badge>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="max-w-xs">
-                    {t(
-                      "오픽 시험은 Survey에서 선택한 문항을 제외하고 돌발 문제가 추가로 출제된다",
-                    )}
+                    {t("오픽 시험은 Survey에서 선택한 문항을 제외하고 돌발 문제가 추가로 출제된다")}
                   </TooltipContent>
                 </Tooltip>
               )}
             </div>
             {config.showQuestionText ? (
-              <p className="text-lg text-slate-700 leading-relaxed max-w-2xl mx-auto">
-                {currentQuestion.text}
-              </p>
+              <p className="text-lg text-slate-700 leading-relaxed max-w-2xl mx-auto">{currentQuestion.text}</p>
             ) : (
               <h2 className="text-2xl font-medium text-slate-800 transition-opacity duration-300">
                 {isSpeaking ? t("듣는 중...") : t("답변하세요")}
@@ -520,12 +456,7 @@ function ExamPageContent() {
                 </Button>
 
                 {config.allowReRecord && hasRecording && !isStoreRecording && (
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-14 px-6 rounded-full"
-                    onClick={handleReRecord}
-                  >
+                  <Button size="lg" variant="outline" className="h-14 px-6 rounded-full" onClick={handleReRecord}>
                     <RotateCcw className="mr-2 w-5 h-5" />
                     {t("다시 녹음")}
                   </Button>
@@ -535,15 +466,12 @@ function ExamPageContent() {
               {isStoreRecording && (
                 <span
                   className={`text-sm font-medium tabular-nums ${
-                    config.enforceMinRecording &&
-                    needsMinRecording() &&
-                    !skipEnabled
+                    config.enforceMinRecording && needsMinRecording() && !skipEnabled
                       ? "text-red-500"
                       : "text-slate-700"
                   }`}
                 >
-                  {Math.floor(recordingDuration / 60)}:
-                  {(recordingDuration % 60).toString().padStart(2, "0")}
+                  {Math.floor(recordingDuration / 60)}:{(recordingDuration % 60).toString().padStart(2, "0")}
                   <span className="ml-1.5 text-slate-500 font-normal">
                     ({t("{seconds}초", { seconds: recordingDuration })})
                   </span>
@@ -580,13 +508,9 @@ function ExamPageContent() {
             {mode === "practice" && (
               <div className="w-full max-w-2xl mx-auto rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3 text-left">
                 <div>
-                  <h3 className="font-semibold text-slate-900">
-                    {t("발음 연습")}
-                  </h3>
+                  <h3 className="font-semibold text-slate-900">{t("발음 연습")}</h3>
                   <p className="text-sm text-slate-600 mt-1">
-                    {t(
-                      "영어 문장을 입력하면 브라우저 TTS로 발음을 들려줍니다.",
-                    )}
+                    {t("영어 문장을 입력하면 브라우저 TTS로 발음을 들려줍니다.")}
                   </p>
                 </div>
                 <PronunciationPracticePanel />
@@ -598,13 +522,7 @@ function ExamPageContent() {
 
       <div className="w-full max-w-4xl flex justify-between">
         {config.allowBackNavigation ? (
-          <Button
-            onClick={handlePrev}
-            disabled={isFirstQuestion}
-            variant="outline"
-            size="lg"
-            className="text-lg px-8"
-          >
+          <Button onClick={handlePrev} disabled={isFirstQuestion} variant="outline" size="lg" className="text-lg px-8">
             <ChevronLeft className="mr-2" /> {t("이전")}
           </Button>
         ) : (
@@ -613,17 +531,11 @@ function ExamPageContent() {
 
         <Button
           onClick={handleNext}
-          disabled={
-            config.enforceMinRecording &&
-            !skipEnabled &&
-            isStoreRecording &&
-            needsMinRecording()
-          }
+          disabled={config.enforceMinRecording && !skipEnabled && isStoreRecording && needsMinRecording()}
           size="lg"
           className="text-lg px-8"
         >
-          {isLastQuestion ? t("완료") : t("다음")}{" "}
-          <ChevronRight className="ml-2" />
+          {isLastQuestion ? t("완료") : t("다음")} <ChevronRight className="ml-2" />
         </Button>
       </div>
     </div>

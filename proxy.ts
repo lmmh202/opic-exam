@@ -3,9 +3,7 @@ import { DEFAULT_LOCALE, LOCALE_COOKIE, LOCALE_MAX_AGE, isLocale } from "@/lib/i
 
 function detectLocale(acceptLanguage: string | null): "ko" | "en" {
   if (!acceptLanguage) return DEFAULT_LOCALE;
-  return acceptLanguage.toLowerCase().trimStart().startsWith("en")
-    ? "en"
-    : "ko";
+  return acceptLanguage.toLowerCase().trimStart().startsWith("en") ? "en" : "ko";
 }
 
 export function proxy(request: NextRequest) {

@@ -17,10 +17,7 @@ export interface BatchAnalysisResult {
   overall_feedback: string;
 }
 
-export type AnalyzeErrorCode =
-  | "UNAVAILABLE"
-  | "RATE_LIMITED"
-  | "ANALYZE_FAILED";
+export type AnalyzeErrorCode = "UNAVAILABLE" | "RATE_LIMITED" | "ANALYZE_FAILED";
 
 const RETRY_ATTEMPTS = 3;
 const RETRY_BASE_DELAY_MS = 1000;
@@ -48,9 +45,7 @@ function isRetryableError(error: unknown): boolean {
   }
 
   const message = error instanceof Error ? error.message : String(error);
-  return /UNAVAILABLE|RESOURCE_EXHAUSTED|high demand|try again later/i.test(
-    message,
-  );
+  return /UNAVAILABLE|RESOURCE_EXHAUSTED|high demand|try again later/i.test(message);
 }
 
 function classifyAnalyzeError(error: unknown): {
@@ -61,15 +56,11 @@ function classifyAnalyzeError(error: unknown): {
   const status = getErrorStatus(error);
   const message = error instanceof Error ? error.message : String(error);
 
-  if (
-    status === 503 ||
-    /UNAVAILABLE|high demand|try again later/i.test(message)
-  ) {
+  if (status === 503 || /UNAVAILABLE|high demand|try again later/i.test(message)) {
     return {
       status: 503,
       code: "UNAVAILABLE",
-      error:
-        "AI 서버가 일시적으로 혼잡합니다. 잠시 후 다시 시도해 주세요.",
+      error: "AI 서버가 일시적으로 혼잡합니다. 잠시 후 다시 시도해 주세요.",
     };
   }
 
@@ -88,10 +79,7 @@ function classifyAnalyzeError(error: unknown): {
   };
 }
 
-async function generateWithRetry(
-  client: GoogleGenAI,
-  params: Parameters<GoogleGenAI["models"]["generateContent"]>[0],
-) {
+async function generateWithRetry(client: GoogleGenAI, params: Parameters<GoogleGenAI["models"]["generateContent"]>[0]) {
   let lastError: unknown;
 
   for (let attempt = 1; attempt <= RETRY_ATTEMPTS; attempt += 1) {
@@ -102,13 +90,8 @@ async function generateWithRetry(
       const shouldRetry = isRetryableError(error) && attempt < RETRY_ATTEMPTS;
       if (!shouldRetry) break;
 
-      const delay =
-        RETRY_BASE_DELAY_MS * 2 ** (attempt - 1) +
-        Math.floor(Math.random() * 250);
-      console.warn(
-        `Gemini analyze attempt ${attempt}/${RETRY_ATTEMPTS} failed; retrying in ${delay}ms`,
-        error,
-      );
+      const delay = RETRY_BASE_DELAY_MS * 2 ** (attempt - 1) + Math.floor(Math.random() * 250);
+      console.warn(`Gemini analyze attempt ${attempt}/${RETRY_ATTEMPTS} failed; retrying in ${delay}ms`, error);
       await sleep(delay);
     }
   }
@@ -119,10 +102,7 @@ async function generateWithRetry(
 export async function POST(request: NextRequest) {
   const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
   if (!apiKey) {
-    return NextResponse.json(
-      { success: false, error: "API key not configured" },
-      { status: 500 },
-    );
+    return NextResponse.json({ success: false, error: "API key not configured" }, { status: 500 });
   }
 
   try {
@@ -146,10 +126,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (audioEntries.length === 0) {
-      return NextResponse.json(
-        { success: false, error: "No audio files provided" },
-        { status: 400 },
-      );
+      return NextResponse.json({ success: false, error: "No audio files provided" }, { status: 400 });
     }
 
     const audioParts = await Promise.all(
@@ -164,15 +141,11 @@ export async function POST(request: NextRequest) {
       }),
     );
 
-    const questionsPrompt = audioParts
-      .map((p) => `Question ID "${p.id}": ${p.questionText}`)
-      .join("\n\n");
+    const questionsPrompt = audioParts.map((p) => `Question ID "${p.id}": ${p.questionText}`).join("\n\n");
 
     const client = new GoogleGenAI({ apiKey });
 
-    const contentParts: Array<
-      { text: string } | { inlineData: { data: string; mimeType: string } }
-    > = [
+    const contentParts: Array<{ text: string } | { inlineData: { data: string; mimeType: string } }> = [
       {
         text: `You are an ACTFL OPIc evaluator. Evaluate all the following audio responses.
 

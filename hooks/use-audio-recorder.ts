@@ -12,13 +12,9 @@ interface UseAudioRecorderReturn {
   error: string | null;
 }
 
-export const useAudioRecorder = ({
-  onStop,
-}: UseAudioRecorderProps = {}): UseAudioRecorderReturn => {
+export const useAudioRecorder = ({ onStop }: UseAudioRecorderProps = {}): UseAudioRecorderReturn => {
   const [isRecording, setIsRecording] = useState(false);
-  const [visualizerData, setVisualizerData] = useState<number[]>(
-    new Array(30).fill(0),
-  );
+  const [visualizerData, setVisualizerData] = useState<number[]>(new Array(30).fill(0));
   const [error, setError] = useState<string | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -34,9 +30,8 @@ export const useAudioRecorder = ({
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
       // Setup Audio Context for Analysis
-      const audioContext =
-        new // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window.AudioContext || (window as any).webkitAudioContext)();
+      const audioContext = new // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window.AudioContext || (window as any).webkitAudioContext)();
       const analyser = audioContext.createAnalyser();
       const source = audioContext.createMediaStreamSource(stream);
 
@@ -92,10 +87,7 @@ export const useAudioRecorder = ({
   }, [onStop]);
 
   const stopRecording = useCallback(() => {
-    if (
-      mediaRecorderRef.current &&
-      mediaRecorderRef.current.state !== "inactive"
-    ) {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
     }
@@ -115,19 +107,13 @@ export const useAudioRecorder = ({
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (animationFrameRef.current)
-        cancelAnimationFrame(animationFrameRef.current);
-      if (
-        audioContextRef.current &&
-        audioContextRef.current.state !== "closed"
-      ) {
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+      if (audioContextRef.current && audioContextRef.current.state !== "closed") {
         audioContextRef.current.close();
       }
       // Ensure stream tracks are stopped if unmounted while recording
       if (mediaRecorderRef.current && mediaRecorderRef.current.stream) {
-        mediaRecorderRef.current.stream
-          .getTracks()
-          .forEach((track) => track.stop());
+        mediaRecorderRef.current.stream.getTracks().forEach((track) => track.stop());
       }
     };
   }, []);

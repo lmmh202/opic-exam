@@ -22,10 +22,7 @@ function stageCount(stages) {
   return Object.keys(stages).length;
 }
 
-export function validateStagedSet(
-  set,
-  { stages, existingQuestionTexts, topicIds, expectedDifficulty },
-) {
+export function validateStagedSet(set, { stages, existingQuestionTexts, topicIds, expectedDifficulty }) {
   const expectedCount = stageCount(stages);
   if (!set || typeof set !== "object") return false;
   if (!set.targetTopicId || typeof set.targetTopicId !== "string") return false;
@@ -60,9 +57,7 @@ export function validateComboSet(set, context) {
   return validateStagedSet(set, {
     stages: context.comboStages,
     existingQuestionTexts: context.existingQuestionTexts,
-    topicIds: set.isSurprise
-      ? context.surpriseTopicIds
-      : context.surveyTopicIds,
+    topicIds: set.isSurprise ? context.surpriseTopicIds : context.surveyTopicIds,
     expectedDifficulty: context.expectedDifficulty,
   });
 }

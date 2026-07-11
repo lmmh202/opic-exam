@@ -3,13 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ExamSetupPanel } from "@/components/exam-setup-panel";
 import { useExamStore } from "@/lib/store";
@@ -40,15 +34,10 @@ export default function RealSetupPage() {
             <ArrowLeft className="w-4 h-4" />
             {t("홈으로 돌아가기")}
           </Link>
-          <Badge
-            variant="outline"
-            className="w-fit mx-auto mb-2 border-blue-200 text-blue-700 bg-blue-50"
-          >
+          <Badge variant="outline" className="w-fit mx-auto mb-2 border-blue-200 text-blue-700 bg-blue-50">
             {t("실전 모의고사 모드")}
           </Badge>
-          <CardTitle className="text-2xl font-bold tracking-tight text-slate-900">
-            {t("시험 설정")}
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold tracking-tight text-slate-900">{t("시험 설정")}</CardTitle>
           <CardDescription className="text-slate-600">
             {t("15문항 시험을 시작하기 전에 마이크 점검과 설정을 완료하세요.")}
           </CardDescription>

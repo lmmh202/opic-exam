@@ -1,23 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import {
-  Mic,
-  CheckCircle2,
-  Play,
-  Pause,
-  RotateCcw,
-  Clock,
-} from "lucide-react";
+import { Mic, CheckCircle2, Play, Pause, RotateCcw, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useExamStore } from "@/lib/store";
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { useTranslation } from "@/components/i18n-provider";
@@ -47,18 +36,15 @@ export function ExamSetupPanel({
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [micStatus, setMicStatus] = useState<"idle" | "testing" | "success">(
-    "idle",
-  );
+  const [micStatus, setMicStatus] = useState<"idle" | "testing" | "success">("idle");
 
-  const { startRecording, stopRecording, isRecording, visualizerData } =
-    useAudioRecorder({
-      onStop: (blob) => {
-        const url = URL.createObjectURL(blob);
-        setAudioUrl(url);
-        setMicStatus("success");
-      },
-    });
+  const { startRecording, stopRecording, isRecording, visualizerData } = useAudioRecorder({
+    onStop: (blob) => {
+      const url = URL.createObjectURL(blob);
+      setAudioUrl(url);
+      setMicStatus("success");
+    },
+  });
 
   const { setSkipSettings } = useExamStore();
 
@@ -147,9 +133,7 @@ export function ExamSetupPanel({
             <span className="text-green-600 text-lg">🔒</span>
           </div>
           <div>
-            <h4 className="font-semibold text-green-900 mb-1">
-              {t("개인정보가 보호됩니다")}
-            </h4>
+            <h4 className="font-semibold text-green-900 mb-1">{t("개인정보가 보호됩니다")}</h4>
             <p className="text-sm text-green-800">
               {t(
                 "모든 음성 녹음은 브라우저 안에만 저장됩니다 (IndexedDB). 어떤 오디오 데이터도 서버나 데이터베이스에 저장되지 않습니다.",
@@ -187,11 +171,7 @@ export function ExamSetupPanel({
               size="icon"
               className="h-12 w-12 rounded-full shrink-0 transition-all shadow-sm bg-blue-600 hover:bg-blue-700 text-white"
             >
-              {isPlaying ? (
-                <Pause className="w-5 h-5" />
-              ) : (
-                <Play className="w-5 h-5 ml-1" />
-              )}
+              {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-1" />}
             </Button>
           ) : (
             <Button
@@ -200,11 +180,7 @@ export function ExamSetupPanel({
               className="h-12 w-12 rounded-full shrink-0 transition-all shadow-sm"
               onClick={handleMicToggle}
             >
-              {isRecording ? (
-                <div className="w-4 h-4 bg-white rounded-sm" />
-              ) : (
-                <Mic className="w-5 h-5" />
-              )}
+              {isRecording ? <div className="w-4 h-4 bg-white rounded-sm" /> : <Mic className="w-5 h-5" />}
             </Button>
           )}
 
@@ -239,17 +215,10 @@ export function ExamSetupPanel({
           </h3>
 
           <div className="flex items-center justify-between">
-            <Label
-              htmlFor="skip-enabled"
-              className="text-sm text-slate-700 cursor-pointer"
-            >
+            <Label htmlFor="skip-enabled" className="text-sm text-slate-700 cursor-pointer">
               {t("건너뛰기 허용 (최소 녹음 시간 없음)")}
             </Label>
-            <Switch
-              id="skip-enabled"
-              checked={localSkipEnabled}
-              onCheckedChange={setLocalSkipEnabled}
-            />
+            <Switch id="skip-enabled" checked={localSkipEnabled} onCheckedChange={setLocalSkipEnabled} />
           </div>
 
           {!localSkipEnabled && (
@@ -294,10 +263,7 @@ export function ExamSetupPanel({
           </TooltipContent>
         </Tooltip>
       ) : (
-        <Button
-          className="w-full text-lg h-14 font-semibold shadow-lg shadow-blue-500/20"
-          onClick={handleStart}
-        >
+        <Button className="w-full text-lg h-14 font-semibold shadow-lg shadow-blue-500/20" onClick={handleStart}>
           {startLabel}
         </Button>
       )}

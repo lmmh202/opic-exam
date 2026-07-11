@@ -8,8 +8,7 @@ import {
   validateRoleplaySet,
 } from "./validate-generated-sets.mjs";
 
-const LONG_TEXT =
-  "Please describe this topic in detail with enough words for validation.";
+const LONG_TEXT = "Please describe this topic in detail with enough words for validation.";
 
 function baseContext() {
   return {
@@ -80,18 +79,10 @@ describe("validateComboSet", () => {
   });
 
   it("rejects mismatched surprise flags and topics", () => {
-    expect(
-      validateComboSet(
-        { ...validSurveySet, targetTopicId: "weather", isSurprise: false },
-        baseContext(),
-      ),
-    ).toBe(false);
-    expect(
-      validateComboSet(
-        { ...validSurveySet, targetTopicId: "park", isSurprise: true },
-        baseContext(),
-      ),
-    ).toBe(false);
+    expect(validateComboSet({ ...validSurveySet, targetTopicId: "weather", isSurprise: false }, baseContext())).toBe(
+      false,
+    );
+    expect(validateComboSet({ ...validSurveySet, targetTopicId: "park", isSurprise: true }, baseContext())).toBe(false);
   });
 
   it("rejects invalid stage order, short text, duplicates, and difficulty", () => {
@@ -127,12 +118,7 @@ describe("validateComboSet", () => {
     context.existingQuestionTexts.add(normalize(LONG_TEXT));
     expect(validateComboSet(validSurveySet, context)).toBe(false);
 
-    expect(
-      validateComboSet(
-        { ...validSurveySet, difficulty: "hard" },
-        baseContext(),
-      ),
-    ).toBe(false);
+    expect(validateComboSet({ ...validSurveySet, difficulty: "hard" }, baseContext())).toBe(false);
 
     expect(
       validateComboSet(validSurveySet, {
@@ -157,12 +143,7 @@ describe("validateRoleplaySet", () => {
 
   it("accepts a valid roleplay set and rejects bad topics/stages", () => {
     expect(validateRoleplaySet(validSet, baseContext())).toBe(true);
-    expect(
-      validateRoleplaySet(
-        { ...validSet, targetTopicId: "park" },
-        baseContext(),
-      ),
-    ).toBe(false);
+    expect(validateRoleplaySet({ ...validSet, targetTopicId: "park" }, baseContext())).toBe(false);
     expect(
       validateRoleplaySet(
         {

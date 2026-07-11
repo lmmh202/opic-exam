@@ -180,15 +180,24 @@
     },
     {
       "id": "past_present_change",
-      "label": { "ko": "과거와 현재의 변화", "en": "Describe how it has changed" }
+      "label": {
+        "ko": "과거와 현재의 변화",
+        "en": "Describe how it has changed"
+      }
     },
     {
       "id": "memorable_experience",
-      "label": { "ko": "기억에 남는 경험", "en": "Describe a memorable experience" }
+      "label": {
+        "ko": "기억에 남는 경험",
+        "en": "Describe a memorable experience"
+      }
     },
     {
       "id": "problem_experience",
-      "label": { "ko": "문제·돌발 경험", "en": "Describe an unexpected problem" }
+      "label": {
+        "ko": "문제·돌발 경험",
+        "en": "Describe an unexpected problem"
+      }
     }
   ],
   "comboStages": {
@@ -202,22 +211,10 @@
       "preference_description",
       "preparation"
     ],
-    "2": [
-      "first_experience",
-      "recent_experience",
-      "first_motivation",
-      "experience_description",
-      "past_present_change"
-    ],
-    "3": [
-      "memorable_experience",
-      "problem_experience"
-    ]
+    "2": ["first_experience", "recent_experience", "first_motivation", "experience_description", "past_present_change"],
+    "3": ["memorable_experience", "problem_experience"]
   },
-  "experienceEndingTypes": [
-    "memorable_experience",
-    "problem_experience"
-  ],
+  "experienceEndingTypes": ["memorable_experience", "problem_experience"],
   "roleplayTopics": [
     {
       "id": "cellphone",

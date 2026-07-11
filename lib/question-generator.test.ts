@@ -17,9 +17,7 @@ describe("generateExam", () => {
     const exam = generateExam();
 
     expect(exam).toHaveLength(15);
-    expect(exam.map((q) => q.id)).toEqual([
-      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-    ]);
+    expect(exam.map((q) => q.id)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 
     expect(exam[0].topic).toBe("Self-Introduction");
     expect(exam[0].type).toBeTruthy();
@@ -30,22 +28,16 @@ describe("generateExam", () => {
     for (let i = 0; i < 3; i += 1) {
       const types = combo.slice(i * 3, i * 3 + 3).map((q) => q.type);
       expect(isValidComboTypeSequence(types)).toBe(true);
-      const topicIds = new Set(
-        combo.slice(i * 3, i * 3 + 3).map((q) => q.topicId),
-      );
+      const topicIds = new Set(combo.slice(i * 3, i * 3 + 3).map((q) => q.topicId));
       expect(topicIds.size).toBe(1);
     }
 
     const roleplay = exam.slice(10, 13);
-    expect(
-      isValidRoleplayTypeSequence(roleplay.map((q) => q.type)),
-    ).toBe(true);
+    expect(isValidRoleplayTypeSequence(roleplay.map((q) => q.type))).toBe(true);
     expect(new Set(roleplay.map((q) => q.topicId)).size).toBe(1);
 
     const comparison = exam.slice(13, 15);
-    expect(
-      isValidComparisonTypeSequence(comparison.map((q) => q.type)),
-    ).toBe(true);
+    expect(isValidComparisonTypeSequence(comparison.map((q) => q.type))).toBe(true);
     expect(new Set(comparison.map((q) => q.topicId)).size).toBe(1);
   });
 
@@ -53,15 +45,9 @@ describe("generateExam", () => {
     for (let i = 0; i < 8; i += 1) {
       const exam = generateExam();
       expect(exam).toHaveLength(15);
-      expect(
-        isValidComboTypeSequence(exam.slice(1, 4).map((q) => q.type)),
-      ).toBe(true);
-      expect(
-        isValidRoleplayTypeSequence(exam.slice(10, 13).map((q) => q.type)),
-      ).toBe(true);
-      expect(
-        isValidComparisonTypeSequence(exam.slice(13, 15).map((q) => q.type)),
-      ).toBe(true);
+      expect(isValidComboTypeSequence(exam.slice(1, 4).map((q) => q.type))).toBe(true);
+      expect(isValidRoleplayTypeSequence(exam.slice(10, 13).map((q) => q.type))).toBe(true);
+      expect(isValidComparisonTypeSequence(exam.slice(13, 15).map((q) => q.type))).toBe(true);
     }
   });
 });
@@ -123,18 +109,8 @@ describe("practice listing helpers", () => {
     expect(sets.every((s) => s.difficulty === "standard")).toBe(true);
     expect(countPracticeSets("combo", "standard")).toBeGreaterThan(0);
 
-    const furnitureKo = listPracticeQuestionSets(
-      "combo",
-      "furniture",
-      "standard",
-      "ko",
-    );
-    const furnitureEn = listPracticeQuestionSets(
-      "combo",
-      "furniture",
-      "standard",
-      "en",
-    );
+    const furnitureKo = listPracticeQuestionSets("combo", "furniture", "standard", "ko");
+    const furnitureEn = listPracticeQuestionSets("combo", "furniture", "standard", "en");
     expect(furnitureKo[0]?.label).toMatch(/[가-힣]/);
     expect(furnitureEn[0]?.label).toMatch(/[A-Za-z]/);
     expect(furnitureKo[0]?.label).not.toBe(furnitureEn[0]?.label);

@@ -57,9 +57,7 @@ describe("question-bank integrity", () => {
 
       for (const set of topic.sets) {
         expect(set.questions).toHaveLength(Object.keys(COMBO_STAGES).length);
-        expect(
-          isValidComboTypeSequence(set.questions.map((q) => q.type)),
-        ).toBe(true);
+        expect(isValidComboTypeSequence(set.questions.map((q) => q.type))).toBe(true);
         if (set.difficulty !== undefined) {
           expect(isDifficultyId(set.difficulty)).toBe(true);
         }
@@ -77,9 +75,7 @@ describe("question-bank integrity", () => {
       expect(roleplayIds.has(topic.id)).toBe(true);
       for (const set of topic.sets) {
         expect(set.questions).toHaveLength(Object.keys(ROLEPLAY_STAGES).length);
-        expect(
-          isValidRoleplayTypeSequence(set.questions.map((q) => q.type)),
-        ).toBe(true);
+        expect(isValidRoleplayTypeSequence(set.questions.map((q) => q.type))).toBe(true);
       }
     }
   });
@@ -90,12 +86,8 @@ describe("question-bank integrity", () => {
     for (const topic of bank.comparison) {
       expect(comparisonIds.has(topic.id)).toBe(true);
       for (const set of topic.sets) {
-        expect(set.questions).toHaveLength(
-          Object.keys(COMPARISON_STAGES).length,
-        );
-        expect(
-          isValidComparisonTypeSequence(set.questions.map((q) => q.type)),
-        ).toBe(true);
+        expect(set.questions).toHaveLength(Object.keys(COMPARISON_STAGES).length);
+        expect(isValidComparisonTypeSequence(set.questions.map((q) => q.type))).toBe(true);
       }
     }
   });

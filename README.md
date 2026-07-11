@@ -98,27 +98,27 @@ opic-exam/
 
 ## 🛠️ Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| Framework | Next.js 16, React 19 |
-| Styling | Tailwind CSS 4, shadcn/ui |
-| State | Zustand (persist) |
-| AI | Google Gemini API |
-| Storage | IndexedDB (idb-keyval) |
-| Charts | Recharts |
+| Category  | Technology                |
+| --------- | ------------------------- |
+| Framework | Next.js 16, React 19      |
+| Styling   | Tailwind CSS 4, shadcn/ui |
+| State     | Zustand (persist)         |
+| AI        | Google Gemini API         |
+| Storage   | IndexedDB (idb-keyval)    |
+| Charts    | Recharts                  |
 
 ## 📋 Exam Structure
 
 The exam consists of **15 questions**:
 
-| Question | Type |
-|----------|------|
-| 1 | Self-Introduction (fixed) |
-| 2-10 | Set Questions (3 random sets) |
-| 11-12 | Roleplay (asking questions, problem solving) |
-| 13 | Similar Experience |
-| 14 | Past vs Present Comparison |
-| 15 | Issues/Problems Description |
+| Question | Type                                         |
+| -------- | -------------------------------------------- |
+| 1        | Self-Introduction (fixed)                    |
+| 2-10     | Set Questions (3 random sets)                |
+| 11-12    | Roleplay (asking questions, problem solving) |
+| 13       | Similar Experience                           |
+| 14       | Past vs Present Comparison                   |
+| 15       | Issues/Problems Description                  |
 
 ## 📄 License
 

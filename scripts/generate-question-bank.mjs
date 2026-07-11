@@ -15,18 +15,10 @@ const ROOT = process.cwd();
 const QUESTION_BANK_PATH = path.join(ROOT, "public", "question-bank.json");
 const CONSTANTS_PATH = path.join(ROOT, "data", "opic-constants.json");
 
-const DAILY_COMBO_STANDARD_COUNT = Number(
-  process.env.DAILY_COMBO_STANDARD_COUNT ?? 3,
-);
-const DAILY_COMBO_CHALLENGING_COUNT = Number(
-  process.env.DAILY_COMBO_CHALLENGING_COUNT ?? 3,
-);
-const DAILY_ROLEPLAY_SET_COUNT = Number(
-  process.env.DAILY_ROLEPLAY_SET_COUNT ?? 2,
-);
-const DAILY_COMPARISON_SET_COUNT = Number(
-  process.env.DAILY_COMPARISON_SET_COUNT ?? 1,
-);
+const DAILY_COMBO_STANDARD_COUNT = Number(process.env.DAILY_COMBO_STANDARD_COUNT ?? 3);
+const DAILY_COMBO_CHALLENGING_COUNT = Number(process.env.DAILY_COMBO_CHALLENGING_COUNT ?? 3);
+const DAILY_ROLEPLAY_SET_COUNT = Number(process.env.DAILY_ROLEPLAY_SET_COUNT ?? 2);
+const DAILY_COMPARISON_SET_COUNT = Number(process.env.DAILY_COMPARISON_SET_COUNT ?? 1);
 const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
 
 function randomPick(array, count) {
@@ -54,8 +46,8 @@ function difficultyWritingRules(difficulty, difficulties) {
       guide ? `- Guide: ${guide}` : "",
       "- Write exam-like prompts with multiple follow-up clauses in one question.",
       "- Add concrete situations, constraints, or twists (who/when/where/what went wrong).",
-      "- Often end with requests like \"Provide as many details as possible\" or \"Tell me everything about that incident in detail.\"",
-      "- Example tone: \"I'd like to know about the bar you often go to. Where is your favorite bar? What does it look like? Please describe everything about that bar in detail.\"",
+      '- Often end with requests like "Provide as many details as possible" or "Tell me everything about that incident in detail."',
+      '- Example tone: "I\'d like to know about the bar you often go to. Where is your favorite bar? What does it look like? Please describe everything about that bar in detail."',
     ].filter(Boolean);
   }
   return [
@@ -96,9 +88,7 @@ function makeComboPrompt({
     "",
     "Difficulty writing rules:",
     ...difficultyWritingRules(difficulty, difficulties).map((line) =>
-      line.startsWith("-") || line.startsWith("Difficulty")
-        ? line
-        : `- ${line}`,
+      line.startsWith("-") || line.startsWith("Difficulty") ? line : `- ${line}`,
     ),
     "",
     "Question writing rules:",
@@ -111,7 +101,7 @@ function makeComboPrompt({
     "",
     "Output JSON fields:",
     "- sets[].targetTopicId",
-    "- sets[].label ({ko, en} short labels that summarize the question arc, e.g. {\"ko\":\"중요한 가구, 최근 구매와 조립 문제\",\"en\":\"Important furniture, last purchase & assembly issue\"} — not just the topic name)",
+    '- sets[].label ({ko, en} short labels that summarize the question arc, e.g. {"ko":"중요한 가구, 최근 구매와 조립 문제","en":"Important furniture, last purchase & assembly issue"} — not just the topic name)',
     "- sets[].isSurprise (boolean: true only for surprise topics)",
     `- sets[].difficulty (must be \"${difficulty}\")`,
     "- sets[].questions[0..2]: {type, text}",
@@ -165,7 +155,7 @@ function makeRoleplayPrompt({
     "",
     "Output JSON fields:",
     "- sets[].targetTopicId",
-    "- sets[].label ({ko, en} short labels that summarize the roleplay situation, e.g. {\"ko\":\"저녁 식사 예약하기\",\"en\":\"Making a dinner reservation\"} — not just the topic name)",
+    '- sets[].label ({ko, en} short labels that summarize the roleplay situation, e.g. {"ko":"저녁 식사 예약하기","en":"Making a dinner reservation"} — not just the topic name)',
     `- sets[].difficulty (must be \"${difficulty}\")`,
     "- sets[].questions[0..2]: {type, text}",
     "",
@@ -213,7 +203,7 @@ function makeComparisonPrompt({
     "",
     "Output JSON fields:",
     "- sets[].targetTopicId",
-    "- sets[].label ({ko, en} short labels that summarize the comparison focus, e.g. {\"ko\":\"과거와 현재 주거 비교, 사회 이슈\",\"en\":\"Housing then vs now & social issues\"} — not just the topic name)",
+    '- sets[].label ({ko, en} short labels that summarize the comparison focus, e.g. {"ko":"과거와 현재 주거 비교, 사회 이슈","en":"Housing then vs now & social issues"} — not just the topic name)',
     `- sets[].difficulty (must be \"${difficulty}\")`,
     "- sets[].questions[0..1]: {type, text}",
     "",
@@ -276,14 +266,7 @@ function ensureTopicExists(bank, category, topicConstant, options = {}) {
   return topic;
 }
 
-function appendGeneratedSets({
-  bank,
-  category,
-  validSets,
-  topicLookup,
-  existingQuestionTexts,
-  now,
-}) {
+function appendGeneratedSets({ bank, category, validSets, topicLookup, existingQuestionTexts, now }) {
   let added = 0;
 
   for (const generatedSet of validSets) {
@@ -296,18 +279,9 @@ function appendGeneratedSets({
       topicConstant,
       category === "combo" ? { isSurprise: generatedSet.isSurprise } : {},
     );
-    const labelEn =
-      typeof generatedSet.label === "string"
-        ? generatedSet.label
-        : generatedSet.label?.en;
-    const labelKo =
-      typeof generatedSet.label === "string"
-        ? generatedSet.label
-        : generatedSet.label?.ko;
-    const idSeed = normalize(labelEn || labelKo || "set").replace(
-      /[^a-z0-9]+/g,
-      "-",
-    );
+    const labelEn = typeof generatedSet.label === "string" ? generatedSet.label : generatedSet.label?.en;
+    const labelKo = typeof generatedSet.label === "string" ? generatedSet.label : generatedSet.label?.ko;
+    const idSeed = normalize(labelEn || labelKo || "set").replace(/[^a-z0-9]+/g, "-");
     const newSetId = `${topic.id}-auto-${now}-${idSeed || "set"}`.slice(0, 80);
     const uniqueId = topic.sets.some((s) => s.id === newSetId)
       ? `${newSetId}-${Math.random().toString(36).slice(2, 7)}`
@@ -319,9 +293,7 @@ function appendGeneratedSets({
         ko: labelKo || labelEn || "세트",
         en: labelEn || labelKo || "Set",
       },
-      difficulty: VALID_DIFFICULTIES.has(generatedSet.difficulty)
-        ? generatedSet.difficulty
-        : "standard",
+      difficulty: VALID_DIFFICULTIES.has(generatedSet.difficulty) ? generatedSet.difficulty : "standard",
       questions: generatedSet.questions,
     });
 
@@ -338,13 +310,7 @@ async function generateSets(client, prompt, { requireIsSurprise = false } = {}) 
   const itemSchema = requireIsSurprise
     ? {
         ...setItemSchema,
-        required: [
-          "targetTopicId",
-          "label",
-          "isSurprise",
-          "difficulty",
-          "questions",
-        ],
+        required: ["targetTopicId", "label", "isSurprise", "difficulty", "questions"],
       }
     : setItemSchema;
 
@@ -420,10 +386,7 @@ async function main() {
   async function generateComboPass(difficulty, setCount) {
     if (setCount <= 0) return 0;
 
-    const { surveyCount, surpriseCount } = splitByRatio(
-      setCount,
-      constants.examComposition.surveyToSurpriseRatio,
-    );
+    const { surveyCount, surpriseCount } = splitByRatio(setCount, constants.examComposition.surveyToSurpriseRatio);
     comboRatioParts.push(`${difficulty} ${surveyCount}:${surpriseCount}`);
 
     const comboSets = await generateSets(
@@ -432,10 +395,7 @@ async function main() {
         surveyCount,
         surpriseCount,
         surveyTopics: randomPick(surveyTopics, Math.max(surveyCount, 4)),
-        surpriseTopics: randomPick(
-          surpriseTopics,
-          Math.max(surpriseCount, 4),
-        ),
+        surpriseTopics: randomPick(surpriseTopics, Math.max(surpriseCount, 4)),
         comboQuestionTypes,
         comboStages,
         difficulty,
@@ -460,25 +420,15 @@ async function main() {
       validSets: validComboSets,
       topicLookup: (generatedSet) =>
         generatedSet.isSurprise
-          ? surpriseTopics.find(
-              (topic) => topic.id === generatedSet.targetTopicId,
-            )
-          : surveyTopics.find(
-              (topic) => topic.id === generatedSet.targetTopicId,
-            ),
+          ? surpriseTopics.find((topic) => topic.id === generatedSet.targetTopicId)
+          : surveyTopics.find((topic) => topic.id === generatedSet.targetTopicId),
       existingQuestionTexts,
       now,
     });
   }
 
-  comboStandardAdded = await generateComboPass(
-    "standard",
-    DAILY_COMBO_STANDARD_COUNT,
-  );
-  comboChallengingAdded = await generateComboPass(
-    "challenging",
-    DAILY_COMBO_CHALLENGING_COUNT,
-  );
+  comboStandardAdded = await generateComboPass("standard", DAILY_COMBO_STANDARD_COUNT);
+  comboChallengingAdded = await generateComboPass("challenging", DAILY_COMBO_CHALLENGING_COUNT);
   comboAdded = comboStandardAdded + comboChallengingAdded;
 
   if (DAILY_ROLEPLAY_SET_COUNT > 0 && roleplayTopics.length > 0) {
@@ -486,10 +436,7 @@ async function main() {
       client,
       makeRoleplayPrompt({
         setCount: DAILY_ROLEPLAY_SET_COUNT,
-        roleplayTopics: randomPick(
-          roleplayTopics,
-          Math.max(DAILY_ROLEPLAY_SET_COUNT, 4),
-        ),
+        roleplayTopics: randomPick(roleplayTopics, Math.max(DAILY_ROLEPLAY_SET_COUNT, 4)),
         roleplayQuestionTypes,
         roleplayStages,
         difficulty: "standard",
@@ -510,8 +457,7 @@ async function main() {
       bank,
       category: "roleplay",
       validSets: validRoleplaySets,
-      topicLookup: (generatedSet) =>
-        roleplayTopics.find((topic) => topic.id === generatedSet.targetTopicId),
+      topicLookup: (generatedSet) => roleplayTopics.find((topic) => topic.id === generatedSet.targetTopicId),
       existingQuestionTexts,
       now,
     });
@@ -522,10 +468,7 @@ async function main() {
       client,
       makeComparisonPrompt({
         setCount: DAILY_COMPARISON_SET_COUNT,
-        comparisonTopics: randomPick(
-          comparisonTopics,
-          Math.max(DAILY_COMPARISON_SET_COUNT, 4),
-        ),
+        comparisonTopics: randomPick(comparisonTopics, Math.max(DAILY_COMPARISON_SET_COUNT, 4)),
         advancedQuestionTypes,
         comparisonStages,
         difficulty: "standard",
@@ -546,10 +489,7 @@ async function main() {
       bank,
       category: "comparison",
       validSets: validComparisonSets,
-      topicLookup: (generatedSet) =>
-        comparisonTopics.find(
-          (topic) => topic.id === generatedSet.targetTopicId,
-        ),
+      topicLookup: (generatedSet) => comparisonTopics.find((topic) => topic.id === generatedSet.targetTopicId),
       existingQuestionTexts,
       now,
     });

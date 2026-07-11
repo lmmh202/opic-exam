@@ -2,13 +2,7 @@
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PronunciationPracticePanel } from "@/components/pronunciation-practice-panel";
 import { useTranslation } from "@/components/i18n-provider";
 
@@ -26,9 +20,7 @@ export default function PronunciationPracticePage() {
             <ArrowLeft className="w-4 h-4" />
             {t("연습 허브로 돌아가기")}
           </Link>
-          <CardTitle className="text-2xl font-bold tracking-tight text-slate-900">
-            {t("발음 연습")}
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold tracking-tight text-slate-900">{t("발음 연습")}</CardTitle>
           <CardDescription className="text-slate-600">
             {t("영어 문장을 입력하면 브라우저 TTS로 발음을 들려줍니다.")}
           </CardDescription>

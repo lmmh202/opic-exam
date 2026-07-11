@@ -38,24 +38,15 @@ export function loadVoices(): Promise<SpeechSynthesisVoice[]> {
 
       const onVoicesChanged = () => {
         if (tryLoad()) {
-          window.speechSynthesis.removeEventListener(
-            "voiceschanged",
-            onVoicesChanged,
-          );
+          window.speechSynthesis.removeEventListener("voiceschanged", onVoicesChanged);
         }
       };
 
-      window.speechSynthesis.addEventListener(
-        "voiceschanged",
-        onVoicesChanged,
-      );
+      window.speechSynthesis.addEventListener("voiceschanged", onVoicesChanged);
 
       // Safari and some browsers load voices asynchronously without firing promptly.
       window.setTimeout(() => {
-        window.speechSynthesis.removeEventListener(
-          "voiceschanged",
-          onVoicesChanged,
-        );
+        window.speechSynthesis.removeEventListener("voiceschanged", onVoicesChanged);
         if (!voicesCache || voicesCache.length === 0) {
           voicesCache = window.speechSynthesis.getVoices();
         }
@@ -67,29 +58,20 @@ export function loadVoices(): Promise<SpeechSynthesisVoice[]> {
   return voicesReadyPromise;
 }
 
-export function pickVoice(
-  voices: SpeechSynthesisVoice[],
-  lang = "en-US",
-): SpeechSynthesisVoice | undefined {
+export function pickVoice(voices: SpeechSynthesisVoice[], lang = "en-US"): SpeechSynthesisVoice | undefined {
   if (voices.length === 0) return undefined;
 
   const langPrefix = lang.split("-")[0];
 
   for (const preferredName of PREFERRED_VOICE_NAMES) {
-    const match = voices.find(
-      (voice) =>
-        voice.name.includes(preferredName) &&
-        voice.lang.startsWith(langPrefix),
-    );
+    const match = voices.find((voice) => voice.name.includes(preferredName) && voice.lang.startsWith(langPrefix));
     if (match) return match;
   }
 
   const exactLangMatch = voices.find((voice) => voice.lang === lang);
   if (exactLangMatch) return exactLangMatch;
 
-  const localMatch = voices.find(
-    (voice) => voice.lang.startsWith(langPrefix) && voice.localService,
-  );
+  const localMatch = voices.find((voice) => voice.lang.startsWith(langPrefix) && voice.localService);
   if (localMatch) return localMatch;
 
   return voices.find((voice) => voice.lang.startsWith(langPrefix));

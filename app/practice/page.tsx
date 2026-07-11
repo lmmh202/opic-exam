@@ -3,21 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  ChevronDown,
-  Layers,
-  Volume2,
-} from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { ArrowLeft, ArrowRight, Check, ChevronDown, Layers, Volume2 } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -63,26 +50,12 @@ const CATEGORY_OPTION_KEY: Record<PracticeCategory, TranslationKey> = {
   comparison: "비교 (2문항)",
 };
 
-const PRACTICE_CATEGORIES: PracticeCategory[] = [
-  "combo",
-  "roleplay",
-  "comparison",
-];
+const PRACTICE_CATEGORIES: PracticeCategory[] = ["combo", "roleplay", "comparison"];
 
-function SelectMenuItem({
-  label,
-  selected,
-  onSelect,
-}: {
-  label: string;
-  selected: boolean;
-  onSelect: () => void;
-}) {
+function SelectMenuItem({ label, selected, onSelect }: { label: string; selected: boolean; onSelect: () => void }) {
   return (
     <DropdownMenuItem onClick={onSelect} className="gap-2">
-      <Check
-        className={`size-4 shrink-0 ${selected ? "opacity-100" : "opacity-0"}`}
-      />
+      <Check className={`size-4 shrink-0 ${selected ? "opacity-100" : "opacity-0"}`} />
       <span className="truncate">{label}</span>
     </DropdownMenuItem>
   );
@@ -133,10 +106,7 @@ export default function PracticeHubPage() {
   const surveyTopics = filteredTopics.filter((item) => !item.surprise);
   const surpriseTopics = filteredTopics.filter((item) => item.surprise);
   const selectedTopic = filteredTopics.find((item) => item.id === topicId);
-  const questionSets =
-    topicId !== "random"
-      ? listPracticeQuestionSets(category, topicId, difficulty, locale)
-      : [];
+  const questionSets = topicId !== "random" ? listPracticeQuestionSets(category, topicId, difficulty, locale) : [];
   const selectedSet = questionSets.find((s) => s.id === setId);
   const noMatchingSets = matchingSetCount === 0;
 
@@ -158,9 +128,7 @@ export default function PracticeHubPage() {
         : t("랜덤 세트");
 
   const difficultyHelper =
-    difficulty === "challenging"
-      ? t("도전 난이도는 기출형 다층 질문입니다.")
-      : getDifficultyGuide("standard", locale);
+    difficulty === "challenging" ? t("도전 난이도는 기출형 다층 질문입니다.") : getDifficultyGuide("standard", locale);
 
   const handleCategoryChange = (value: PracticeCategory) => {
     setCategory(value);
@@ -203,19 +171,12 @@ export default function PracticeHubPage() {
             <ArrowLeft className="w-4 h-4" />
             {t("홈으로 돌아가기")}
           </Link>
-          <Badge
-            variant="outline"
-            className="w-fit mb-2 border-emerald-200 text-emerald-700 bg-emerald-50"
-          >
+          <Badge variant="outline" className="w-fit mb-2 border-emerald-200 text-emerald-700 bg-emerald-50">
             {t("연습 모드")}
           </Badge>
-          <CardTitle className="text-2xl font-bold tracking-tight text-slate-900">
-            {t("연습 허브")}
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold tracking-tight text-slate-900">{t("연습 허브")}</CardTitle>
           <CardDescription className="text-slate-600">
-            {t(
-              "연습 활동을 선택하세요. 주제 세션은 문제 은행의 설문 기반 문항을 사용합니다.",
-            )}
+            {t("연습 활동을 선택하세요. 주제 세션은 문제 은행의 설문 기반 문항을 사용합니다.")}
           </CardDescription>
         </CardHeader>
 
@@ -228,12 +189,8 @@ export default function PracticeHubPage() {
               <Volume2 className="w-5 h-5 text-emerald-600" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-slate-900">
-                {t("발음 연습")}
-              </h3>
-              <p className="text-sm text-slate-600">
-                {t("문장을 입력하고 브라우저 TTS 발음을 들어보세요.")}
-              </p>
+              <h3 className="font-semibold text-slate-900">{t("발음 연습")}</h3>
+              <p className="text-sm text-slate-600">{t("문장을 입력하고 브라우저 TTS 발음을 들어보세요.")}</p>
             </div>
             <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
           </Link>
@@ -253,9 +210,7 @@ export default function PracticeHubPage() {
               onStart={handleStartSession}
               startDisabled={noMatchingSets}
               startDisabledReason={
-                noMatchingSets
-                  ? t("선택한 난이도에 맞는 문항 세트가 없습니다.")
-                  : t("연습할 주제가 없습니다.")
+                noMatchingSets ? t("선택한 난이도에 맞는 문항 세트가 없습니다.") : t("연습할 주제가 없습니다.")
               }
               showRecordingSettings={false}
             >
@@ -269,16 +224,11 @@ export default function PracticeHubPage() {
                         className="w-full justify-between font-normal"
                         aria-labelledby="practice-difficulty-label"
                       >
-                        <span className="truncate">
-                          {getDifficultyLabel(difficulty, locale)}
-                        </span>
+                        <span className="truncate">{getDifficultyLabel(difficulty, locale)}</span>
                         <ChevronDown className="size-4 shrink-0 opacity-50" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="start"
-                      className="w-(--radix-dropdown-menu-trigger-width)"
-                    >
+                    <DropdownMenuContent align="start" className="w-(--radix-dropdown-menu-trigger-width)">
                       {DIFFICULTIES.map((item) => (
                         <SelectMenuItem
                           key={item.id}
@@ -301,16 +251,11 @@ export default function PracticeHubPage() {
                         className="w-full justify-between font-normal"
                         aria-labelledby="practice-category-label"
                       >
-                        <span className="truncate">
-                          {t(CATEGORY_OPTION_KEY[category])}
-                        </span>
+                        <span className="truncate">{t(CATEGORY_OPTION_KEY[category])}</span>
                         <ChevronDown className="size-4 shrink-0 opacity-50" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="start"
-                      className="w-(--radix-dropdown-menu-trigger-width)"
-                    >
+                    <DropdownMenuContent align="start" className="w-(--radix-dropdown-menu-trigger-width)">
                       {PRACTICE_CATEGORIES.map((item) => (
                         <SelectMenuItem
                           key={item}
@@ -328,33 +273,21 @@ export default function PracticeHubPage() {
                       </p>
                       <ol className="space-y-2 text-xs text-slate-600">
                         <li>
-                          <span className="font-medium text-slate-800">
-                            {t("1단계 · 현재 묘사 / 루틴")}
-                          </span>
+                          <span className="font-medium text-slate-800">{t("1단계 · 현재 묘사 / 루틴")}</span>
                           <span className="mt-0.5 block text-slate-500">
-                            {t(
-                              "장소·활동·평소 습관을 현재 시제로 설명합니다.",
-                            )}
+                            {t("장소·활동·평소 습관을 현재 시제로 설명합니다.")}
                           </span>
                         </li>
                         <li>
-                          <span className="font-medium text-slate-800">
-                            {t("2단계 · 과거 경험 / 변화")}
-                          </span>
+                          <span className="font-medium text-slate-800">{t("2단계 · 과거 경험 / 변화")}</span>
                           <span className="mt-0.5 block text-slate-500">
-                            {t(
-                              "처음·최근 경험이나, 예전과 달라진 점을 이야기합니다.",
-                            )}
+                            {t("처음·최근 경험이나, 예전과 달라진 점을 이야기합니다.")}
                           </span>
                         </li>
                         <li>
-                          <span className="font-medium text-slate-800">
-                            {t("3단계 · 기억에 남는 사건")}
-                          </span>
+                          <span className="font-medium text-slate-800">{t("3단계 · 기억에 남는 사건")}</span>
                           <span className="mt-0.5 block text-slate-500">
-                            {t(
-                              "특별하거나 예상치 못한 일을 스토리로 풀어냅니다.",
-                            )}
+                            {t("특별하거나 예상치 못한 일을 스토리로 풀어냅니다.")}
                           </span>
                         </li>
                       </ol>
@@ -366,61 +299,39 @@ export default function PracticeHubPage() {
                       </p>
                       <ol className="space-y-2 text-xs text-slate-600">
                         <li>
-                          <span className="font-medium text-slate-800">
-                            {t("1단계 · 상황 질문")}
-                          </span>
+                          <span className="font-medium text-slate-800">{t("1단계 · 상황 질문")}</span>
                           <span className="mt-0.5 block text-slate-500">
-                            {t(
-                              "주어진 상황에서 필요한 정보 3~4가지를 질문합니다.",
-                            )}
+                            {t("주어진 상황에서 필요한 정보 3~4가지를 질문합니다.")}
                           </span>
                         </li>
                         <li>
-                          <span className="font-medium text-slate-800">
-                            {t("2단계 · 문제와 대안")}
-                          </span>
+                          <span className="font-medium text-slate-800">{t("2단계 · 문제와 대안")}</span>
                           <span className="mt-0.5 block text-slate-500">
-                            {t(
-                              "문제가 생기면 상황을 설명하고 대안 2~3가지를 제시합니다.",
-                            )}
+                            {t("문제가 생기면 상황을 설명하고 대안 2~3가지를 제시합니다.")}
                           </span>
                         </li>
                         <li>
-                          <span className="font-medium text-slate-800">
-                            {t("3단계 · 유사 경험")}
-                          </span>
+                          <span className="font-medium text-slate-800">{t("3단계 · 유사 경험")}</span>
                           <span className="mt-0.5 block text-slate-500">
-                            {t(
-                              "앞에서와 비슷한 실제 경험을 과거 시제로 이야기합니다.",
-                            )}
+                            {t("앞에서와 비슷한 실제 경험을 과거 시제로 이야기합니다.")}
                           </span>
                         </li>
                       </ol>
                     </div>
                   ) : (
                     <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-3 space-y-2.5">
-                      <p className="text-xs font-medium text-slate-700">
-                        {t("비교는 2문항이 단계적으로 이어집니다.")}
-                      </p>
+                      <p className="text-xs font-medium text-slate-700">{t("비교는 2문항이 단계적으로 이어집니다.")}</p>
                       <ol className="space-y-2 text-xs text-slate-600">
                         <li>
-                          <span className="font-medium text-slate-800">
-                            {t("1단계 · 비교와 대조")}
-                          </span>
+                          <span className="font-medium text-slate-800">{t("1단계 · 비교와 대조")}</span>
                           <span className="mt-0.5 block text-slate-500">
-                            {t(
-                              "두 대상 또는 과거와 현재의 공통점·차이점을 말합니다.",
-                            )}
+                            {t("두 대상 또는 과거와 현재의 공통점·차이점을 말합니다.")}
                           </span>
                         </li>
                         <li>
-                          <span className="font-medium text-slate-800">
-                            {t("2단계 · 사회 이슈")}
-                          </span>
+                          <span className="font-medium text-slate-800">{t("2단계 · 사회 이슈")}</span>
                           <span className="mt-0.5 block text-slate-500">
-                            {t(
-                              "같은 주제의 최신 사회 문제나 트렌드에 대해 이야기합니다.",
-                            )}
+                            {t("같은 주제의 최신 사회 문제나 트렌드에 대해 이야기합니다.")}
                           </span>
                         </li>
                       </ol>
@@ -441,10 +352,7 @@ export default function PracticeHubPage() {
                         <ChevronDown className="size-4 shrink-0 opacity-50" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="start"
-                      className="w-(--radix-dropdown-menu-trigger-width) max-h-72"
-                    >
+                    <DropdownMenuContent align="start" className="w-(--radix-dropdown-menu-trigger-width) max-h-72">
                       <DropdownMenuGroup>
                         <SelectMenuItem
                           label={t("랜덤 주제")}
@@ -494,10 +402,7 @@ export default function PracticeHubPage() {
                           <ChevronDown className="size-4 shrink-0 opacity-50" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="start"
-                        className="w-(--radix-dropdown-menu-trigger-width) max-h-72"
-                      >
+                      <DropdownMenuContent align="start" className="w-(--radix-dropdown-menu-trigger-width) max-h-72">
                         <SelectMenuItem
                           label={t("랜덤 세트")}
                           selected={setId === "random"}
