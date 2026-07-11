@@ -28,6 +28,7 @@ function ExamPageContent() {
   const urlMode = parseExamMode(searchParams.get("mode"));
 
   const {
+    _hasHydrated: hasHydrated,
     examMode,
     currentQuestionIndex,
     nextQuestion,
@@ -93,25 +94,42 @@ function ExamPageContent() {
   }, []);
 
   useEffect(() => {
+    if (!hasHydrated) return;
+
     if (examMode !== mode) {
       router.replace(config.setupPath);
+      return;
     }
-  }, [examMode, mode, router, config.setupPath]);
 
-  useEffect(() => {
     if (examQuestions.length === 0) {
       router.replace(config.setupPath);
+      return;
     }
-  }, [examQuestions.length, router, config.setupPath]);
+
+    // Past the last question means the session finished — go to results.
+    // Do not treat "not yet hydrated / empty defaults" as finished.
+    if (currentQuestionIndex >= examQuestions.length) {
+      router.replace(`${config.resultsPath}?mode=${mode}`);
+    }
+  }, [
+    hasHydrated,
+    examMode,
+    mode,
+    examQuestions.length,
+    currentQuestionIndex,
+    router,
+    config.setupPath,
+    config.resultsPath,
+  ]);
 
   useEffect(() => {
-    if (config.totalTimeSeconds === null) return;
+    if (!hasHydrated || config.totalTimeSeconds === null) return;
 
     const timer = setInterval(() => {
       decrementTime();
     }, 1000);
     return () => clearInterval(timer);
-  }, [decrementTime, config.totalTimeSeconds]);
+  }, [hasHydrated, decrementTime, config.totalTimeSeconds]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -122,12 +140,6 @@ function ExamPageContent() {
     }
     return () => clearInterval(interval);
   }, [isStoreRecording]);
-
-  useEffect(() => {
-    if (!currentQuestion) {
-      router.push(`${config.resultsPath}?mode=${mode}`);
-    }
-  }, [currentQuestion, router, config.resultsPath, mode]);
 
   useEffect(() => {
     stop();
@@ -343,7 +355,7 @@ function ExamPageContent() {
     router.push(config.setupPath);
   };
 
-  if (!currentQuestion || examMode !== mode) return null;
+  if (!hasHydrated || !currentQuestion || examMode !== mode) return null;
 
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-between p-4">
