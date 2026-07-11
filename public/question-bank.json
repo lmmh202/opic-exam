@@ -73,6 +73,28 @@
             "ko": "공원 활동, 첫 방문과 기억에 남는 하루",
             "en": "Park activities, first visit & memorable day"
           }
+        },
+        {
+          "id": "park-auto-2026-07-10-park-activities-recent-visit-and-a-memorable-moment",
+          "label": {
+            "ko": "공원 방문 활동, 최근 경험과 기억에 남는 순간",
+            "en": "Park activities, recent visit, and a memorable moment"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "activity_description",
+              "text": "What kind of activities do you usually do when you go to a park? Describe a typical visit to your favorite park."
+            },
+            {
+              "type": "recent_experience",
+              "text": "When was the last time you went to a park? Tell me about that recent experience, including where you went and what you did there."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Could you tell me about a particularly memorable or enjoyable experience you've had at a park? What made it so special?"
+            }
+          ]
         }
       ]
     },
@@ -141,6 +163,28 @@
             "ko": "음악 취향, 변화와 기억에 남는 순간",
             "en": "Music taste, how it changed & memorable moment"
           }
+        },
+        {
+          "id": "music-auto-2026-07-10-music-listening-routine-changes-and-problem-experience",
+          "label": {
+            "ko": "음악 감상 루틴과 변화, 문제 경험",
+            "en": "Music listening routine, changes, and problem experience"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "routine",
+              "text": "Please describe your usual routine for listening to music. What kind of music do you typically enjoy, and where do you listen to it?"
+            },
+            {
+              "type": "past_present_change",
+              "text": "How have your music listening habits or preferences changed over the years? Describe how you used to listen to music compared to now."
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever had a problem or an unexpected situation related to listening to music? Perhaps a technical issue, a lost device, or something else. Tell me about what happened and how you handled it."
+            }
+          ]
         }
       ]
     },
@@ -376,6 +420,28 @@
             "ko": "조깅 루틴, 변화와 기억에 남는 러닝",
             "en": "Jogging routine, how it changed & memorable run"
           }
+        },
+        {
+          "id": "jogging-auto-2026-07-10-jogging-routine-recent-experience-special-moment",
+          "label": {
+            "ko": "조깅 루틴, 최근 경험과 특별한 순간",
+            "en": "Jogging routine, recent experience & special moment"
+          },
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "routine",
+              "text": "You indicated that you enjoy jogging. Can you describe your typical jogging routine? Where do you usually go, how often do you jog, and what do you do to prepare before and after your run? Tell me everything in detail."
+            },
+            {
+              "type": "recent_experience",
+              "text": "Could you tell me about a recent time you went jogging? Where did you go, who did you go with, and what was the weather like? Describe the entire experience from start to finish."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "While jogging, have you ever encountered a memorable or unexpected incident, perhaps something unusual you saw, a person you met, or a challenge you overcame? Describe that particular experience in detail, including what happened and why it stands out in your memory."
+            }
+          ]
         }
       ]
     },
@@ -529,6 +595,28 @@
             {
               "type": "problem_experience",
               "text": "Have you ever experienced any problems or unexpected incidents related to your housing? What happened, and how did you resolve it?"
+            }
+          ]
+        },
+        {
+          "id": "housing-auto-2026-07-10-housing-description-changes-problem-resolution",
+          "label": {
+            "ko": "주거 공간 설명, 변화와 문제 해결",
+            "en": "Housing description, changes & problem resolution"
+          },
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "I'd like to know about your current living situation. What kind of home do you live in? Please describe your home, including its location, the number of rooms, and any special features you enjoy. Provide as many details as possible."
+            },
+            {
+              "type": "past_present_change",
+              "text": "Thinking back to when you were younger, how has your housing changed over the years? Perhaps you moved from a small apartment to a house, or vice versa. Describe how your living situation has evolved from the past to the present, and what led to these changes."
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever experienced a significant problem or memorable incident related to your housing, such as a major repair issue, a moving disaster, or an unexpected event? Tell me about that incident in detail, what happened, who was involved, and how it was resolved."
             }
           ]
         }
@@ -899,6 +987,72 @@
           ]
         }
       ]
+    },
+    {
+      "id": "appliances",
+      "label": "Home Appliances",
+      "keywords": [
+        "appliances",
+        "home appliances"
+      ],
+      "surprise": true,
+      "sets": [
+        {
+          "id": "appliances-auto-2026-07-10-favorite-appliance-first-purchase-and-a-breakdown-pro",
+          "label": {
+            "ko": "선호하는 가전제품, 첫 구매와 고장 경험",
+            "en": "Favorite appliance, first purchase, and a breakdown problem"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "object_description",
+              "text": "Among all the home appliances you own, which one do you use the most or find most essential? Describe this appliance in detail."
+            },
+            {
+              "type": "first_experience",
+              "text": "Can you recall the first time you purchased a major home appliance for yourself? Tell me about that experience, including what you bought and why."
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever encountered a problem or unexpected issue with a home appliance? Describe the situation, what appliance it was, and how you resolved the problem."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bank",
+      "label": "Bank",
+      "keywords": [
+        "bank",
+        "bank"
+      ],
+      "surprise": true,
+      "sets": [
+        {
+          "id": "bank-auto-2026-07-10-bank-description-changes-problem-resolution",
+          "label": {
+            "ko": "은행 설명, 변화와 문제 해결",
+            "en": "Bank description, changes & problem resolution"
+          },
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "I'd like to ask you some questions about banks. Could you describe a bank you visit often, or one that you find yourself using frequently? What does it look like, where is it located, and what services do you typically use there? Give me as many details as possible."
+            },
+            {
+              "type": "past_present_change",
+              "text": "Thinking about the past, how have banks or your banking habits changed over time? Perhaps you used to go to the physical bank often, but now you use mobile banking. Describe how banking has evolved for you personally, and what has caused these changes."
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever encountered a problem or a memorable incident while at a bank or dealing with banking services? For example, a transaction error, a lost card, or an unexpected situation with a bank employee. Tell me everything about that incident in detail, including what happened and how it was resolved."
+            }
+          ]
+        }
+      ]
     }
   ],
   "roleplay": [
@@ -927,6 +1081,28 @@
             "ko": "새 휴대폰 구매하기",
             "en": "Buying a new cellphone"
           }
+        },
+        {
+          "id": "cellphone-auto-2026-07-10-inquiring-about-a-cell-phone-purchase",
+          "label": {
+            "ko": "휴대폰 구매 관련 문의하기",
+            "en": "Inquiring about a cell phone purchase"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "I'd like you to call a cell phone store and ask about purchasing a new phone. Ask 3-4 questions about the different models available, their prices, and the monthly plans they offer."
+            },
+            {
+              "type": "problem_solving",
+              "text": "I am sorry, but the specific phone model you wanted is currently out of stock. Call the store again, explain the situation politely, and suggest 2-3 alternative solutions to the store clerk."
+            },
+            {
+              "type": "similar_experience",
+              "text": "Have you ever wanted to buy something specific, but it was unavailable or out of stock? Tell me about that experience. What did you do?"
+            }
+          ]
         }
       ]
     },
@@ -1137,6 +1313,28 @@
               "text": "In real life, have you ever wanted to purchase something or sign up for a service, but found the price was too high, or it didn't quite meet your expectations? Tell me about that experience. What happened and what did you decide to do?"
             }
           ]
+        },
+        {
+          "id": "gym-auto-2026-07-10-inquiring-about-gym-membership-and-usage",
+          "label": {
+            "ko": "헬스장 등록 및 이용 문의",
+            "en": "Inquiring about gym membership and usage"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "You want to join a new gym. Call the gym and ask 3-4 questions about their membership options, the facilities they have, and the class schedules."
+            },
+            {
+              "type": "problem_solving",
+              "text": "The yoga class you wanted to join is fully booked. Call the gym again, explain the situation, and suggest 2-3 alternative options for attending a class or getting a similar workout."
+            },
+            {
+              "type": "similar_experience",
+              "text": "Tell me about a time when a plan or reservation you made was unexpectedly changed or canceled. What happened and how did you handle it?"
+            }
+          ]
         }
       ]
     }
@@ -1221,6 +1419,24 @@
             {
               "type": "issue_discussion",
               "text": "As communication technology continues to advance rapidly, some social issues or negative side effects have started to emerge. What are some of these problems that have arisen due to modern communication technology? Explain why these issues are important and what actions, if any, are being taken to address them."
+            }
+          ]
+        },
+        {
+          "id": "technology-auto-2026-07-10-technology-use-then-vs-now-social-impact",
+          "label": {
+            "ko": "과거와 현재 기술 활용 비교, 사회적 영향",
+            "en": "Technology use then vs now & social impact"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "past_present_comparison",
+              "text": "In the past, people used technology very differently compared to today for communication and accessing information. Please describe how technology was utilized for these purposes in the past, and then compare it to how people use technology today. What are the most significant similarities and differences you've observed in these two periods?"
+            },
+            {
+              "type": "issue_discussion",
+              "text": "With the rapid advancement and integration of technology into daily life, various social issues have emerged. Choose one specific social issue or trend related to modern technology use, such as concerns about privacy, information overload, or the impact on mental health. Explain why this issue is important and discuss how individuals, communities, or governments are attempting to cope with or solve this problem."
             }
           ]
         }
