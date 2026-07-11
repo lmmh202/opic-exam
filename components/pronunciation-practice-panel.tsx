@@ -16,21 +16,24 @@ interface PronunciationPracticePanelProps {
   className?: string;
 }
 
-export function PronunciationPracticePanel({
-  seedText = "",
-  className,
-}: PronunciationPracticePanelProps) {
+export function PronunciationPracticePanel({ seedText = "", className }: PronunciationPracticePanelProps) {
   const { t } = useTranslation();
   const inputId = useId();
-  const [text, setText] = useState(seedText.slice(0, MAX_LENGTH));
+  const clippedSeed = seedText.slice(0, MAX_LENGTH);
+  const [text, setText] = useState(clippedSeed);
+  const [seedSnapshot, setSeedSnapshot] = useState(clippedSeed);
   const { speak, stop, isSpeaking, isSupported } = useSpeechSynthesis({
     onError: (message) => toast.error(message),
   });
 
+  if (clippedSeed !== seedSnapshot) {
+    setSeedSnapshot(clippedSeed);
+    setText(clippedSeed);
+  }
+
   useEffect(() => {
     stop();
-    setText(seedText.slice(0, MAX_LENGTH));
-  }, [seedText, stop]);
+  }, [clippedSeed, stop]);
 
   const handleSpeak = () => {
     const trimmed = text.trim();
@@ -61,10 +64,7 @@ export function PronunciationPracticePanel({
   return (
     <div className={className}>
       <div className="space-y-2">
-        <label
-          htmlFor={inputId}
-          className="text-sm font-medium text-slate-900"
-        >
+        <label htmlFor={inputId} className="text-sm font-medium text-slate-900">
           {t("영어 문장을 입력하세요")}
         </label>
         <Textarea
@@ -87,11 +87,7 @@ export function PronunciationPracticePanel({
       </div>
 
       <div className="flex flex-wrap gap-3 mt-4">
-        <Button
-          onClick={handleSpeak}
-          disabled={!isSupported}
-          className="flex-1 sm:flex-none"
-        >
+        <Button onClick={handleSpeak} disabled={!isSupported} className="flex-1 sm:flex-none">
           {isSpeaking ? (
             <>
               <Square className="w-4 h-4 mr-2" />
@@ -104,21 +100,13 @@ export function PronunciationPracticePanel({
             </>
           )}
         </Button>
-        <Button
-          variant="outline"
-          onClick={handleClear}
-          disabled={!text && !isSpeaking}
-        >
+        <Button variant="outline" onClick={handleClear} disabled={!text && !isSpeaking}>
           <RotateCcw className="w-4 h-4 mr-2" />
           {t("지우기")}
         </Button>
       </div>
 
-      {isSpeaking && (
-        <p className="text-sm text-blue-600 text-center animate-pulse mt-4">
-          {t("발음 재생 중...")}
-        </p>
-      )}
+      {isSpeaking && <p className="text-sm text-blue-600 text-center animate-pulse mt-4">{t("발음 재생 중...")}</p>}
 
       {!isSupported && (
         <p className="text-sm text-red-600 text-center mt-4">
@@ -126,9 +114,7 @@ export function PronunciationPracticePanel({
         </p>
       )}
 
-      <p className="text-xs text-slate-400 text-center mt-4">
-        {t("팁: Cmd/Ctrl + Enter로 말하기")}
-      </p>
+      <p className="text-xs text-slate-400 text-center mt-4">{t("팁: Cmd/Ctrl + Enter로 말하기")}</p>
     </div>
   );
 }

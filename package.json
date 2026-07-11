@@ -7,9 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "generate:question-bank": "node scripts/generate-question-bank.mjs",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepare": "husky"
   },
   "dependencies": {
     "@google/genai": "^1.38.0",
@@ -52,6 +55,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "husky": "^9.1.7",
+    "prettier": "^3.9.5",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.4.0",
     "typescript": "^5",
