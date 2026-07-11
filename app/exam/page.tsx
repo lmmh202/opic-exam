@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useExamStore } from "@/lib/store";
+import { useExamStoreHydrated } from "@/hooks/use-exam-store-hydrated";
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { useSpeechSynthesis } from "@/hooks/use-speech-synthesis";
 import { saveAudio, deleteAudio, getAudio } from "@/lib/db";
@@ -27,8 +28,8 @@ function ExamPageContent() {
   const searchParams = useSearchParams();
   const urlMode = parseExamMode(searchParams.get("mode"));
 
+  const hasHydrated = useExamStoreHydrated();
   const {
-    _hasHydrated: hasHydrated,
     examMode,
     currentQuestionIndex,
     nextQuestion,

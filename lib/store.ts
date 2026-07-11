@@ -5,7 +5,6 @@ import type { ExamMode } from "./exam-mode";
 import { clearModeAudio } from "./db";
 
 interface ExamState {
-  _hasHydrated: boolean;
   examMode: ExamMode;
   currentQuestionIndex: number;
   timeLeft: number;
@@ -15,7 +14,6 @@ interface ExamState {
   minRecordingDuration: number;
   examQuestions: Question[];
 
-  setHasHydrated: (value: boolean) => void;
   setExamMode: (mode: ExamMode) => void;
   switchExamMode: (mode: ExamMode) => Promise<void>;
   setQuestionIndex: (index: number) => void;
@@ -36,7 +34,6 @@ const REAL_TOTAL_TIME = 40 * 60;
 export const useExamStore = create<ExamState>()(
   persist(
     (set, get) => ({
-      _hasHydrated: false,
       examMode: "real",
       currentQuestionIndex: 0,
       timeLeft: REAL_TOTAL_TIME,
@@ -45,8 +42,6 @@ export const useExamStore = create<ExamState>()(
       skipEnabled: false,
       minRecordingDuration: 30,
       examQuestions: [],
-
-      setHasHydrated: (value) => set({ _hasHydrated: value }),
 
       setExamMode: (mode) => set({ examMode: mode }),
 
@@ -127,11 +122,6 @@ export const useExamStore = create<ExamState>()(
         minRecordingDuration: state.minRecordingDuration,
         examQuestions: state.examQuestions,
       }),
-      onRehydrateStorage: () => {
-        return () => {
-          useExamStore.getState().setHasHydrated(true);
-        };
-      },
     },
   ),
 );
