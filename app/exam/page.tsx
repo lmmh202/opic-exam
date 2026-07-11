@@ -11,7 +11,7 @@ import { PracticeAnswerPanel } from "@/components/practice-answer-panel";
 import { PronunciationPracticePanel } from "@/components/pronunciation-practice-panel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Play, Pause, ChevronRight, ChevronLeft, Mic, RotateCcw } from "lucide-react";
+import { Play, Pause, ChevronRight, ChevronLeft, Mic, RotateCcw, ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -42,6 +42,8 @@ function ExamPageContent() {
     minRecordingDuration,
     examQuestions,
     answers,
+    resetExam,
+    setExamQuestions,
   } = useExamStore();
 
   const mode: ExamMode = urlMode;
@@ -329,18 +331,44 @@ function ExamPageContent() {
     toast.success(t("녹음이 삭제되었습니다. 다시 녹음할 수 있습니다."));
   };
 
+  const handleBackToSetup = () => {
+    if (isStoreRecording) {
+      stopRecording();
+      setIsRecording(false);
+    }
+    stop();
+    stopAnswerPlayback();
+    resetExam();
+    setExamQuestions([]);
+    router.push(config.setupPath);
+  };
+
   if (!currentQuestion || examMode !== mode) return null;
 
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-between p-4">
       <div className="w-full max-w-4xl flex justify-between items-center mb-4">
-        <div className="text-xl font-bold text-slate-700">
-          {t(mode === "practice" ? "연습" : "실전 모의고사")}
+        <div className="flex flex-col gap-1">
           {mode === "practice" && (
-            <Badge variant="outline" className="ml-2 text-xs font-normal">
-              {t("연습")}
-            </Badge>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleBackToSetup}
+              className="w-fit -ml-2 h-8 px-2 text-slate-500 hover:text-slate-900"
+            >
+              <ArrowLeft className="w-4 h-4 mr-1" />
+              {t("주제 다시 고르기")}
+            </Button>
           )}
+          <div className="text-xl font-bold text-slate-700">
+            {t(mode === "practice" ? "연습" : "실전 모의고사")}
+            {mode === "practice" && (
+              <Badge variant="outline" className="ml-2 text-xs font-normal">
+                {t("연습")}
+              </Badge>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-4">
           {config.totalTimeSeconds !== null && (
