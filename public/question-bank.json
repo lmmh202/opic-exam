@@ -308,6 +308,28 @@
             "ko": "캠핑 장소, 최근 여행과 기억에 남는 나들이",
             "en": "Camping spot, recent trip & memorable outing"
           }
+        },
+        {
+          "id": "camping-auto-2026-07-11-camping-experiences-and-a-memorable-incident",
+          "label": {
+            "ko": "캠핑 경험과 기억에 남는 사건",
+            "en": "Camping experiences and a memorable incident"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "routine",
+              "text": "Tell me about your typical camping routine. What kind of activities do you usually do when you go camping?"
+            },
+            {
+              "type": "recent_experience",
+              "text": "Describe your most recent camping trip. Where did you go, what did you do, and how was it?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Have you ever had a particularly memorable or unexpected experience while camping? Tell me what happened and why it stands out."
+            }
+          ]
         }
       ]
     },
@@ -517,6 +539,28 @@
             {
               "type": "memorable_experience",
               "text": "Tell me about a particularly memorable or unexpected experience you had while walking. What happened, where were you, and who were you with? How did this incident unfold, and what made it so unforgettable? Provide as many details as possible."
+            }
+          ]
+        },
+        {
+          "id": "walking-auto-2026-07-11-walking-habits-changes-and-an-unexpected-problem",
+          "label": {
+            "ko": "걷기 습관, 변화 및 예상치 못한 문제",
+            "en": "Walking habits, changes, and an unexpected problem"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "activity_description",
+              "text": "Please describe your walking habits. Where do you usually walk, and what do you like about walking?"
+            },
+            {
+              "type": "past_present_change",
+              "text": "How have your walking habits changed over time? Do you walk more or less now compared to the past, and why?"
+            },
+            {
+              "type": "problem_experience",
+              "text": "Tell me about a time you encountered an unexpected problem or difficulty while walking. What happened, and how did you resolve it?"
             }
           ]
         }
@@ -730,6 +774,28 @@
             {
               "type": "memorable_experience",
               "text": "I'd like to hear about a memorable experience you had during one of your domestic travels. What happened, and what made it so special?"
+            }
+          ]
+        },
+        {
+          "id": "domestic_travel-auto-2026-07-11-domestic-travel-preference-recent-trip-a-problem",
+          "label": {
+            "ko": "국내 여행 선호, 최근 여행과 문제",
+            "en": "Domestic travel preference, recent trip & a problem"
+          },
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "preference_description",
+              "text": "You indicated that you enjoy domestic travel. What kind of places do you prefer to visit within your country, and what specific characteristics attract you to them? What are your favorite activities to do when traveling domestically? Describe your preferences with specific examples."
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about a recent domestic trip you took. Where did you go, when was it, and who did you travel with? What were the highlights of that trip, and what did you enjoy the most? Was there anything surprising or different about this trip compared to others? Give me all the details."
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever encountered an unexpected problem or a difficult situation while traveling domestically? Describe what happened, where you were, and who was involved. How did you manage to resolve the issue, and what was the outcome? Provide as many details as possible about that experience."
             }
           ]
         }
@@ -996,6 +1062,28 @@
               "text": "Have you ever encountered an unexpected problem or a memorable incident while visiting a cafe? What exactly happened? How did you handle the situation, and what was the outcome? Tell me the full story in detail, including your feelings and any interactions with staff or others."
             }
           ]
+        },
+        {
+          "id": "cafe-auto-2026-07-11-favorite-cafe-first-visit-a-special-incident",
+          "label": {
+            "ko": "자주 가는 카페, 첫 경험과 특별한 일",
+            "en": "Favorite cafe, first visit & a special incident"
+          },
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Describe a cafe you frequently visit. Where is your favorite cafe located? What does it look like inside and out, and what kind of atmosphere does it have? What do you usually order there, and why do you like going there so much? Provide as many details as possible."
+            },
+            {
+              "type": "first_experience",
+              "text": "Can you tell me about the very first time you went to a cafe? Where was it, who were you with, and what was your impression of that experience? What was the occasion, and what did you find most interesting or new about it? Explain everything in detail."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Please tell me about a particularly memorable or unexpected incident that happened to you at a cafe. What happened, who was involved, and how did you feel about it? How was the situation resolved, and what did you learn from it? Tell me everything about that incident in detail."
+            }
+          ]
         }
       ]
     },
@@ -1093,6 +1181,61 @@
             {
               "type": "problem_experience",
               "text": "Have you ever encountered a problem or a memorable incident while at a bank or dealing with banking services? For example, a transaction error, a lost card, or an unexpected situation with a bank employee. Tell me everything about that incident in detail, including what happened and how it was resolved."
+            }
+          ]
+        },
+        {
+          "id": "bank-auto-2026-07-11-bank-routine-first-use-an-unexpected-event",
+          "label": {
+            "ko": "은행 이용 루틴, 첫 이용과 예상치 못한 일",
+            "en": "Bank routine, first use & an unexpected event"
+          },
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "routine",
+              "text": "Please describe your typical routine when you visit a bank or use online banking services. What types of transactions or services do you frequently use, and what steps do you take? Are there specific times you prefer to do your banking? Tell me everything in detail."
+            },
+            {
+              "type": "first_experience",
+              "text": "Can you recall the very first time you had to use a bank or open an account? Where was it, how old were you, and what was that initial experience like? What were your expectations, and how has using banking services changed for you since then? Elaborate on your experience."
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever faced an unexpected issue or a difficult situation related to a bank, such as a problem with a transaction, an ATM, or an account error? What exactly happened, and how did you handle the situation to get it resolved? Tell me about the incident in detail and what the final outcome was."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "restaurant",
+      "label": "Restaurant",
+      "keywords": [
+        "restaurant",
+        "restaurant"
+      ],
+      "surprise": true,
+      "sets": [
+        {
+          "id": "restaurant-auto-2026-07-11-restaurant-preferences-first-experience-and-a-memorab",
+          "label": {
+            "ko": "식당 선호도, 첫 경험과 기억에 남는 일화",
+            "en": "Restaurant preferences, first experience, and a memorable incident"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "preference_description",
+              "text": "Describe the types of restaurants you enjoy going to. What kind of food and atmosphere do you prefer?"
+            },
+            {
+              "type": "first_experience",
+              "text": "Tell me about your very first experience eating at a restaurant that left a strong impression on you. What do you remember about it?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Can you share a memorable experience you had at a restaurant, perhaps something unusual or unexpected that happened there?"
             }
           ]
         }
@@ -1275,6 +1418,28 @@
               "text": "Have you ever had to change or cancel a reservation for a hotel or flight? Describe what happened and how you handled the situation."
             }
           ]
+        },
+        {
+          "id": "hotel-auto-2026-07-11-booking-and-changing-a-hotel-room",
+          "label": {
+            "ko": "호텔 객실 예약 및 변경",
+            "en": "Booking and changing a hotel room"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "You are planning a trip and need to book a hotel room. Call a hotel and ask three or four questions to get the information you need, such as available room types, amenities, and prices."
+            },
+            {
+              "type": "problem_solving",
+              "text": "You've booked a hotel room, but now you realize the dates won't work due to an unexpected schedule change. Call the hotel again, explain the situation politely, and suggest two or three alternatives for changing your reservation."
+            },
+            {
+              "type": "similar_experience",
+              "text": "Have you ever had to change or cancel a reservation for a hotel, flight, or similar service due to an unexpected problem? Tell me about that experience in detail."
+            }
+          ]
         }
       ]
     },
@@ -1323,6 +1488,28 @@
             {
               "type": "similar_experience",
               "text": "Tell me about a time you had to reschedule or cancel an important appointment in your real life. What was the reason, and how did you manage the change?"
+            }
+          ]
+        },
+        {
+          "id": "appointment-auto-2026-07-11-rescheduling-a-doctor-s-appointment",
+          "label": {
+            "ko": "의사 진료 예약 변경",
+            "en": "Rescheduling a doctor's appointment"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "You need to make an appointment with a doctor. Call the clinic and ask three or four questions to gather important information, such as available times, what to bring, and payment options."
+            },
+            {
+              "type": "problem_solving",
+              "text": "Unfortunately, something urgent has come up, and you can't make your scheduled doctor's appointment. Call the clinic, explain the situation politely, and suggest two or three alternatives for rescheduling."
+            },
+            {
+              "type": "similar_experience",
+              "text": "Tell me about a time when you had to reschedule or cancel an important appointment. What was the situation, and how did you handle it?"
             }
           ]
         }
@@ -1449,6 +1636,24 @@
             {
               "type": "issue_discussion",
               "text": "Following up on housing, many countries face significant social issues related to it, such as rising housing costs, gentrification, or the challenges of urban development. Pick one pressing social issue concerning housing in your region or country. Describe what this issue is, why it has become a problem, and what kinds of efforts are being made to resolve it."
+            }
+          ]
+        },
+        {
+          "id": "housing-auto-2026-07-11-housing-then-vs-now-social-issues",
+          "label": {
+            "ko": "과거와 현재 주거 비교, 사회 이슈",
+            "en": "Housing then vs now & social issues"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "past_present_comparison",
+              "text": "Compare how housing or living situations in your country have changed from the past to the present. What are some key similarities and differences in terms of housing styles, available amenities, or general living conditions?"
+            },
+            {
+              "type": "issue_discussion",
+              "text": "In many places, housing affordability has become a significant social issue. Discuss some of the main reasons behind this trend and its impact on individuals and society. What are some proposed solutions or current efforts to address this problem?"
             }
           ]
         }
