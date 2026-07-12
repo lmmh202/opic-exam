@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useExamStore } from "@/lib/store";
 import { useExamStoreHydrated } from "@/hooks/use-exam-store-hydrated";
 import { getAudio } from "@/lib/db";
+import { deriveOverallGrade } from "@/lib/analysis-cache";
 import type { QuestionAnalysis, BatchAnalysisResult } from "@/app/api/analyze/route";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -24,7 +25,7 @@ function ResultsPageContent() {
   const mode: ExamMode = parseExamMode(searchParams.get("mode"));
   const hasHydrated = useExamStoreHydrated();
 
-  const { answers, examQuestions, examMode } = useExamStore();
+  const { answers, examQuestions, examMode, questionAnalyses, setQuestionAnalyses } = useExamStore();
   const [analyzedData, setAnalyzedData] = useState<Record<number, QuestionAnalysis>>({});
   const [overallGrade, setOverallGrade] = useState<string | null>(null);
   const [overallFeedback, setOverallFeedback] = useState<string | null>(null);
@@ -36,22 +37,22 @@ function ResultsPageContent() {
 
   const calculateAverageScores = () => {
     const results = Object.values(analyzedData);
-    if (results.length === 0)
+    if (results.length === 0) {
       return [
         { subject: t("유창성"), A: 0, fullMark: 100 },
         { subject: t("문법"), A: 0, fullMark: 100 },
         { subject: t("어휘"), A: 0, fullMark: 100 },
         { subject: t("내용"), A: 0, fullMark: 100 },
       ];
+    }
 
     const sum = results.reduce(
       (acc, curr) => ({
         fluency: acc.fluency + (curr.fluency_score || 0),
         grammar: acc.grammar + (curr.grammar_score || 0),
         vocabs: acc.vocabs + (curr.vocabulary_score || 0),
-        content: acc.content + 80,
       }),
-      { fluency: 0, grammar: 0, vocabs: 0, content: 0 },
+      { fluency: 0, grammar: 0, vocabs: 0 },
     );
 
     const count = results.length;
@@ -71,12 +72,47 @@ function ResultsPageContent() {
     ];
   };
 
+  const applyAnalysisResult = useCallback(
+    (questionAnalysis: Record<number, QuestionAnalysis>, grade: string | null, feedback: string | null) => {
+      setAnalyzedData(questionAnalysis);
+      setOverallGrade(grade);
+      setOverallFeedback(feedback);
+      setAnalysisComplete(true);
+      setQuestionAnalyses(questionAnalysis);
+    },
+    [setQuestionAnalyses],
+  );
+
+  const applyCachedAnalyses = useCallback(
+    (questionIds: number[]) => {
+      const cached: Record<number, QuestionAnalysis> = {};
+      for (const id of questionIds) {
+        const item = questionAnalyses[id];
+        if (item) cached[id] = item;
+      }
+      applyAnalysisResult(
+        cached,
+        deriveOverallGrade(Object.values(cached)),
+        t("문항별 피드백을 모아 표시합니다. 전체 재분석은 '다시 분석'을 눌러 주세요."),
+      );
+    },
+    [applyAnalysisResult, questionAnalyses, t],
+  );
+
   const analyzeAllQuestions = useCallback(
-    async (options?: { signal?: AbortSignal }) => {
+    async (options?: { force?: boolean; signal?: AbortSignal }) => {
+      const force = options?.force ?? false;
       const signal = options?.signal;
       const questionIds = Object.keys(answers).map(Number);
       if (questionIds.length === 0) {
         toast.error(t("답변한 문항이 없습니다."));
+        return;
+      }
+
+      const missingIds = force ? questionIds : questionIds.filter((id) => !questionAnalyses[id]);
+
+      if (missingIds.length === 0) {
+        applyCachedAnalyses(questionIds);
         return;
       }
 
@@ -85,7 +121,7 @@ function ResultsPageContent() {
       try {
         const formData = new FormData();
 
-        for (const questionId of questionIds) {
+        for (const questionId of missingIds) {
           const blob = await getAudio(mode, questionId);
           if (blob) {
             const questionText = examQuestions.find((q) => q.id === questionId)?.text || "";
@@ -107,15 +143,23 @@ function ResultsPageContent() {
         if (result.success && result.data) {
           const batchResult = result.data as BatchAnalysisResult;
 
-          const questionAnalysis: Record<number, QuestionAnalysis> = {};
+          const fresh: Record<number, QuestionAnalysis> = {};
           for (const item of batchResult.questions) {
-            questionAnalysis[Number(item.question_id)] = item;
+            fresh[Number(item.question_id)] = item;
           }
 
-          setAnalyzedData(questionAnalysis);
-          setOverallGrade(batchResult.overall_grade);
-          setOverallFeedback(batchResult.overall_feedback);
-          setAnalysisComplete(true);
+          const merged: Record<number, QuestionAnalysis> = force ? fresh : { ...questionAnalyses, ...fresh };
+
+          const forAnswered: Record<number, QuestionAnalysis> = {};
+          for (const id of questionIds) {
+            if (merged[id]) forAnswered[id] = merged[id];
+          }
+
+          applyAnalysisResult(
+            forAnswered,
+            batchResult.overall_grade ?? deriveOverallGrade(Object.values(forAnswered)),
+            batchResult.overall_feedback ?? null,
+          );
           toast.success(t("모든 문항 분석이 완료되었습니다!"));
         } else {
           toast.error(t((result.error as TranslationKey) || "분석에 실패했습니다"));
@@ -131,7 +175,7 @@ function ResultsPageContent() {
         }
       }
     },
-    [answers, examQuestions, mode, t],
+    [answers, applyCachedAnalyses, applyAnalysisResult, examQuestions, mode, questionAnalyses, t],
   );
 
   useEffect(() => {
@@ -140,7 +184,7 @@ function ResultsPageContent() {
     if (answeredIds.length === 0) return;
 
     const controller = new AbortController();
-    void analyzeAllQuestions({ signal: controller.signal });
+    void analyzeAllQuestions({ force: false, signal: controller.signal });
 
     return () => {
       controller.abort();
@@ -167,7 +211,7 @@ function ResultsPageContent() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => void analyzeAllQuestions()} disabled={isAnalyzing}>
+            <Button variant="outline" onClick={() => void analyzeAllQuestions({ force: true })} disabled={isAnalyzing}>
               {isAnalyzing ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

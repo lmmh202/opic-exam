@@ -7,7 +7,7 @@ import { useExamStoreHydrated } from "@/hooks/use-exam-store-hydrated";
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { useSpeechSynthesis } from "@/hooks/use-speech-synthesis";
 import { saveAudio, deleteAudio, getAudio } from "@/lib/db";
-import type { BatchAnalysisResult, QuestionAnalysis } from "@/app/api/analyze/route";
+import type { BatchAnalysisResult } from "@/app/api/analyze/route";
 import { PracticeAnswerPanel } from "@/components/practice-answer-panel";
 import { PronunciationPracticePanel } from "@/components/pronunciation-practice-panel";
 import { Button } from "@/components/ui/button";
@@ -46,6 +46,9 @@ function ExamPageContent() {
     answers,
     resetExam,
     setExamQuestions,
+    questionAnalyses,
+    setQuestionAnalysis,
+    clearQuestionAnalysis,
   } = useExamStore();
 
   const mode: ExamMode = urlMode;
@@ -53,7 +56,6 @@ function ExamPageContent() {
 
   const [playCount, setPlayCount] = useState(0);
   const [recordingDuration, setRecordingDuration] = useState(0);
-  const [questionFeedback, setQuestionFeedback] = useState<Record<number, QuestionAnalysis>>({});
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isPlayingAnswer, setIsPlayingAnswer] = useState(false);
   const answerAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -65,11 +67,7 @@ function ExamPageContent() {
         await saveAudio(mode, currentQuestion.id, blob);
         submitAnswer(currentQuestion.id);
         if (config.perQuestionFeedback) {
-          setQuestionFeedback((prev) => {
-            const next = { ...prev };
-            delete next[currentQuestion.id];
-            return next;
-          });
+          clearQuestionAnalysis(currentQuestion.id);
         }
       }
     },
@@ -86,7 +84,7 @@ function ExamPageContent() {
   const maxReplays = config.maxQuestionReplays === Infinity ? Number.POSITIVE_INFINITY : config.maxQuestionReplays;
   const replaysExhausted = Number.isFinite(maxReplays) && playCount >= maxReplays;
 
-  const currentAnalysis = currentQuestion ? questionFeedback[currentQuestion.id] : undefined;
+  const currentAnalysis = currentQuestion ? questionAnalyses[currentQuestion.id] : undefined;
 
   const stopAnswerPlayback = useCallback(() => {
     answerAudioRef.current?.pause();
@@ -237,10 +235,7 @@ function ExamPageContent() {
         const analysis = batchResult.questions.find((item) => Number(item.question_id) === currentQuestion.id);
 
         if (analysis) {
-          setQuestionFeedback((prev) => ({
-            ...prev,
-            [currentQuestion.id]: analysis,
-          }));
+          setQuestionAnalysis(currentQuestion.id, analysis);
           toast.success(t("피드백이 준비되었습니다!"));
         } else {
           toast.error(t("분석 결과를 찾을 수 없습니다."));
@@ -335,11 +330,7 @@ function ExamPageContent() {
 
     await deleteAudio(mode, currentQuestion.id);
     clearAnswer(currentQuestion.id);
-    setQuestionFeedback((prev) => {
-      const next = { ...prev };
-      delete next[currentQuestion.id];
-      return next;
-    });
+    clearQuestionAnalysis(currentQuestion.id);
     setRecordingDuration(0);
     toast.success(t("녹음이 삭제되었습니다. 다시 녹음할 수 있습니다."));
   };

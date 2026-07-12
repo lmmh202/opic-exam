@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { Question } from "./question-generator";
 import type { ExamMode } from "./exam-mode";
+import type { QuestionAnalysis } from "@/app/api/analyze/route";
 import { clearModeAudio } from "./db";
 
 interface ExamState {
@@ -13,6 +14,7 @@ interface ExamState {
   skipEnabled: boolean;
   minRecordingDuration: number;
   examQuestions: Question[];
+  questionAnalyses: Record<number, QuestionAnalysis>;
 
   setExamMode: (mode: ExamMode) => void;
   switchExamMode: (mode: ExamMode) => Promise<void>;
@@ -26,6 +28,10 @@ interface ExamState {
   clearAnswer: (questionId: number) => void;
   setSkipSettings: (skipEnabled: boolean, duration: number) => void;
   setExamQuestions: (questions: Question[]) => void;
+  setQuestionAnalysis: (questionId: number, analysis: QuestionAnalysis) => void;
+  setQuestionAnalyses: (analyses: Record<number, QuestionAnalysis>) => void;
+  clearQuestionAnalysis: (questionId: number) => void;
+  clearQuestionAnalyses: () => void;
   resetExam: () => void;
 }
 
@@ -42,6 +48,7 @@ export const useExamStore = create<ExamState>()(
       skipEnabled: false,
       minRecordingDuration: 30,
       examQuestions: [],
+      questionAnalyses: {},
 
       setExamMode: (mode) => set({ examMode: mode }),
 
@@ -60,6 +67,7 @@ export const useExamStore = create<ExamState>()(
           isRecording: false,
           answers: {},
           examQuestions: [],
+          questionAnalyses: {},
         });
       },
 
@@ -95,12 +103,33 @@ export const useExamStore = create<ExamState>()(
         set((state) => {
           const answers = { ...state.answers };
           delete answers[questionId];
-          return { answers };
+          const questionAnalyses = { ...state.questionAnalyses };
+          delete questionAnalyses[questionId];
+          return { answers, questionAnalyses };
         }),
 
       setSkipSettings: (skipEnabled, duration) => set({ skipEnabled, minRecordingDuration: duration }),
 
-      setExamQuestions: (questions) => set({ examQuestions: questions }),
+      setExamQuestions: (questions) => set({ examQuestions: questions, questionAnalyses: {} }),
+
+      setQuestionAnalysis: (questionId, analysis) =>
+        set((state) => ({
+          questionAnalyses: {
+            ...state.questionAnalyses,
+            [questionId]: analysis,
+          },
+        })),
+
+      setQuestionAnalyses: (analyses) => set({ questionAnalyses: analyses }),
+
+      clearQuestionAnalysis: (questionId) =>
+        set((state) => {
+          const questionAnalyses = { ...state.questionAnalyses };
+          delete questionAnalyses[questionId];
+          return { questionAnalyses };
+        }),
+
+      clearQuestionAnalyses: () => set({ questionAnalyses: {} }),
 
       resetExam: () =>
         set({
@@ -108,6 +137,7 @@ export const useExamStore = create<ExamState>()(
           timeLeft: REAL_TOTAL_TIME,
           isRecording: false,
           answers: {},
+          questionAnalyses: {},
         }),
     }),
     {
@@ -121,6 +151,7 @@ export const useExamStore = create<ExamState>()(
         skipEnabled: state.skipEnabled,
         minRecordingDuration: state.minRecordingDuration,
         examQuestions: state.examQuestions,
+        questionAnalyses: state.questionAnalyses,
       }),
     },
   ),
