@@ -7,6 +7,7 @@ import { useExamStoreHydrated } from "@/hooks/use-exam-store-hydrated";
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { useSpeechSynthesis } from "@/hooks/use-speech-synthesis";
 import { saveAudio, deleteAudio, getAudio } from "@/lib/db";
+import { getBlobDurationSeconds, isAnalyzeDurationTooShort, MIN_ANALYZE_DURATION_SECONDS } from "@/lib/audio-duration";
 import type { BatchAnalysisResult } from "@/app/api/analyze/route";
 import { PracticeAnswerPanel } from "@/components/practice-answer-panel";
 import { PronunciationPracticePanel } from "@/components/pronunciation-practice-panel";
@@ -217,6 +218,16 @@ function ExamPageContent() {
       const blob = await getAudio(mode, currentQuestion.id);
       if (!blob) {
         toast.error(t("이 문항에 대한 녹음을 찾을 수 없습니다."));
+        return;
+      }
+
+      const duration = await getBlobDurationSeconds(blob);
+      if (isAnalyzeDurationTooShort(duration)) {
+        toast.error(
+          t("분석을 하려면 최소 {seconds}초 이상 녹음해야 합니다.", {
+            seconds: MIN_ANALYZE_DURATION_SECONDS,
+          }),
+        );
         return;
       }
 

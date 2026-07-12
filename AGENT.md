@@ -41,6 +41,34 @@ wip
 
 ---
 
+## 코드 주석
+
+함수·상수 위 설명은 **한 줄 `//` 주석**으로 작성합니다. JSDoc 블록(`/** ... */`)은 쓰지 않습니다.
+
+- 필요한 만큼 여러 줄을 이어 씀
+- 각 줄은 `//`로 시작
+- 문장 끝에 마침표를 둠
+
+예시:
+
+```ts
+// Minimum spoken answer length required before calling /api/analyze.
+export const MIN_ANALYZE_DURATION_SECONDS = 20;
+
+// Decode blob duration in seconds.
+// Returns null when the browser cannot decode the media.
+export async function getBlobDurationSeconds(blob: Blob): Promise<number | null> {
+```
+
+피하기:
+
+```ts
+/** Decode blob duration in seconds. Returns null when the browser cannot decode the media. */
+export async function getBlobDurationSeconds(blob: Blob): Promise<number | null> {
+```
+
+---
+
 ## 테스트
 
 작업(코드·데이터·스크립트 변경)을 마친 뒤에는 **항상** 아래를 실행하고, 실패하면 통과할 때까지 고칩니다.

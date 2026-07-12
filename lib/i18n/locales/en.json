@@ -107,6 +107,7 @@
   "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.": "Too many requests. Please try again in a moment.",
   "답변 분석 중 오류가 발생했습니다": "Error analyzing your answer",
   "최소 {seconds}초 이상 녹음해야 합니다.": "You must record for at least {seconds} seconds.",
+  "분석을 하려면 최소 {seconds}초 이상 녹음해야 합니다.": "Record at least {seconds} seconds before analyzing.",
   "녹음을 완료해 주세요. (최소 {seconds}초)": "Please complete the recording. (Min {seconds} seconds)",
   "녹음이 삭제되었습니다. 다시 녹음할 수 있습니다.": "Recording cleared. You can record again.",
   "Eva가 말하고 있어요...": "Eva is speaking...",
