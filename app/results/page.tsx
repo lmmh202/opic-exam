@@ -1,8 +1,9 @@
 "use client";
 
-import { Suspense, useState, useEffect, useCallback } from "react";
+import { Suspense, useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { useExamStore } from "@/lib/store";
+import { useExamStoreHydrated } from "@/hooks/use-exam-store-hydrated";
 import { getAudio } from "@/lib/db";
 import type { QuestionAnalysis, BatchAnalysisResult } from "@/app/api/analyze/route";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ function ResultsPageContent() {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
   const mode: ExamMode = parseExamMode(searchParams.get("mode"));
+  const hasHydrated = useExamStoreHydrated();
 
   const { answers, examQuestions, examMode } = useExamStore();
   const [analyzedData, setAnalyzedData] = useState<Record<number, QuestionAnalysis>>({});
@@ -28,6 +30,7 @@ function ResultsPageContent() {
   const [overallFeedback, setOverallFeedback] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
+  const analysisRequestRef = useRef(0);
 
   const answeredIds = Object.keys(answers).map(Number);
 
@@ -68,63 +71,84 @@ function ResultsPageContent() {
     ];
   };
 
-  const analyzeAllQuestions = useCallback(async () => {
-    const questionIds = Object.keys(answers).map(Number);
-    if (questionIds.length === 0) {
-      toast.error(t("답변한 문항이 없습니다."));
-      return;
-    }
-
-    setIsAnalyzing(true);
-    try {
-      const formData = new FormData();
-
-      for (const questionId of questionIds) {
-        const blob = await getAudio(mode, questionId);
-        if (blob) {
-          const questionText = examQuestions.find((q) => q.id === questionId)?.text || "";
-          formData.append(`audio_${questionId}`, blob, `recording_${questionId}.webm`);
-          formData.append(`questionText_${questionId}`, questionText);
-        }
+  const analyzeAllQuestions = useCallback(
+    async (options?: { signal?: AbortSignal }) => {
+      const signal = options?.signal;
+      const questionIds = Object.keys(answers).map(Number);
+      if (questionIds.length === 0) {
+        toast.error(t("답변한 문항이 없습니다."));
+        return;
       }
 
-      const response = await fetch("/api/analyze", {
-        method: "POST",
-        body: formData,
-      });
+      const requestId = ++analysisRequestRef.current;
+      setIsAnalyzing(true);
+      try {
+        const formData = new FormData();
 
-      const result = await response.json();
-
-      if (result.success && result.data) {
-        const batchResult = result.data as BatchAnalysisResult;
-
-        const questionAnalysis: Record<number, QuestionAnalysis> = {};
-        for (const item of batchResult.questions) {
-          questionAnalysis[Number(item.question_id)] = item;
+        for (const questionId of questionIds) {
+          const blob = await getAudio(mode, questionId);
+          if (blob) {
+            const questionText = examQuestions.find((q) => q.id === questionId)?.text || "";
+            formData.append(`audio_${questionId}`, blob, `recording_${questionId}.webm`);
+            formData.append(`questionText_${questionId}`, questionText);
+          }
         }
 
-        setAnalyzedData(questionAnalysis);
-        setOverallGrade(batchResult.overall_grade);
-        setOverallFeedback(batchResult.overall_feedback);
-        setAnalysisComplete(true);
-        toast.success(t("모든 문항 분석이 완료되었습니다!"));
-      } else {
-        toast.error(t((result.error as TranslationKey) || "분석에 실패했습니다"));
+        const response = await fetch("/api/analyze", {
+          method: "POST",
+          body: formData,
+          signal,
+        });
+
+        if (requestId !== analysisRequestRef.current) return;
+
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          const batchResult = result.data as BatchAnalysisResult;
+
+          const questionAnalysis: Record<number, QuestionAnalysis> = {};
+          for (const item of batchResult.questions) {
+            questionAnalysis[Number(item.question_id)] = item;
+          }
+
+          setAnalyzedData(questionAnalysis);
+          setOverallGrade(batchResult.overall_grade);
+          setOverallFeedback(batchResult.overall_feedback);
+          setAnalysisComplete(true);
+          toast.success(t("모든 문항 분석이 완료되었습니다!"));
+        } else {
+          toast.error(t((result.error as TranslationKey) || "분석에 실패했습니다"));
+        }
+      } catch (e) {
+        if (signal?.aborted) return;
+        if (requestId !== analysisRequestRef.current) return;
+        console.error(e);
+        toast.error(t("오디오 분석 중 오류가 발생했습니다"));
+      } finally {
+        if (requestId === analysisRequestRef.current) {
+          setIsAnalyzing(false);
+        }
       }
-    } catch (e) {
-      console.error(e);
-      toast.error(t("오디오 분석 중 오류가 발생했습니다"));
-    } finally {
-      setIsAnalyzing(false);
-    }
-  }, [answers, examQuestions, mode, t]);
+    },
+    [answers, examQuestions, mode, t],
+  );
 
   useEffect(() => {
+    if (!hasHydrated) return;
     if (examMode !== mode) return;
-    if (answeredIds.length > 0 && !analysisComplete && !isAnalyzing) {
-      analyzeAllQuestions();
-    }
-  }, [answeredIds.length, analysisComplete, isAnalyzing, analyzeAllQuestions, examMode, mode]);
+    if (answeredIds.length === 0) return;
+
+    const controller = new AbortController();
+    void analyzeAllQuestions({ signal: controller.signal });
+
+    return () => {
+      controller.abort();
+      analysisRequestRef.current += 1;
+    };
+    // Run once per hydrated answers/mode; abort supersedes Strict Mode remounts.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- avoid retrigger on callback identity churn
+  }, [hasHydrated, examMode, mode, answeredIds.length]);
 
   const backPath = mode === "practice" ? "/practice" : "/real/setup";
   const pageTitle = mode === "practice" ? t("연습 결과") : t("시험 결과");
@@ -143,7 +167,7 @@ function ResultsPageContent() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={analyzeAllQuestions} disabled={isAnalyzing || analysisComplete}>
+            <Button variant="outline" onClick={() => void analyzeAllQuestions()} disabled={isAnalyzing}>
               {isAnalyzing ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
