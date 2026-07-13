@@ -95,6 +95,28 @@
               "text": "Could you tell me about a particularly memorable or enjoyable experience you've had at a park? What made it so special?"
             }
           ]
+        },
+        {
+          "id": "park-auto-2026-07-13-favorite-park-recent-visit-and-a-problem",
+          "label": {
+            "ko": "자주 가는 공원, 최근 방문과 문제 상황",
+            "en": "Favorite park, recent visit, and a problem"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Describe a park that you often visit. Where is it located, what does it look like, and what do you usually do there?"
+            },
+            {
+              "type": "recent_experience",
+              "text": "When was the last time you went to a park? Who did you go with, what did you do there, and how was the experience?"
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever encountered an unexpected problem or a memorable incident while visiting a park? What happened, and how did you handle it?"
+            }
+          ]
         }
       ]
     },
@@ -129,6 +151,28 @@
             "ko": "좋아하는 배우, 영화 취향 변화와 기억에 남는 영화",
             "en": "Favorite actor, how movies changed & memorable film"
           }
+        },
+        {
+          "id": "movies-auto-2026-07-13-movie-watching-habits-changes-and-a-memorable-experience",
+          "label": {
+            "ko": "영화 관람 습관, 변화, 그리고 기억에 남는 경험",
+            "en": "Movie-watching habits, changes, and a memorable experience"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "activity_description",
+              "text": "What kinds of movies do you typically watch, and what do you usually do when you watch them? Tell me about your movie-watching routine."
+            },
+            {
+              "type": "past_present_change",
+              "text": "Have your movie-watching habits or preferences changed compared to the past? How are they different now, and what caused these changes?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a particularly memorable experience you had related to watching a movie. What happened, and why was it so memorable?"
+            }
+          ]
         }
       ]
     },
@@ -183,6 +227,28 @@
             {
               "type": "problem_experience",
               "text": "Have you ever had a problem or an unexpected situation related to listening to music? Perhaps a technical issue, a lost device, or something else. Tell me about what happened and how you handled it."
+            }
+          ]
+        },
+        {
+          "id": "music-auto-2026-07-13-music-listening-habits-changes-memorable-experience",
+          "label": {
+            "ko": "음악 감상 습관, 변화와 기억에 남는 경험",
+            "en": "Music listening habits, changes & memorable experience"
+          },
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "activity_description",
+              "text": "I'd like to hear about your music listening habits. How do you usually listen to music, for example, through streaming services, CDs, or live concerts? What genres or artists do you typically enjoy, and what do you look for in music? Please describe your routine for enjoying music in detail."
+            },
+            {
+              "type": "past_present_change",
+              "text": "Think back to when you first started actively listening to music. How has your way of discovering, listening to, and enjoying music changed over the years, compared to when you were younger? What caused these changes, and do you prefer your current habits or your past ones? Explain in detail."
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Music often creates powerful memories. Can you describe a particularly memorable experience you've had involving music? Perhaps it was a live concert, a song played at an important moment, or a significant event connected to music. What happened, who were you with, and what made it so memorable for you? Tell me everything."
             }
           ]
         }
@@ -798,6 +864,28 @@
               "text": "Have you ever encountered an unexpected problem or a difficult situation while traveling domestically? Describe what happened, where you were, and who was involved. How did you manage to resolve the issue, and what was the outcome? Provide as many details as possible about that experience."
             }
           ]
+        },
+        {
+          "id": "domestic_travel-auto-2026-07-13-domestic-travel-preferences-recent-experience-pr",
+          "label": {
+            "ko": "국내 여행 선호, 최근 경험과 문제 상황",
+            "en": "Domestic travel preferences, recent experience & problem"
+          },
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "preference_description",
+              "text": "I'd like to know about your preferences when it comes to domestic travel. Where do you typically like to go, and why do you choose these places? What kind of activities do you usually do there? Please describe your ideal domestic travel experience in detail."
+            },
+            {
+              "type": "recent_experience",
+              "text": "Please tell me about your most recent domestic trip. Where did you go, when was it, and who did you go with? What did you do during the trip, and what made it special or different from other trips? Provide as many details as possible."
+            },
+            {
+              "type": "problem_experience",
+              "text": "We've all had unexpected issues while traveling. Can you recall a specific incident during one of your domestic trips where you encountered an unforeseen problem or challenge? What exactly happened, how did you deal with it, and what was the outcome? Tell me everything about that incident in detail."
+            }
+          ]
         }
       ]
     },
@@ -929,6 +1017,28 @@
             {
               "type": "problem_experience",
               "text": "Have you ever had a problem or an unexpected situation related to furniture, perhaps when assembling it or moving it? Describe what happened and how you resolved it."
+            }
+          ]
+        },
+        {
+          "id": "furniture-auto-2026-07-13-favorite-furniture-recent-purchase-and-a-problem",
+          "label": {
+            "ko": "좋아하는 가구, 최근 구매 경험과 문제",
+            "en": "Favorite furniture, recent purchase, and a problem"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "object_description",
+              "text": "Describe your favorite piece of furniture in your home. What does it look like, where is it, and why do you like it so much?"
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about the last time you bought furniture. Where did you buy it, what did you get, and what was the process like?"
+            },
+            {
+              "type": "problem_experience",
+              "text": "Have you ever had an unexpected problem or issue related to buying or assembling furniture? Describe what happened and how you resolved the situation."
             }
           ]
         }
@@ -1240,6 +1350,39 @@
           ]
         }
       ]
+    },
+    {
+      "id": "phone",
+      "label": "Phone",
+      "keywords": [
+        "phone",
+        "phone"
+      ],
+      "surprise": true,
+      "sets": [
+        {
+          "id": "phone-auto-2026-07-13-phone-description-first-experience-a-problem",
+          "label": {
+            "ko": "휴대폰 설명, 첫 경험과 문제 발생",
+            "en": "Phone description, first experience & a problem"
+          },
+          "difficulty": "challenging",
+          "questions": [
+            {
+              "type": "object_description",
+              "text": "Your phone is probably a very important device in your daily life. Can you describe your current phone in detail? What brand and model is it, what does it look like, and what are its most important features? How do you typically use it throughout your day? Provide a thorough description."
+            },
+            {
+              "type": "first_experience",
+              "text": "Let's go back in time. Can you tell me about your very first mobile phone? What kind of phone was it, when did you get it, and what was it primarily used for? How did that first phone compare to the phones we have today, and what do you remember most about it? Explain in detail."
+            },
+            {
+              "type": "problem_experience",
+              "text": "Having a phone can sometimes come with unexpected problems. Can you recall a specific time when you experienced a significant issue or problem with your phone? What exactly happened, what was the cause, and how did you manage to resolve it? Tell me the whole story from beginning to end."
+            }
+          ]
+        }
+      ]
     }
   ],
   "roleplay": [
@@ -1368,6 +1511,28 @@
               "text": "We've just talked about changing a restaurant reservation. Have you ever had to change or cancel plans at the last minute in real life? Tell me about that experience. What happened and how did you handle it?"
             }
           ]
+        },
+        {
+          "id": "restaurant-auto-2026-07-13-restaurant-reservation-inquiry-and-change",
+          "label": {
+            "ko": "식당 예약 문의 및 변경",
+            "en": "Restaurant Reservation Inquiry and Change"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "You want to make a reservation at a popular restaurant for a special occasion. Call the restaurant and ask 3-4 questions to gather important information before you book."
+            },
+            {
+              "type": "problem_solving",
+              "text": "You've made a reservation at a restaurant, but your plans have unexpectedly changed, and you need to adjust it. Call the restaurant, politely explain your situation, and suggest 2-3 alternative solutions for your reservation."
+            },
+            {
+              "type": "similar_experience",
+              "text": "Have you ever had to change or cancel a reservation for a restaurant, hotel, or any other service in real life? What happened, and how did you handle the situation?"
+            }
+          ]
         }
       ]
     },
@@ -1438,6 +1603,28 @@
             {
               "type": "similar_experience",
               "text": "Have you ever had to change or cancel a reservation for a hotel, flight, or similar service due to an unexpected problem? Tell me about that experience in detail."
+            }
+          ]
+        },
+        {
+          "id": "hotel-auto-2026-07-13-hotel-room-inquiry-and-problem-solving",
+          "label": {
+            "ko": "호텔 객실 문의 및 문제 해결",
+            "en": "Hotel Room Inquiry and Problem Solving"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "situation_questions",
+              "text": "You are planning a trip and need to book a hotel room. Call a hotel you're interested in and ask 3-4 questions about their rooms, amenities, and services before making your reservation."
+            },
+            {
+              "type": "problem_solving",
+              "text": "You booked a hotel room for your trip, but you just realized you accidentally booked it for the wrong dates. Call the hotel, politely explain your mistake, and suggest 2-3 ways to resolve this issue."
+            },
+            {
+              "type": "similar_experience",
+              "text": "Tell me about a time when you made a mistake while booking travel or accommodation, such as wrong dates or incorrect details. What was the problem, and how did you manage to fix it?"
             }
           ]
         }
@@ -1740,6 +1927,24 @@
             "ko": "과거와 현재 여행 비교, 여행 이슈",
             "en": "Travel then vs now & travel issues"
           }
+        },
+        {
+          "id": "travel-auto-2026-07-13-travel-then-vs-now-social-issues",
+          "label": {
+            "ko": "과거와 현재 여행 비교, 사회 이슈",
+            "en": "Travel then vs now & social issues"
+          },
+          "difficulty": "standard",
+          "questions": [
+            {
+              "type": "past_present_comparison",
+              "text": "Travel has changed a lot over the years. Can you describe how people traveled in the past compared to how they travel now? What are some key similarities and differences in how people plan trips and experience destinations?"
+            },
+            {
+              "type": "issue_discussion",
+              "text": "Recently, there's been a lot of discussion about overtourism and its impact on popular destinations. What do you know about this issue? Why is it becoming a problem, and how are different communities and travelers responding to it?"
+            }
+          ]
         }
       ]
     },
