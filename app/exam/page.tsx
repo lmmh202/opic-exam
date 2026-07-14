@@ -325,6 +325,8 @@ function ExamPageContent() {
       stopRecording();
       setIsRecording(false);
     } else {
+      stop();
+      stopAnswerPlayback();
       setRecordingDuration(0);
       await startRecording();
       setIsRecording(true);
@@ -333,6 +335,9 @@ function ExamPageContent() {
 
   const handleReRecord = async () => {
     if (!config.allowReRecord || !currentQuestion) return;
+
+    stop();
+    stopAnswerPlayback();
 
     if (isStoreRecording) {
       stopRecording();
