@@ -178,7 +178,7 @@ The question IDs to evaluate are: ${audioParts.map((p) => `"${p.id}"`).join(", "
     }
 
     const response = await generateWithRetry(client, {
-      model: "gemini-2.5-flash",
+      model: "gemini-3.1-flash-lite",
       config: {
         responseMimeType: "application/json",
         responseSchema: {
