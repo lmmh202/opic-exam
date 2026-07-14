@@ -55,9 +55,8 @@ export function ExamSetupPanel({
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [micStatus, setMicStatus] = useState<"idle" | "testing" | "success">("idle");
-  const [micAccessReady, setMicAccessReady] = useState(() =>
-    typeof window !== "undefined" ? readStoredMicCheck() : false,
-  );
+  // Always false on first render so SSR and client HTML match; hydrate from storage/permissions in effect.
+  const [micAccessReady, setMicAccessReady] = useState(false);
 
   const { startRecording, stopRecording, isRecording, visualizerData } = useAudioRecorder({
     onStop: (blob) => {
