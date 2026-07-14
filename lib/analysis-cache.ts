@@ -1,4 +1,4 @@
-import type { QuestionAnalysis } from "@/app/api/analyze/route";
+import type { QuestionAnalysis } from "@/lib/analyze-types";
 
 const GRADE_RANK = ["NH", "IL", "IM1", "IM2", "IM3", "IH", "AL"] as const;
 
@@ -8,7 +8,7 @@ export function isOpicGrade(value: string): value is OpicGrade {
   return (GRADE_RANK as readonly string[]).includes(value);
 }
 
-/** Conservative overall grade: most frequent, ties go to the lower level. */
+// Conservative overall grade: most frequent, ties go to the lower level.
 export function deriveOverallGrade(analyses: QuestionAnalysis[]): OpicGrade | null {
   if (analyses.length === 0) return null;
 

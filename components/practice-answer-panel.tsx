@@ -1,6 +1,6 @@
 "use client";
 
-import type { QuestionAnalysis } from "@/app/api/analyze/route";
+import type { QuestionAnalysis } from "@/lib/analyze-types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Pause, Play, Sparkles } from "lucide-react";

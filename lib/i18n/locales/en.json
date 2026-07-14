@@ -155,5 +155,8 @@
   "답변한 문항이 없습니다.": "No answered questions found.",
   "모든 문항 분석이 완료되었습니다!": "All questions analyzed!",
   "문항별 피드백을 모아 표시합니다. 전체 재분석은 '다시 분석'을 눌러 주세요.": "Showing per-question feedback. Tap Re-analyze for a full batch review.",
-  "오디오 분석 중 오류가 발생했습니다": "Error analyzing audio"
+  "오디오 분석 중 오류가 발생했습니다": "Error analyzing audio",
+  "녹음을 분석할 수 없습니다. 다시 녹음해 주세요.": "Could not analyze the recording. Please record again.",
+  "분석할 녹음을 찾을 수 없습니다.": "No recordings found to analyze.",
+  "유효한 분석 요청이 아닙니다": "Invalid analysis request"
 }

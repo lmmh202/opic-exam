@@ -275,7 +275,23 @@ combo[] (Topic)
 | `components/exam-setup-panel.tsx`    | 설문 표시 + 마이크 설정                                               |
 | `app/exam/page.tsx`                  | 시험 UI (돌발 배지 포함)                                              |
 | `app/practice/page.tsx`              | 유형별 연습 모드                                                      |
+| `app/api/analyze/route.ts`           | 답변 분석 API (VAD + 규칙 루브릭, Phase 1)                            |
+| `lib/speech-metrics.ts`              | 클라이언트/테스트용 RMS VAD 지표                                      |
+| `lib/analyze-rubric.ts`              | 지표 → 점수·등급·템플릿 피드백                                        |
+| `lib/analyze-types.ts`               | `QuestionAnalysis` / `BatchAnalysisResult` 타입                       |
 | `lib/i18n/`                          | i18n 코어 (config, translate, locales)                                |
+
+---
+
+## 답변 분석 (Phase 1)
+
+`/api/analyze`는 Gemini 멀티모달 채점을 쓰지 않습니다.
+
+- 클라이언트가 녹음 blob에서 VAD 지표를 계산해 JSON으로 POST
+- 서버는 결정적 루브릭으로 `fluency_score`·등급·템플릿 피드백 산출
+- **5초 이상 연속 침묵**이 있으면 등급을 `IM3` 이하로 제한
+- 문법/어휘 점수와 교정 스크립트는 STT 규칙 단계(Phase 2)까지 placeholder
+- 결과는 공식 OPIc가 아닌 **휴리스틱 참고값**임을 피드백에 명시
 
 ---
 

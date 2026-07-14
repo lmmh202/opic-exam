@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { deriveOverallGrade, type OpicGrade } from "./analysis-cache";
-import type { QuestionAnalysis } from "@/app/api/analyze/route";
+import type { QuestionAnalysis } from "@/lib/analyze-types";
 
 function analysis(grade: OpicGrade): QuestionAnalysis {
   return {

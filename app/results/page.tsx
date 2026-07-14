@@ -6,7 +6,8 @@ import { useExamStore } from "@/lib/store";
 import { useExamStoreHydrated } from "@/hooks/use-exam-store-hydrated";
 import { getAudio } from "@/lib/db";
 import { deriveOverallGrade } from "@/lib/analysis-cache";
-import type { QuestionAnalysis, BatchAnalysisResult } from "@/app/api/analyze/route";
+import type { QuestionAnalysis, BatchAnalysisResult } from "@/lib/analyze-types";
+import { getBlobSpeechMetrics } from "@/lib/speech-metrics";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +21,7 @@ import { useTranslation } from "@/components/i18n-provider";
 import type { TranslationKey } from "@/lib/i18n/dictionaries";
 
 function ResultsPageContent() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const searchParams = useSearchParams();
   const mode: ExamMode = parseExamMode(searchParams.get("mode"));
   const hasHydrated = useExamStoreHydrated();
@@ -119,20 +120,34 @@ function ResultsPageContent() {
       const requestId = ++analysisRequestRef.current;
       setIsAnalyzing(true);
       try {
-        const formData = new FormData();
+        const questions: Array<{
+          questionId: string;
+          questionText: string;
+          metrics: NonNullable<Awaited<ReturnType<typeof getBlobSpeechMetrics>>>;
+        }> = [];
 
         for (const questionId of missingIds) {
           const blob = await getAudio(mode, questionId);
-          if (blob) {
-            const questionText = examQuestions.find((q) => q.id === questionId)?.text || "";
-            formData.append(`audio_${questionId}`, blob, `recording_${questionId}.webm`);
-            formData.append(`questionText_${questionId}`, questionText);
-          }
+          if (!blob) continue;
+          const metrics = await getBlobSpeechMetrics(blob);
+          if (!metrics) continue;
+          const questionText = examQuestions.find((q) => q.id === questionId)?.text || "";
+          questions.push({
+            questionId: String(questionId),
+            questionText,
+            metrics,
+          });
+        }
+
+        if (questions.length === 0) {
+          toast.error(t("분석할 녹음을 찾을 수 없습니다."));
+          return;
         }
 
         const response = await fetch("/api/analyze", {
           method: "POST",
-          body: formData,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ locale, questions }),
           signal,
         });
 
@@ -175,7 +190,7 @@ function ResultsPageContent() {
         }
       }
     },
-    [answers, applyCachedAnalyses, applyAnalysisResult, examQuestions, mode, questionAnalyses, t],
+    [answers, applyCachedAnalyses, applyAnalysisResult, examQuestions, locale, mode, questionAnalyses, t],
   );
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { Question } from "./question-generator";
 import type { ExamMode } from "./exam-mode";
-import type { QuestionAnalysis } from "@/app/api/analyze/route";
+import type { QuestionAnalysis } from "@/lib/analyze-types";
 import { clearModeAudio } from "./db";
 
 interface ExamState {

@@ -7,8 +7,9 @@ import { useExamStoreHydrated } from "@/hooks/use-exam-store-hydrated";
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { useSpeechSynthesis } from "@/hooks/use-speech-synthesis";
 import { saveAudio, deleteAudio, getAudio } from "@/lib/db";
+import type { BatchAnalysisResult } from "@/lib/analyze-types";
 import { getBlobDurationSeconds, isAnalyzeDurationTooShort, MIN_ANALYZE_DURATION_SECONDS } from "@/lib/audio-duration";
-import type { BatchAnalysisResult } from "@/app/api/analyze/route";
+import { getBlobSpeechMetrics } from "@/lib/speech-metrics";
 import { PracticeAnswerPanel } from "@/components/practice-answer-panel";
 import { PronunciationPracticePanel } from "@/components/pronunciation-practice-panel";
 import { Button } from "@/components/ui/button";
@@ -231,13 +232,25 @@ function ExamPageContent() {
         return;
       }
 
-      const formData = new FormData();
-      formData.append(`audio_${currentQuestion.id}`, blob, `recording_${currentQuestion.id}.webm`);
-      formData.append(`questionText_${currentQuestion.id}`, currentQuestion.text);
+      const metrics = await getBlobSpeechMetrics(blob);
+      if (!metrics) {
+        toast.error(t("녹음을 분석할 수 없습니다. 다시 녹음해 주세요."));
+        return;
+      }
 
       const response = await fetch("/api/analyze", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          locale,
+          questions: [
+            {
+              questionId: String(currentQuestion.id),
+              questionText: currentQuestion.text,
+              metrics,
+            },
+          ],
+        }),
       });
       const result = await response.json();
 
