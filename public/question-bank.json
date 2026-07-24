@@ -40,6 +40,28 @@
             "ko": "지역 지형, 최근 여행과 기억에 남는 장소",
             "en": "Local geography, recent trip & memorable place"
           }
+        },
+        {
+          "id": "geography-place-description-expected",
+          "difficulty": "standard",
+          "label": {
+            "ko": "나라의 지형 묘사, 최근 방문과 기억에 남는 풍경",
+            "en": "Country geography description, recent visit & memorable landscape"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Tell me about the geographical features of your country. Are there any mountains or seashores? Tell me about the landscape in your country in as much detail as possible."
+            },
+            {
+              "type": "recent_experience",
+              "text": "Have you recently visited a place known for its mountains, seashore, or unique landscape? When did you go, and what did you see there?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable experience related to the landscape of your country. Where were you, and what made the scenery so impressive?"
+            }
+          ]
         }
       ]
     },
@@ -93,6 +115,28 @@
             {
               "type": "memorable_experience",
               "text": "Could you tell me about a particularly memorable or enjoyable experience you've had at a park? What made it so special?"
+            }
+          ]
+        },
+        {
+          "id": "park-place-description-expected",
+          "difficulty": "standard",
+          "label": {
+            "ko": "자주 가는 공원 묘사, 최근 방문과 기억에 남는 순간",
+            "en": "Usual parks description, recent visit & memorable moment"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "You indicated in the survey that you go to parks. Tell me about the kinds of parks that you often go to. What do the parks look like? Describe them in as much detail as possible."
+            },
+            {
+              "type": "recent_experience",
+              "text": "When was the last time you went to one of those parks? What did you do there, and how long did you stay?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable moment you had at a park you often visit. What happened, and why was it special?"
             }
           ]
         }
@@ -183,6 +227,28 @@
             {
               "type": "problem_experience",
               "text": "Have you ever had a problem or an unexpected situation related to listening to music? Perhaps a technical issue, a lost device, or something else. Tell me about what happened and how you handled it."
+            }
+          ]
+        },
+        {
+          "id": "music-place-description-expected",
+          "difficulty": "standard",
+          "label": {
+            "ko": "음악 감상 장소 묘사, 최근 감상과 기억에 남는 경험",
+            "en": "Music listening place description, recent listening & memorable moment"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Where do you usually listen to music? What kind of device do you use to listen to music? Why do you like listening to music there?"
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about a recent time you listened to music in that place. What were you listening to, and what were you doing at the time?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Describe a memorable moment when you were listening to music in your usual place. What song was it, and why was the experience special?"
             }
           ]
         }
@@ -330,6 +396,28 @@
               "text": "Have you ever had a particularly memorable or unexpected experience while camping? Tell me what happened and why it stands out."
             }
           ]
+        },
+        {
+          "id": "camping-place-description-expected",
+          "difficulty": "standard",
+          "label": {
+            "ko": "좋아하는 캠핑장 묘사, 최근 캠핑과 기억에 남는 경험",
+            "en": "Favorite campsite description, recent camping & memorable trip"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "You indicated in the survey that you like to go camping. Describe your favorite campsite in detail. Where is it located, what does it look like, and what facilities does it have?"
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about your most recent camping trip to that campsite or a similar place. When did you go, who joined you, and what did you do there?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Describe a memorable camping experience at your favorite campsite. What happened, and why does it stick with you?"
+            }
+          ]
         }
       ]
     },
@@ -408,6 +496,28 @@
               "text": "Describe a memorable experience you had at the beach. What happened, and what made it so special?"
             }
           ]
+        },
+        {
+          "id": "beach-place-description-expected",
+          "difficulty": "standard",
+          "label": {
+            "ko": "좋아하는 해변 묘사, 최근 방문과 특별한 경험",
+            "en": "Favorite beach description, recent visit & special experience"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "You indicated in the survey that you like to go to the beach. Describe your favorite beach in as much detail as possible. What makes it so special?"
+            },
+            {
+              "type": "recent_experience",
+              "text": "When was the last time you went to your favorite beach? Who did you go with, and what did you do there that day?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a special or unexpected moment you had at the beach. What happened, and why do you still remember it?"
+            }
+          ]
         }
       ]
     },
@@ -462,6 +572,28 @@
             {
               "type": "memorable_experience",
               "text": "While jogging, have you ever encountered a memorable or unexpected incident, perhaps something unusual you saw, a person you met, or a challenge you overcame? Describe that particular experience in detail, including what happened and why it stands out in your memory."
+            }
+          ]
+        },
+        {
+          "id": "jogging-place-description-expected",
+          "difficulty": "standard",
+          "label": {
+            "ko": "조깅·걷기 코스 묘사, 최근 러닝과 기억에 남는 경험",
+            "en": "Jogging or walking path description, recent run & memorable experience"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "You indicated in the survey that you like to go jogging or walking. Describe the place or the path where you usually go for a jog or walk. What does it look like, and why do you like to jog or walk there?"
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about a recent jog or walk on that path. When did you go, how long did it take, and what did you notice along the way?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Have you ever had a memorable experience while jogging or walking on your usual path? What happened, and why do you remember it?"
             }
           ]
         }
@@ -663,6 +795,28 @@
               "text": "Have you ever experienced a significant problem or memorable incident related to your housing, such as a major repair issue, a moving disaster, or an unexpected event? Tell me about that incident in detail, what happened, who was involved, and how it was resolved."
             }
           ]
+        },
+        {
+          "id": "housing-place-description-expected",
+          "difficulty": "standard",
+          "label": {
+            "ko": "집과 좋아하는 방 묘사, 최근 일과 기억에 남는 경험",
+            "en": "Home and favorite room description, recent day & memorable experience"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Describe your home to me. What does it look like? How many rooms does it have? Tell me about your favorite room in detail."
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about a recent day you spent mostly at home in your favorite room. What did you do there, and how did you feel?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Share a memorable experience related to your home or your favorite room. What happened, and why was it meaningful?"
+            }
+          ]
         }
       ]
     },
@@ -798,6 +952,28 @@
               "text": "Have you ever encountered an unexpected problem or a difficult situation while traveling domestically? Describe what happened, where you were, and who was involved. How did you manage to resolve the issue, and what was the outcome? Provide as many details as possible about that experience."
             }
           ]
+        },
+        {
+          "id": "domestic_travel-place-description-expected",
+          "difficulty": "standard",
+          "label": {
+            "ko": "좋아하는 국내 여행지 묘사, 최근 여행과 기억에 남는 경험",
+            "en": "Favorite domestic destination, recent trip & memorable travel"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "You indicated that you like to go on trips domestically. Tell me about a place you like to visit the most. Why do you like to go there? Describe the place you like to visit in as much detail as possible."
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about your most recent trip to that favorite domestic destination. When did you go, and what stood out during the visit?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Share a memorable experience from one of your domestic trips. What made that trip unforgettable?"
+            }
+          ]
         }
       ]
     },
@@ -832,6 +1008,28 @@
             "ko": "집콕 휴가 활동, 변화와 기억에 남는 하루",
             "en": "Staycation activities, how they changed & memorable day"
           }
+        },
+        {
+          "id": "staycation-place-description-expected",
+          "difficulty": "standard",
+          "label": {
+            "ko": "집콕 휴가 하루 묘사, 최근 휴가와 기억에 남는 경험",
+            "en": "Stay-at-home vacation day, recent staycation & memorable experience"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "You indicated in the survey that you like to spend your vacations at home. What do you usually do during your stay-at-home vacation? Describe a typical day of your vacation at home."
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about your most recent stay-at-home vacation. When was it, and how did you spend those days at home?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Share a memorable staycation experience at home. What made that vacation day enjoyable or unexpected?"
+            }
+          ]
         }
       ]
     },
@@ -1084,6 +1282,28 @@
               "text": "Please tell me about a particularly memorable or unexpected incident that happened to you at a cafe. What happened, who was involved, and how did you feel about it? How was the situation resolved, and what did you learn from it? Tell me everything about that incident in detail."
             }
           ]
+        },
+        {
+          "id": "cafe-place-description-expected",
+          "difficulty": "standard",
+          "label": {
+            "ko": "자주 가는 카페 분위기 묘사, 최근 방문과 기억에 남는 경험",
+            "en": "Usual cafe atmosphere, recent visit & memorable experience"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "You indicated in the survey that you like going to cafes. Tell me about the cafe you usually go to. Where is it located, and what does it look like? Describe the atmosphere of the cafe."
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about the last time you visited that cafe. What did you order, who were you with, and what did you do while you were there?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Share a memorable experience from your usual cafe. What happened there, and why does it stand out?"
+            }
+          ]
         }
       ]
     },
@@ -1205,6 +1425,28 @@
               "text": "Have you ever faced an unexpected issue or a difficult situation related to a bank, such as a problem with a transaction, an ATM, or an account error? What exactly happened, and how did you handle the situation to get it resolved? Tell me about the incident in detail and what the final outcome was."
             }
           ]
+        },
+        {
+          "id": "bank-place-description-expected",
+          "difficulty": "standard",
+          "label": {
+            "ko": "자주 가는 은행 묘사, 최근 방문과 기억에 남는 경험",
+            "en": "Usual bank description, recent visit & memorable experience"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Tell me about the bank you usually go to. Where is it located? What does it look like? Please describe the bank in as much detail as possible."
+            },
+            {
+              "type": "recent_experience",
+              "text": "Tell me about a recent visit to that bank. What did you need to do there, and how did the visit go?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Have you ever had a memorable experience at your usual bank? What happened, and how did you feel about it?"
+            }
+          ]
         }
       ]
     },
@@ -1236,6 +1478,63 @@
             {
               "type": "memorable_experience",
               "text": "Can you share a memorable experience you had at a restaurant, perhaps something unusual or unexpected that happened there?"
+            }
+          ]
+        },
+        {
+          "id": "restaurant-place-description-expected",
+          "difficulty": "standard",
+          "label": {
+            "ko": "동네 식당 묘사, 최근 식사와 기억에 남는 경험",
+            "en": "Local restaurant description, recent meal & memorable visit"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Tell me about a restaurant near where you live. What kind of dishes does it serve? How are the prices? How often do you go there? Give me all the details about one of your favorite local places to dine out."
+            },
+            {
+              "type": "recent_experience",
+              "text": "When was the last time you ate at that local restaurant? Who did you go with, and what did you order?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable visit to that restaurant. What made the experience special or unexpected?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neighborhood",
+      "label": "Neighborhood",
+      "keywords": [
+        "neighborhood",
+        "local",
+        "community",
+        "grocery"
+      ],
+      "surprise": true,
+      "sets": [
+        {
+          "id": "neighborhood-place-description-expected",
+          "difficulty": "standard",
+          "label": {
+            "ko": "동네 마트·식료품점 묘사, 최근 장보기와 기억에 남는 경험",
+            "en": "Local grocery store description, recent shopping & memorable visit"
+          },
+          "questions": [
+            {
+              "type": "place_description",
+              "text": "Tell me about a local grocery store or a health food store you often go to. Where is it? What do you usually buy? Please describe the store in detail."
+            },
+            {
+              "type": "recent_experience",
+              "text": "When was the last time you went to that grocery or health food store? What did you buy, and how long did the trip take?"
+            },
+            {
+              "type": "memorable_experience",
+              "text": "Tell me about a memorable experience at a local grocery or health food store. What happened, and why do you remember it?"
             }
           ]
         }

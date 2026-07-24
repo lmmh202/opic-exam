@@ -1,7 +1,11 @@
 import questionBank from "@/public/question-bank.json";
 import {
+  COMBO_STAGES,
+  COMPARISON_STAGES,
   DEFAULT_DIFFICULTY,
+  ROLEPLAY_STAGES,
   getLocalizedLabel,
+  getQuestionTypeLabel,
   type DifficultyId,
   type LocalizedLabel,
   isDifficultyId,
@@ -280,5 +284,155 @@ export function generatePracticeExam(options: GeneratePracticeExamOptions): Ques
   const exam: Question[] = [];
   const questionId = { value: 1 };
   pushSetQuestions(exam, category, topic, set, questionId);
+  return exam;
+}
+
+export type PracticeStageNumber = 1 | 2 | 3;
+
+export interface PracticeStageInfo {
+  stage: PracticeStageNumber;
+  typeIds: string[];
+}
+
+export interface PracticeTypeOption {
+  id: string;
+  label: string;
+  count: number;
+}
+
+interface PooledTypeQuestion {
+  topic: BankTopic;
+  set: QuestionSet;
+  question: QuestionItem;
+  questionIndex: number;
+}
+
+function getStageMap(category: PracticeCategory): Record<string, string[]> {
+  if (category === "combo") return COMBO_STAGES;
+  if (category === "roleplay") return ROLEPLAY_STAGES;
+  return COMPARISON_STAGES;
+}
+
+export function listPracticeStages(category: PracticeCategory): PracticeStageInfo[] {
+  const stageMap = getStageMap(category);
+  return Object.keys(stageMap)
+    .map(Number)
+    .sort((a, b) => a - b)
+    .map((stage) => ({
+      stage: stage as PracticeStageNumber,
+      typeIds: stageMap[String(stage)] ?? [],
+    }));
+}
+
+function getAllowedTypeIds(
+  category: PracticeCategory,
+  stage: PracticeStageNumber,
+  typeId?: string | "all",
+): string[] {
+  const stageTypes = getStageMap(category)[String(stage)] ?? [];
+  if (!typeId || typeId === "all") return stageTypes;
+  if (!stageTypes.includes(typeId)) {
+    throw new Error(`Type ${typeId} is not valid for ${category} stage ${stage}`);
+  }
+  return [typeId];
+}
+
+function collectTypePool(options: {
+  category: PracticeCategory;
+  stage: PracticeStageNumber;
+  typeId?: string | "all";
+  difficulty?: DifficultyId | "random";
+}): PooledTypeQuestion[] {
+  const { category, stage } = options;
+  const difficulty = options.difficulty ?? "random";
+  const allowedTypes = new Set(getAllowedTypeIds(category, stage, options.typeId));
+  const pool: PooledTypeQuestion[] = [];
+
+  for (const topic of getTopicsForCategory(category)) {
+    for (const set of filterSetsByDifficulty(topic.sets, difficulty)) {
+      set.questions.forEach((question, questionIndex) => {
+        if (!allowedTypes.has(question.type)) return;
+        pool.push({ topic, set, question, questionIndex });
+      });
+    }
+  }
+
+  return pool;
+}
+
+export function countPracticeQuestionsByType(options: {
+  category: PracticeCategory;
+  stage: PracticeStageNumber;
+  typeId?: string | "all";
+  difficulty?: DifficultyId | "random";
+}): number {
+  return collectTypePool(options).length;
+}
+
+export function listPracticeTypesForStage(
+  category: PracticeCategory,
+  stage: PracticeStageNumber,
+  difficulty?: DifficultyId | "random",
+  locale: Locale = "ko",
+): PracticeTypeOption[] {
+  const stageTypes = getStageMap(category)[String(stage)] ?? [];
+  const counts = new Map<string, number>();
+
+  for (const item of collectTypePool({ category, stage, typeId: "all", difficulty })) {
+    counts.set(item.question.type, (counts.get(item.question.type) ?? 0) + 1);
+  }
+
+  return stageTypes
+    .filter((typeId) => (counts.get(typeId) ?? 0) > 0)
+    .map((typeId) => ({
+      id: typeId,
+      label: getQuestionTypeLabel(typeId, locale),
+      count: counts.get(typeId) ?? 0,
+    }));
+}
+
+export interface GenerateTypePracticeExamOptions {
+  category: PracticeCategory;
+  stage: PracticeStageNumber;
+  typeId?: string | "all";
+  difficulty?: DifficultyId | "random";
+  count?: number;
+}
+
+export function generateTypePracticeExam(options: GenerateTypePracticeExamOptions): Question[] {
+  const { category, stage } = options;
+  const difficulty = options.difficulty ?? "random";
+  const typeId = options.typeId ?? "all";
+  const requestedCount = options.count ?? 3;
+
+  if (requestedCount < 1) {
+    throw new Error("Type practice count must be at least 1");
+  }
+
+  const pool = collectTypePool({ category, stage, typeId, difficulty });
+  if (pool.length === 0) {
+    throw new Error(
+      `No practice questions available for ${category} stage ${stage}` +
+        (typeId !== "all" ? ` type ${typeId}` : "") +
+        (difficulty !== "random" ? ` with difficulty ${difficulty}` : ""),
+    );
+  }
+
+  const selected = shuffle(pool).slice(0, Math.min(requestedCount, pool.length));
+  const exam: Question[] = [];
+  let questionId = 1;
+
+  for (const item of selected) {
+    exam.push({
+      id: questionId++,
+      type: item.question.type,
+      topic: item.topic.label,
+      topicId: item.topic.id,
+      text: item.question.text,
+      surprise: item.topic.surprise ?? false,
+      difficulty: normalizeDifficulty(item.set.difficulty),
+    });
+  }
+
   return exam;
 }

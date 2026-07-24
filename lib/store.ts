@@ -5,6 +5,12 @@ import type { ExamMode } from "./exam-mode";
 import type { QuestionAnalysis } from "@/app/api/analyze/route";
 import { clearModeAudio } from "./db";
 
+export type PracticeSessionKind = "topic" | "type";
+
+export interface PracticeSession {
+  kind: PracticeSessionKind;
+}
+
 interface ExamState {
   examMode: ExamMode;
   currentQuestionIndex: number;
@@ -15,6 +21,7 @@ interface ExamState {
   minRecordingDuration: number;
   examQuestions: Question[];
   questionAnalyses: Record<number, QuestionAnalysis>;
+  practiceSession: PracticeSession | null;
 
   setExamMode: (mode: ExamMode) => void;
   switchExamMode: (mode: ExamMode) => Promise<void>;
@@ -28,6 +35,7 @@ interface ExamState {
   clearAnswer: (questionId: number) => void;
   setSkipSettings: (skipEnabled: boolean, duration: number) => void;
   setExamQuestions: (questions: Question[]) => void;
+  setPracticeSession: (session: PracticeSession | null) => void;
   setQuestionAnalysis: (questionId: number, analysis: QuestionAnalysis) => void;
   setQuestionAnalyses: (analyses: Record<number, QuestionAnalysis>) => void;
   clearQuestionAnalysis: (questionId: number) => void;
@@ -49,6 +57,7 @@ export const useExamStore = create<ExamState>()(
       minRecordingDuration: 30,
       examQuestions: [],
       questionAnalyses: {},
+      practiceSession: null,
 
       setExamMode: (mode) => set({ examMode: mode }),
 
@@ -68,6 +77,7 @@ export const useExamStore = create<ExamState>()(
           answers: {},
           examQuestions: [],
           questionAnalyses: {},
+          practiceSession: null,
         });
       },
 
@@ -112,6 +122,8 @@ export const useExamStore = create<ExamState>()(
 
       setExamQuestions: (questions) => set({ examQuestions: questions, questionAnalyses: {} }),
 
+      setPracticeSession: (session) => set({ practiceSession: session }),
+
       setQuestionAnalysis: (questionId, analysis) =>
         set((state) => ({
           questionAnalyses: {
@@ -152,6 +164,7 @@ export const useExamStore = create<ExamState>()(
         minRecordingDuration: state.minRecordingDuration,
         examQuestions: state.examQuestions,
         questionAnalyses: state.questionAnalyses,
+        practiceSession: state.practiceSession,
       }),
     },
   ),
