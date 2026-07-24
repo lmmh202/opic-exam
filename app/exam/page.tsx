@@ -47,6 +47,7 @@ function ExamPageContent() {
     answers,
     resetExam,
     setExamQuestions,
+    practiceSession,
     questionAnalyses,
     setQuestionAnalysis,
     clearQuestionAnalysis,
@@ -378,7 +379,7 @@ function ExamPageContent() {
               className="w-fit -ml-2 h-8 px-2 text-slate-500 hover:text-slate-900"
             >
               <ArrowLeft className="w-4 h-4 mr-1" />
-              {t("주제 다시 고르기")}
+              {t(practiceSession?.kind === "type" ? "유형 다시 고르기" : "주제 다시 고르기")}
             </Button>
           )}
           <div className="text-xl font-bold text-slate-700">

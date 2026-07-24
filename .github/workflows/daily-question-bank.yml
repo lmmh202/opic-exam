@@ -32,7 +32,7 @@ jobs:
       - name: Generate question bank updates
         env:
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
-          GEMINI_MODEL: gemini-2.5-flash
+          GEMINI_MODEL: gemini-3.1-flash
           DAILY_COMBO_STANDARD_COUNT: "3"
           DAILY_COMBO_CHALLENGING_COUNT: "3"
           DAILY_ROLEPLAY_SET_COUNT: "2"

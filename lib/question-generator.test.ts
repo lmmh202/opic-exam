@@ -1,12 +1,19 @@
 import { describe, expect, it } from "vitest";
 import {
+  countPracticeQuestionsByType,
   countPracticeSets,
   generateExam,
   generatePracticeExam,
+  generateTypePracticeExam,
   listPracticeQuestionSets,
+  listPracticeStages,
   listPracticeTopics,
+  listPracticeTypesForStage,
 } from "@/lib/question-generator";
 import {
+  getComboStage,
+  getComparisonStage,
+  getRoleplayStage,
   isValidComboTypeSequence,
   isValidComparisonTypeSequence,
   isValidRoleplayTypeSequence,
@@ -114,5 +121,102 @@ describe("practice listing helpers", () => {
     expect(furnitureKo[0]?.label).toMatch(/[가-힣]/);
     expect(furnitureEn[0]?.label).toMatch(/[A-Za-z]/);
     expect(furnitureKo[0]?.label).not.toBe(furnitureEn[0]?.label);
+  });
+});
+
+describe("type practice helpers", () => {
+  it("lists stages for each category", () => {
+    expect(listPracticeStages("combo").map((s) => s.stage)).toEqual([1, 2, 3]);
+    expect(listPracticeStages("roleplay").map((s) => s.stage)).toEqual([1, 2, 3]);
+    expect(listPracticeStages("comparison").map((s) => s.stage)).toEqual([1, 2]);
+  });
+
+  it("lists only types that exist in the bank for a stage", () => {
+    const types = listPracticeTypesForStage("combo", 2, "standard", "ko");
+    expect(types.length).toBeGreaterThan(0);
+    expect(types.every((item) => item.count > 0)).toBe(true);
+    expect(types.every((item) => getComboStage(item.id) === 2)).toBe(true);
+  });
+
+  it("counts questions for a stage and optional type filter", () => {
+    const allStage2 = countPracticeQuestionsByType({
+      category: "combo",
+      stage: 2,
+      typeId: "all",
+      difficulty: "standard",
+    });
+    expect(allStage2).toBeGreaterThan(0);
+
+    const types = listPracticeTypesForStage("combo", 2, "standard");
+    const firstType = types[0];
+    expect(firstType).toBeDefined();
+    if (!firstType) return;
+
+    const filtered = countPracticeQuestionsByType({
+      category: "combo",
+      stage: 2,
+      typeId: firstType.id,
+      difficulty: "standard",
+    });
+    expect(filtered).toBe(firstType.count);
+    expect(filtered).toBeLessThanOrEqual(allStage2);
+  });
+
+  it("samples cross-topic questions for a stage without duplicates", () => {
+    const exam = generateTypePracticeExam({
+      category: "combo",
+      stage: 2,
+      typeId: "all",
+      difficulty: "standard",
+      count: 5,
+    });
+
+    expect(exam.length).toBeGreaterThan(0);
+    expect(exam.length).toBeLessThanOrEqual(5);
+    expect(exam.every((q) => getComboStage(q.type) === 2)).toBe(true);
+    expect(exam.every((q) => q.difficulty === "standard")).toBe(true);
+
+    const keys = exam.map((q) => `${q.topicId}|${q.type}|${q.text}`);
+    expect(new Set(keys).size).toBe(exam.length);
+  });
+
+  it("caps count when the pool is smaller than requested", () => {
+    const types = listPracticeTypesForStage("comparison", 2, "standard");
+    const firstType = types[0];
+    expect(firstType).toBeDefined();
+    if (!firstType) return;
+
+    const exam = generateTypePracticeExam({
+      category: "comparison",
+      stage: 2,
+      typeId: firstType.id,
+      difficulty: "standard",
+      count: 50,
+    });
+
+    expect(exam).toHaveLength(firstType.count);
+    expect(exam.every((q) => q.type === firstType.id)).toBe(true);
+    expect(exam.every((q) => getComparisonStage(q.type) === 2)).toBe(true);
+  });
+
+  it("throws when the type pool is empty", () => {
+    expect(() =>
+      generateTypePracticeExam({
+        category: "roleplay",
+        stage: 1,
+        difficulty: "challenging",
+        count: 3,
+      }),
+    ).toThrow(/No practice questions available/);
+  });
+
+  it("keeps roleplay stage filtering consistent", () => {
+    const exam = generateTypePracticeExam({
+      category: "roleplay",
+      stage: 1,
+      difficulty: "standard",
+      count: 3,
+    });
+    expect(exam.every((q) => getRoleplayStage(q.type) === 1)).toBe(true);
   });
 });
