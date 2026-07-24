@@ -324,11 +324,7 @@ export function listPracticeStages(category: PracticeCategory): PracticeStageInf
     }));
 }
 
-function getAllowedTypeIds(
-  category: PracticeCategory,
-  stage: PracticeStageNumber,
-  typeId?: string | "all",
-): string[] {
+function getAllowedTypeIds(category: PracticeCategory, stage: PracticeStageNumber, typeId?: string | "all"): string[] {
   const stageTypes = getStageMap(category)[String(stage)] ?? [];
   if (!typeId || typeId === "all") return stageTypes;
   if (!stageTypes.includes(typeId)) {

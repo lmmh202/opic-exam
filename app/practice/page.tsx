@@ -124,9 +124,7 @@ function CategoryStageExplainer({ category, t }: { category: PracticeCategory; t
         <ol className="space-y-2 text-xs text-slate-600">
           <li>
             <span className="font-medium text-slate-800">{t("1단계 · 현재 묘사 / 루틴")}</span>
-            <span className="mt-0.5 block text-slate-500">
-              {t("장소·활동·평소 습관을 현재 시제로 설명합니다.")}
-            </span>
+            <span className="mt-0.5 block text-slate-500">{t("장소·활동·평소 습관을 현재 시제로 설명합니다.")}</span>
           </li>
           <li>
             <span className="font-medium text-slate-800">{t("2단계 · 과거 경험 / 변화")}</span>
@@ -136,9 +134,7 @@ function CategoryStageExplainer({ category, t }: { category: PracticeCategory; t
           </li>
           <li>
             <span className="font-medium text-slate-800">{t("3단계 · 기억에 남는 사건")}</span>
-            <span className="mt-0.5 block text-slate-500">
-              {t("특별하거나 예상치 못한 일을 스토리로 풀어냅니다.")}
-            </span>
+            <span className="mt-0.5 block text-slate-500">{t("특별하거나 예상치 못한 일을 스토리로 풀어냅니다.")}</span>
           </li>
         </ol>
       </div>
@@ -248,9 +244,7 @@ export default function PracticeHubPage() {
   const stageLabelKey = STAGE_LABEL_KEY[category][stage];
   const stageLabel = stageLabelKey ? t(stageLabelKey) : `${t("단계")} ${stage}`;
   const typeLabel =
-    typeId === "all"
-      ? t("해당 단계 전체")
-      : (typeOptions.find((option) => option.id === typeId)?.label ?? typeId);
+    typeId === "all" ? t("해당 단계 전체") : (typeOptions.find((option) => option.id === typeId)?.label ?? typeId);
 
   const difficultyHelper =
     difficulty === "challenging" ? t("도전 난이도는 기출형 다층 질문입니다.") : getDifficultyGuide("standard", locale);
@@ -355,9 +349,7 @@ export default function PracticeHubPage() {
                 type="button"
                 onClick={() => handleTrackChange("topic")}
                 className={`flex items-center justify-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
-                  track === "topic"
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-600 hover:text-slate-900"
+                  track === "topic" ? "bg-white text-slate-900 shadow-sm" : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 <Layers className="w-4 h-4" />
@@ -367,9 +359,7 @@ export default function PracticeHubPage() {
                 type="button"
                 onClick={() => handleTrackChange("type")}
                 className={`flex items-center justify-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
-                  track === "type"
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-600 hover:text-slate-900"
+                  track === "type" ? "bg-white text-slate-900 shadow-sm" : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 <ListTree className="w-4 h-4" />
