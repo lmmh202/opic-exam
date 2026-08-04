@@ -22,6 +22,7 @@ interface ExamState {
   examQuestions: Question[];
   questionAnalyses: Record<number, QuestionAnalysis>;
   practiceSession: PracticeSession | null;
+  mockExamId: string | null;
 
   setExamMode: (mode: ExamMode) => void;
   switchExamMode: (mode: ExamMode) => Promise<void>;
@@ -36,6 +37,7 @@ interface ExamState {
   setSkipSettings: (skipEnabled: boolean, duration: number) => void;
   setExamQuestions: (questions: Question[]) => void;
   setPracticeSession: (session: PracticeSession | null) => void;
+  setMockExamId: (examId: string | null) => void;
   setQuestionAnalysis: (questionId: number, analysis: QuestionAnalysis) => void;
   setQuestionAnalyses: (analyses: Record<number, QuestionAnalysis>) => void;
   clearQuestionAnalysis: (questionId: number) => void;
@@ -58,6 +60,7 @@ export const useExamStore = create<ExamState>()(
       examQuestions: [],
       questionAnalyses: {},
       practiceSession: null,
+      mockExamId: null,
 
       setExamMode: (mode) => set({ examMode: mode }),
 
@@ -78,6 +81,7 @@ export const useExamStore = create<ExamState>()(
           examQuestions: [],
           questionAnalyses: {},
           practiceSession: null,
+          mockExamId: null,
         });
       },
 
@@ -124,6 +128,8 @@ export const useExamStore = create<ExamState>()(
 
       setPracticeSession: (session) => set({ practiceSession: session }),
 
+      setMockExamId: (examId) => set({ mockExamId: examId }),
+
       setQuestionAnalysis: (questionId, analysis) =>
         set((state) => ({
           questionAnalyses: {
@@ -165,6 +171,7 @@ export const useExamStore = create<ExamState>()(
         examQuestions: state.examQuestions,
         questionAnalyses: state.questionAnalyses,
         practiceSession: state.practiceSession,
+        mockExamId: state.mockExamId,
       }),
     },
   ),

@@ -1,0 +1,243 @@
+{
+  "version": 2,
+  "exams": [
+    {
+      "id": "mock-016-level-5-6",
+      "title": {
+        "ko": "여우오픽 모의고사 (난이도 5~6) #16",
+        "en": "Wolfopic Mock Exam (Level 5~6) #16"
+      },
+      "source": {
+        "kind": "youtube",
+        "videoId": "-kapDJVUUD0",
+        "url": "https://www.youtube.com/watch?v=tDd601t-sbY&list=PLQqxXrxA9EGj_XIfyp1zC8ADRxjamZVut&index=16",
+        "channel": {
+          "name": "여우강사 최나영",
+          "handle": "",
+          "url": ""
+        },
+        "publishedAt": null,
+        "retrievedAt": "2026-08-04"
+      },
+      "survey": [
+        {
+          "id": "work",
+          "number": "1",
+          "question": {
+            "ko": "현재 귀하는 어떤 분야에 종사하고 계십니까?",
+            "en": "What field are you currently working in?"
+          },
+          "answer": { "ko": "일 경험 없음", "en": "No work experience" },
+          "topicIds": []
+        },
+        {
+          "id": "student",
+          "number": "2",
+          "question": { "ko": "현재 귀하는 학생이십니까?", "en": "Are you currently a student?" },
+          "answer": { "ko": "아니오", "en": "No" },
+          "topicIds": []
+        },
+        {
+          "id": "courses",
+          "number": "2.1",
+          "question": {
+            "ko": "최근 어떤 강의를 수강했습니까?",
+            "en": "What courses have you taken recently?"
+          },
+          "answer": { "ko": "수업 등록 후 5년", "en": "5 years since last enrollment" },
+          "topicIds": []
+        },
+        {
+          "id": "housing",
+          "number": "3",
+          "question": {
+            "ko": "현재 귀하는 어디에 살고 계십니까?",
+            "en": "Where do you currently live?"
+          },
+          "answer": {
+            "ko": "독신자로서 개인 주택이나 아파트에 거주",
+            "en": "Living alone in a private house or apartment"
+          },
+          "topicIds": ["housing"]
+        },
+        {
+          "id": "leisure",
+          "number": "4",
+          "question": {
+            "ko": "귀하는 여가 활동으로 주로 무엇을 하십니까?",
+            "en": "What do you usually do for leisure?"
+          },
+          "answer": {
+            "ko": "영화보기, 콘서트 가기, 공연/연극 관람하기, 공원 가기, 해변가기, 카페/커피전문점 가기",
+            "en": "Watching movies, going to concerts and performances, going to parks, the beach, and cafes"
+          },
+          "topicIds": ["movies", "concerts", "performances", "park", "beach", "cafe"]
+        },
+        {
+          "id": "hobbies",
+          "number": "5",
+          "question": {
+            "ko": "귀하의 취미나 관심사는 무엇입니까?",
+            "en": "What are your hobbies or interests?"
+          },
+          "answer": { "ko": "음악 감상", "en": "Listening to music" },
+          "topicIds": ["music"]
+        },
+        {
+          "id": "sports",
+          "number": "6",
+          "question": {
+            "ko": "귀하는 주로 어떤 운동을 즐기십니까?",
+            "en": "What sports or exercise do you usually enjoy?"
+          },
+          "answer": { "ko": "조깅, 걷기, 신체 운동을 즐기지 않음", "en": "Jogging, walking, no physical exercise" },
+          "topicIds": ["jogging", "walking"]
+        },
+        {
+          "id": "travel",
+          "number": "7",
+          "question": {
+            "ko": "당신은 어떤 휴가나 출장을 다녀온 경험이 있습니까?",
+            "en": "What kind of vacation or business trip experience do you have?"
+          },
+          "answer": { "ko": "국내여행, 해외여행", "en": "Domestic travel, overseas travel" },
+          "topicIds": ["domestic_travel"]
+        }
+      ],
+      "sets": [
+        { "id": "intro", "section": "intro" },
+        { "id": "health", "section": "combo", "topicId": "health", "surprise": true },
+        { "id": "cafe", "section": "combo", "topicId": "cafe", "surprise": false },
+        { "id": "music", "section": "combo", "topicId": "music", "surprise": false },
+        {
+          "id": "hair_salon",
+          "section": "roleplay",
+          "topicId": "hair_salon",
+          "topicLabel": { "ko": "미용실", "en": "Hair Salon" }
+        },
+        { "id": "housing", "section": "comparison", "topicId": "housing" }
+      ],
+      "questions": [
+        {
+          "number": 1,
+          "setId": "intro",
+          "type": "self_introduction",
+          "text": "Let's start the interview now. Tell me something about yourself.",
+          "startSeconds": null
+        },
+        {
+          "number": 2,
+          "setId": "health",
+          "stage": 1,
+          "type": "activity_description",
+          "text": "What kinds of healthy foods do people eat in your country? What are these foods, and where do people buy them?",
+          "startSeconds": null
+        },
+        {
+          "number": 3,
+          "setId": "health",
+          "stage": 1,
+          "type": "routine",
+          "text": "What do you do to stay healthy? Tell me about the things you do to maintain your health.",
+          "startSeconds": null
+        },
+        {
+          "number": 4,
+          "setId": "health",
+          "stage": 2,
+          "type": "past_present_change",
+          "text": "How has the way people maintain their health changed? What did people do to stay healthy when you were a child, and what do they do now?",
+          "startSeconds": null
+        },
+        {
+          "number": 5,
+          "setId": "cafe",
+          "stage": 1,
+          "type": "place_description",
+          "text": "You indicated in the survey that you go to coffee shops. Tell me about a coffee shop you like to visit. What is special about that café or coffee shop?",
+          "startSeconds": null
+        },
+        {
+          "number": 6,
+          "setId": "cafe",
+          "stage": 1,
+          "type": "routine",
+          "text": "What do you usually do when you're at a coffee shop? Do you read, eat something, or have meetings?",
+          "startSeconds": null
+        },
+        {
+          "number": 7,
+          "setId": "cafe",
+          "stage": 3,
+          "type": "memorable_experience",
+          "text": "Share a memorable experience you had at a coffee shop. What happened? How did you deal with the situation?",
+          "startSeconds": null
+        },
+        {
+          "number": 8,
+          "setId": "music",
+          "stage": 1,
+          "type": "preference_description",
+          "text": "You indicated in the survey that you like to listen to music. What kind of music do you listen to? Who is your favorite musician or composer?",
+          "startSeconds": null
+        },
+        {
+          "number": 9,
+          "setId": "music",
+          "stage": 2,
+          "type": "first_motivation",
+          "text": "How did you first become interested in listening to music? What kinds of music did you like listening to, and how has your taste in music changed over time?",
+          "startSeconds": null
+        },
+        {
+          "number": 10,
+          "setId": "music",
+          "stage": 3,
+          "type": "memorable_experience",
+          "text": "Tell me about a time you listened to live music. Was it at a concert? Who did you go with? Was it memorable?",
+          "startSeconds": null
+        },
+        {
+          "number": 11,
+          "setId": "hair_salon",
+          "stage": 1,
+          "type": "situation_questions",
+          "text": "You have an important meeting in two days, so you want to get a haircut. Call the hair salon and ask three or four questions to make an appointment no later than tomorrow afternoon.",
+          "startSeconds": null
+        },
+        {
+          "number": 12,
+          "setId": "hair_salon",
+          "stage": 2,
+          "type": "problem_solving",
+          "text": "You just got your hair cut, but you are not happy with it. You think the haircut was done badly. Call the hair salon, explain the situation, and ask if there is a solution.",
+          "startSeconds": null
+        },
+        {
+          "number": 13,
+          "setId": "hair_salon",
+          "stage": 3,
+          "type": "similar_experience",
+          "text": "Do you have a memorable experience at a hair salon? What happened? What made it so memorable?",
+          "startSeconds": null
+        },
+        {
+          "number": 14,
+          "setId": "housing",
+          "stage": 1,
+          "type": "two_subject_comparison",
+          "text": "How do you deal with problems at home? How do your parents handle these kinds of problems? What are the differences between how you and your parents solve problems at home?",
+          "startSeconds": null
+        },
+        {
+          "number": 15,
+          "setId": "housing",
+          "stage": 2,
+          "type": "issue_discussion",
+          "text": "What are some common problems people face when renting a home? Why do these problems occur, and how do people solve them?",
+          "startSeconds": null
+        }
+      ]
+    }
+  ]
+}

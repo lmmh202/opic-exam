@@ -141,45 +141,6 @@ function pushSetQuestions(
   }
 }
 
-/**
- * Generates a randomized 15-question OPIc exam
- *
- * Structure:
- * - Q1: Self-introduction (fixed)
- * - Q2-Q10: 3 random combo topics, one set each
- * - Q11-Q13: 1 random roleplay topic, one set
- * - Q14-Q15: 1 random comparison topic, one set
- */
-export function generateExam(): Question[] {
-  const bank = getBank();
-  const exam: Question[] = [];
-  const questionId = { value: 1 };
-
-  const intro = bank.intro.questions[0];
-  exam.push({
-    id: questionId.value++,
-    type: intro.type,
-    topic: "Self-Introduction",
-    text: intro.text,
-  });
-
-  const selectedComboTopics = shuffle(bank.combo).slice(0, 3);
-  for (const topic of selectedComboTopics) {
-    const set = pickRandom(topic.sets);
-    pushSetQuestions(exam, "combo", topic, set, questionId);
-  }
-
-  const roleplayTopic = pickRandom(bank.roleplay);
-  const roleplaySet = pickRandom(roleplayTopic.sets);
-  pushSetQuestions(exam, "roleplay", roleplayTopic, roleplaySet, questionId);
-
-  const comparisonTopic = pickRandom(bank.comparison);
-  const comparisonSet = pickRandom(comparisonTopic.sets);
-  pushSetQuestions(exam, "comparison", comparisonTopic, comparisonSet, questionId);
-
-  return exam;
-}
-
 export interface PracticeTopic {
   id: string;
   category: PracticeCategory;

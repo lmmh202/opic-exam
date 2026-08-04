@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Mic, CheckCircle2, Play, Pause, RotateCcw, Clock } from "lucide-react";
+import { Mic, CheckCircle2, Play, Pause, RotateCcw, Clock, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useExamStore } from "@/lib/store";
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { useTranslation } from "@/components/i18n-provider";
@@ -30,6 +31,14 @@ function writeStoredMicCheck() {
   }
 }
 
+// Shared by `data/survey.json` and the per-exam survey stored in `data/mock-exams.json`.
+export interface SurveyDisplayItem {
+  id: string;
+  number: string;
+  question: Record<string, string>;
+  answer: Record<string, string>;
+}
+
 interface ExamSetupPanelProps {
   children?: React.ReactNode;
   startLabel: React.ReactNode;
@@ -37,6 +46,9 @@ interface ExamSetupPanelProps {
   startDisabled?: boolean;
   startDisabledReason?: string;
   showRecordingSettings?: boolean;
+  // Each mock exam was recorded under its own background survey, so callers can override
+  // the default profile with the one that produced the questions being replayed.
+  survey?: SurveyDisplayItem[];
 }
 
 export function ExamSetupPanel({
@@ -46,8 +58,10 @@ export function ExamSetupPanel({
   startDisabled = false,
   startDisabledReason,
   showRecordingSettings = true,
+  survey,
 }: ExamSetupPanelProps) {
   const { t, locale } = useTranslation();
+  const surveyItems = survey ?? surveyData;
   const { skipEnabled, minRecordingDuration } = useExamStore();
   const [localSkipEnabled, setLocalSkipEnabled] = useState(skipEnabled);
   const [localDuration, setLocalDuration] = useState(minRecordingDuration);
@@ -177,20 +191,41 @@ export function ExamSetupPanel({
       {children}
 
       <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
-        <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
-          <CheckCircle2 className="w-5 h-5 text-green-600" />
-          {t("적용된 설문 설정")}
-        </h3>
-        <div className="grid grid-cols-1 gap-4 text-sm text-slate-600">
-          {surveyData.map((item) => (
-            <div key={item.id} className="space-y-1">
-              <span className="font-medium text-slate-900 block">
-                {item.number}. {item.question[locale] ?? item.question.ko}
-              </span>
-              <span>{item.answer[locale] ?? item.answer.ko}</span>
-            </div>
-          ))}
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="font-semibold text-slate-800 flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-green-600" />
+            {t("적용된 설문 설정")}
+          </h3>
+
+          <HoverCard openDelay={100} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 shrink-0 rounded-md px-2 py-1 text-xs text-slate-500 hover:text-slate-900 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors"
+              >
+                <Info className="w-3.5 h-3.5" />
+                {t("설문 전체 보기")}
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent align="end" className="w-96 max-h-[26rem] overflow-y-auto">
+              <div className="space-y-3">
+                {surveyItems.map((item) => (
+                  <div key={item.id} className="space-y-0.5">
+                    <span className="font-medium text-slate-900 block text-xs">
+                      {item.number}. {item.question[locale] ?? item.question.ko}
+                    </span>
+                    <span className="text-xs text-slate-600">{item.answer[locale] ?? item.answer.ko}</span>
+                  </div>
+                ))}
+              </div>
+            </HoverCardContent>
+          </HoverCard>
         </div>
+
+        {/* Kept inline so the answers stay reachable where hover is unavailable. */}
+        <p className="mt-3 text-sm text-slate-600">
+          {surveyItems.map((item) => item.answer[locale] ?? item.answer.ko).join(" · ")}
+        </p>
       </div>
 
       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
