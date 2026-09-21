@@ -35,9 +35,15 @@
       "id": "rq-001",
       "topic": "Imagine that an English research firm is doing a survey in your area. You have agreed to participate in a telephone interview about commuting to work.",
       "questions": [
-        { "type": "respond_q1", "text": "How long does it usually take you to commute to work, and what mode of transportation do you use?" },
+        {
+          "type": "respond_q1",
+          "text": "How long does it usually take you to commute to work, and what mode of transportation do you use?"
+        },
         { "type": "respond_q2", "text": "Have you ever changed your commute route? Why or why not?" },
-        { "type": "respond_q3", "text": "What do you think is the biggest problem with commuting in your city, and how would you fix it?" }
+        {
+          "type": "respond_q3",
+          "text": "What do you think is the biggest problem with commuting in your city, and how would you fix it?"
+        }
       ]
     },
     {
@@ -46,7 +52,10 @@
       "questions": [
         { "type": "respond_q1", "text": "When was the last time you watched a movie, and what genre was it?" },
         { "type": "respond_q2", "text": "Do you prefer watching movies at a cinema or at home? Why?" },
-        { "type": "respond_q3", "text": "If a new cinema opened in your neighborhood, what features would make you want to visit it?" }
+        {
+          "type": "respond_q3",
+          "text": "If a new cinema opened in your neighborhood, what features would make you want to visit it?"
+        }
       ]
     },
     {
@@ -55,7 +64,10 @@
       "questions": [
         { "type": "respond_q1", "text": "How often do you exercise, and what is your favorite type of workout?" },
         { "type": "respond_q2", "text": "Do you usually exercise alone or with others? Why?" },
-        { "type": "respond_q3", "text": "What advice would you give to someone who wants to start an exercise routine but feels they don't have enough time?" }
+        {
+          "type": "respond_q3",
+          "text": "What advice would you give to someone who wants to start an exercise routine but feels they don't have enough time?"
+        }
       ]
     }
   ],
@@ -65,7 +77,10 @@
       "infoText": "Annual Marketing Conference Schedule\n9:00 AM - Keynote Address by Jane Doe\n10:30 AM - Digital Advertising Trends (Room A)\n12:00 PM - Catered Lunch\n1:00 PM - Social Media Strategies (Room B)\n3:00 PM - Networking Session",
       "questions": [
         { "type": "info_q1", "text": "What time does the conference start, and who is giving the opening address?" },
-        { "type": "info_q2", "text": "I need to leave early around 1:30 PM. Will I miss the session on Digital Advertising Trends?" },
+        {
+          "type": "info_q2",
+          "text": "I need to leave early around 1:30 PM. Will I miss the session on Digital Advertising Trends?"
+        },
         { "type": "info_q3", "text": "Could you please tell me about all the events scheduled after lunch?" }
       ]
     },
@@ -73,9 +88,15 @@
       "id": "ri-002",
       "infoText": "Job Interview Schedule - Thursday, October 15\nPosition: Sales Manager\n9:00 AM - Michael Smith\n10:00 AM - Sarah Johnson (CANCELED)\n11:00 AM - David Lee\n2:00 PM - Emily Chen",
       "questions": [
-        { "type": "info_q1", "text": "What date are these interviews taking place, and what position is being filled?" },
+        {
+          "type": "info_q1",
+          "text": "What date are these interviews taking place, and what position is being filled?"
+        },
         { "type": "info_q2", "text": "I heard that Sarah Johnson will be interviewed at 10:00 AM. Is that correct?" },
-        { "type": "info_q3", "text": "Could you list the names of all the candidates who will be interviewed in the afternoon?" }
+        {
+          "type": "info_q3",
+          "text": "Could you list the names of all the candidates who will be interviewed in the afternoon?"
+        }
       ]
     },
     {
@@ -83,7 +104,10 @@
       "infoText": "Community Center Workshops - May\nMay 5: Basic Photography (Instructor: John Evans, Fee: $20)\nMay 12: Creative Writing (Instructor: Lisa Ray, Fee: $15)\nMay 19: Advanced Photography (Instructor: John Evans, Fee: $25)\nMay 26: Public Speaking (Instructor: Tom Baker, Fee: $10)",
       "questions": [
         { "type": "info_q1", "text": "When is the Creative Writing workshop, and who is teaching it?" },
-        { "type": "info_q2", "text": "I'm interested in the photography classes. Does John Evans teach any classes in May?" },
+        {
+          "type": "info_q2",
+          "text": "I'm interested in the photography classes. Does John Evans teach any classes in May?"
+        },
         { "type": "info_q3", "text": "Could you tell me the details of all the workshops that cost $20 or more?" }
       ]
     }

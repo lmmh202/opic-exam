@@ -28,9 +28,7 @@ export default function HomePage() {
             <CardTitle className="text-3xl font-bold tracking-tight text-slate-900">
               {t("스피킹 모의고사에 오신 것을 환영합니다")}
             </CardTitle>
-            <CardDescription className="text-lg text-slate-600 mt-2">
-              {t("시험을 선택하세요")}
-            </CardDescription>
+            <CardDescription className="text-lg text-slate-600 mt-2">{t("시험을 선택하세요")}</CardDescription>
           </CardHeader>
 
           <CardContent className="grid gap-4 sm:grid-cols-2">
@@ -63,9 +61,7 @@ export default function HomePage() {
               </div>
               <div>
                 <h3 className="font-semibold text-lg text-slate-900">{t("TOEIC Speaking")}</h3>
-                <p className="text-sm text-slate-600 mt-1">
-                  {t("11문항 전체 TOEIC Speaking 시뮬레이션입니다.")}
-                </p>
+                <p className="text-sm text-slate-600 mt-1">{t("11문항 전체 TOEIC Speaking 시뮬레이션입니다.")}</p>
               </div>
               <span className="inline-flex items-center text-sm font-medium text-violet-600">
                 {t("TOEIC Speaking")} <ArrowRight className="w-4 h-4 ml-1" />
@@ -134,9 +130,7 @@ export default function HomePage() {
 
           <button
             type="button"
-            onClick={() =>
-              handleStart(isOPIc ? "/practice" : "/practice?examType=toeic-speaking")
-            }
+            onClick={() => handleStart(isOPIc ? "/practice" : "/practice?examType=toeic-speaking")}
             className="group text-left p-6 rounded-xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all space-y-3"
           >
             <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center group-hover:bg-emerald-200 transition-colors">

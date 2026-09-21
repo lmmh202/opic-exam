@@ -23,7 +23,10 @@
     },
     {
       "id": "respond_with_info",
-      "label": { "ko": "제공된 정보를 사용하여 질문에 답하기", "en": "Respond to Questions Using Information Provided" },
+      "label": {
+        "ko": "제공된 정보를 사용하여 질문에 답하기",
+        "en": "Respond to Questions Using Information Provided"
+      },
       "questionRange": [7, 9],
       "prepSeconds": 45,
       "responseSeconds": [15, 15, 30]
