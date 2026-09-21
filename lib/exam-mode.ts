@@ -1,3 +1,5 @@
+import { type ExamType, DEFAULT_EXAM_TYPE, isExamType } from "@/lib/exam-type";
+
 export type ExamMode = "real" | "practice";
 
 export interface ExamModeConfig {
@@ -44,6 +46,15 @@ export function parseExamMode(value: string | null): ExamMode {
   return value === "practice" ? "practice" : "real";
 }
 
-export function examPath(mode: ExamMode): string {
-  return `/exam?mode=${mode}`;
+// Parses exam type from URL search param with fallback to default.
+export function parseExamType(value: string | null): ExamType {
+  return isExamType(value) ? value : DEFAULT_EXAM_TYPE;
+}
+
+export function examPath(mode: ExamMode, examType?: ExamType): string {
+  const params = new URLSearchParams({ mode });
+  if (examType && examType !== DEFAULT_EXAM_TYPE) {
+    params.set("examType", examType);
+  }
+  return `/exam?${params.toString()}`;
 }

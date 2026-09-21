@@ -1,0 +1,89 @@
+{
+  "parts": [
+    {
+      "id": "read_aloud",
+      "label": { "ko": "문장 읽기", "en": "Read a Text Aloud" },
+      "questionRange": [1, 2],
+      "prepSeconds": 45,
+      "responseSeconds": 45
+    },
+    {
+      "id": "describe_picture",
+      "label": { "ko": "사진 묘사하기", "en": "Describe a Picture" },
+      "questionRange": [3, 3],
+      "prepSeconds": 45,
+      "responseSeconds": 30
+    },
+    {
+      "id": "respond_questions",
+      "label": { "ko": "듣고 질문에 답하기", "en": "Respond to Questions" },
+      "questionRange": [4, 6],
+      "prepSeconds": 3,
+      "responseSeconds": [15, 15, 30]
+    },
+    {
+      "id": "respond_with_info",
+      "label": { "ko": "제공된 정보를 사용하여 질문에 답하기", "en": "Respond to Questions Using Information Provided" },
+      "questionRange": [7, 9],
+      "prepSeconds": 45,
+      "responseSeconds": [15, 15, 30]
+    },
+    {
+      "id": "propose_solution",
+      "label": { "ko": "해결책 제안하기", "en": "Propose a Solution" },
+      "questionRange": [10, 10],
+      "prepSeconds": 45,
+      "responseSeconds": 60
+    },
+    {
+      "id": "express_opinion",
+      "label": { "ko": "의견 제시하기", "en": "Express an Opinion" },
+      "questionRange": [11, 11],
+      "prepSeconds": 30,
+      "responseSeconds": 60
+    }
+  ],
+  "questionTypes": [
+    {
+      "id": "read_aloud",
+      "label": { "ko": "문장 읽기", "en": "Read a Text Aloud" }
+    },
+    {
+      "id": "describe_picture",
+      "label": { "ko": "사진 묘사하기", "en": "Describe a Picture" }
+    },
+    {
+      "id": "respond_questions",
+      "label": { "ko": "듣고 질문에 답하기", "en": "Respond to Questions" }
+    },
+    {
+      "id": "respond_with_info",
+      "label": { "ko": "제공된 정보를 사용하여 질문에 답하기", "en": "Respond to Questions Using Information Provided" }
+    },
+    {
+      "id": "propose_solution",
+      "label": { "ko": "해결책 제안하기", "en": "Propose a Solution" }
+    },
+    {
+      "id": "express_opinion",
+      "label": { "ko": "의견 제시하기", "en": "Express an Opinion" }
+    }
+  ],
+  "grading": {
+    "scoreRange": [0, 200],
+    "levels": [
+      { "level": 8, "name": "Advanced High", "minScore": 190 },
+      { "level": 7, "name": "Advanced Mid", "minScore": 160 },
+      { "level": 6, "name": "Advanced Low", "minScore": 130 },
+      { "level": 5, "name": "Intermediate High", "minScore": 110 },
+      { "level": 4, "name": "Intermediate Mid", "minScore": 80 },
+      { "level": 3, "name": "Intermediate Low", "minScore": 60 },
+      { "level": 2, "name": "Novice High", "minScore": 40 },
+      { "level": 1, "name": "Novice Low", "minScore": 0 }
+    ]
+  },
+  "examComposition": {
+    "totalQuestions": 11,
+    "totalTimeMinutes": 20
+  }
+}

@@ -20,6 +20,8 @@ export interface Question {
   text: string;
   surprise?: boolean;
   difficulty?: DifficultyId;
+  prepSeconds?: number;
+  responseSeconds?: number;
 }
 
 interface QuestionItem {

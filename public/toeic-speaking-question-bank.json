@@ -1,0 +1,122 @@
+{
+  "read_aloud": [
+    {
+      "id": "ra-001",
+      "text": "Attention all passengers waiting for flight 4B7 to New York. The departure gate has been changed from 12A to 15B. We apologize for any inconvenience this may cause. Please proceed to gate 15B immediately, as boarding will begin in approximately ten minutes. Have your boarding passes and identification ready."
+    },
+    {
+      "id": "ra-002",
+      "text": "Welcome to the grand opening of the Springfield City Library. We are thrilled to introduce our new facility, which features over fifty thousand books, state-of-the-art computer labs, and a cozy cafe on the first floor. Please enjoy your time exploring our collection, and don't hesitate to ask our friendly staff if you need assistance."
+    },
+    {
+      "id": "ra-003",
+      "text": "Good morning, team. Just a quick reminder about our monthly staff meeting taking place today at 2 PM in the main conference room. We will be discussing the new project timeline, budget updates, and upcoming holiday schedules. Please make sure to review the agenda emailed to you earlier this week."
+    }
+  ],
+  "describe_picture": [
+    {
+      "id": "dp-001",
+      "prompt": "Describe the picture in detail.",
+      "imageDescription": "A busy outdoor cafe with several people sitting at round tables under umbrellas. A waiter wearing an apron is serving drinks to a couple in the foreground. In the background, pedestrians are walking on a sunny sidewalk next to parked cars."
+    },
+    {
+      "id": "dp-002",
+      "prompt": "Describe the picture in detail.",
+      "imageDescription": "A modern office space where three professionals are standing around a large whiteboard. One woman is pointing at a chart on the board with a marker, while the two men listen attentively. There are laptops and coffee mugs on the desk in front of them."
+    },
+    {
+      "id": "dp-003",
+      "prompt": "Describe the picture in detail.",
+      "imageDescription": "A supermarket aisle stocked with fresh produce. A customer is examining a bunch of bananas, and another person is pushing a shopping cart full of groceries. The lighting is bright, and the shelves are fully stocked."
+    }
+  ],
+  "respond_questions": [
+    {
+      "id": "rq-001",
+      "topic": "Imagine that an English research firm is doing a survey in your area. You have agreed to participate in a telephone interview about commuting to work.",
+      "questions": [
+        { "type": "respond_q1", "text": "How long does it usually take you to commute to work, and what mode of transportation do you use?" },
+        { "type": "respond_q2", "text": "Have you ever changed your commute route? Why or why not?" },
+        { "type": "respond_q3", "text": "What do you think is the biggest problem with commuting in your city, and how would you fix it?" }
+      ]
+    },
+    {
+      "id": "rq-002",
+      "topic": "Imagine that a marketing agency is doing a survey. You have agreed to participate in a telephone interview about watching movies.",
+      "questions": [
+        { "type": "respond_q1", "text": "When was the last time you watched a movie, and what genre was it?" },
+        { "type": "respond_q2", "text": "Do you prefer watching movies at a cinema or at home? Why?" },
+        { "type": "respond_q3", "text": "If a new cinema opened in your neighborhood, what features would make you want to visit it?" }
+      ]
+    },
+    {
+      "id": "rq-003",
+      "topic": "Imagine that a local magazine is writing an article on fitness. You have agreed to participate in an interview about exercising.",
+      "questions": [
+        { "type": "respond_q1", "text": "How often do you exercise, and what is your favorite type of workout?" },
+        { "type": "respond_q2", "text": "Do you usually exercise alone or with others? Why?" },
+        { "type": "respond_q3", "text": "What advice would you give to someone who wants to start an exercise routine but feels they don't have enough time?" }
+      ]
+    }
+  ],
+  "respond_with_info": [
+    {
+      "id": "ri-001",
+      "infoText": "Annual Marketing Conference Schedule\n9:00 AM - Keynote Address by Jane Doe\n10:30 AM - Digital Advertising Trends (Room A)\n12:00 PM - Catered Lunch\n1:00 PM - Social Media Strategies (Room B)\n3:00 PM - Networking Session",
+      "questions": [
+        { "type": "info_q1", "text": "What time does the conference start, and who is giving the opening address?" },
+        { "type": "info_q2", "text": "I need to leave early around 1:30 PM. Will I miss the session on Digital Advertising Trends?" },
+        { "type": "info_q3", "text": "Could you please tell me about all the events scheduled after lunch?" }
+      ]
+    },
+    {
+      "id": "ri-002",
+      "infoText": "Job Interview Schedule - Thursday, October 15\nPosition: Sales Manager\n9:00 AM - Michael Smith\n10:00 AM - Sarah Johnson (CANCELED)\n11:00 AM - David Lee\n2:00 PM - Emily Chen",
+      "questions": [
+        { "type": "info_q1", "text": "What date are these interviews taking place, and what position is being filled?" },
+        { "type": "info_q2", "text": "I heard that Sarah Johnson will be interviewed at 10:00 AM. Is that correct?" },
+        { "type": "info_q3", "text": "Could you list the names of all the candidates who will be interviewed in the afternoon?" }
+      ]
+    },
+    {
+      "id": "ri-003",
+      "infoText": "Community Center Workshops - May\nMay 5: Basic Photography (Instructor: John Evans, Fee: $20)\nMay 12: Creative Writing (Instructor: Lisa Ray, Fee: $15)\nMay 19: Advanced Photography (Instructor: John Evans, Fee: $25)\nMay 26: Public Speaking (Instructor: Tom Baker, Fee: $10)",
+      "questions": [
+        { "type": "info_q1", "text": "When is the Creative Writing workshop, and who is teaching it?" },
+        { "type": "info_q2", "text": "I'm interested in the photography classes. Does John Evans teach any classes in May?" },
+        { "type": "info_q3", "text": "Could you tell me the details of all the workshops that cost $20 or more?" }
+      ]
+    }
+  ],
+  "propose_solution": [
+    {
+      "id": "ps-001",
+      "scenario": "You receive a voicemail from a customer.",
+      "text": "Hi, this is Robert from Harrison Electronics. I ordered fifty laptops for our new office last week, and they arrived today. However, when we opened the boxes, we found that ten of them have cracked screens. We have a major training session starting in two days and we desperately need all fifty laptops to be functional. Please call me back and let me know how you can resolve this issue quickly."
+    },
+    {
+      "id": "ps-002",
+      "scenario": "You receive a voicemail from a colleague.",
+      "text": "Hello, it's Amanda from the HR department. I'm calling because the caterer for tomorrow's company anniversary party just canceled on us due to an emergency. The party starts at noon tomorrow, and we have over a hundred employees expecting a full lunch. I'm completely overwhelmed with other tasks. Can you please help me figure out a backup plan for the food?"
+    },
+    {
+      "id": "ps-003",
+      "scenario": "You receive a voicemail from a client.",
+      "text": "Hi, this is Daniel, the manager of the fitness center. I'm calling regarding the new treadmills we purchased from your company. They were installed yesterday, but three of the machines keep shutting down unexpectedly after about five minutes of use. Our members are already complaining. We need these machines working as soon as possible. Please let me know what you can do about this."
+    }
+  ],
+  "express_opinion": [
+    {
+      "id": "eo-001",
+      "text": "Do you agree or disagree with the following statement? 'Employees should be allowed to work from home at least two days a week.' Give specific reasons and details to support your opinion."
+    },
+    {
+      "id": "eo-002",
+      "text": "Some companies prefer to promote employees from within, while others prefer to hire new employees from outside the company for senior positions. Which approach do you think is better and why?"
+    },
+    {
+      "id": "eo-003",
+      "text": "What do you think is the most important quality for a manager to have? Is it good communication skills, technical expertise, or the ability to motivate others? Provide reasons to support your choice."
+    }
+  ]
+}

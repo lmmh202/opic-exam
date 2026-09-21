@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { Question } from "./question-generator";
 import type { ExamMode } from "./exam-mode";
+import type { ExamType } from "./exam-type";
 import type { QuestionAnalysis } from "@/app/api/analyze/route";
 import { clearModeAudio } from "./db";
 
@@ -12,6 +13,7 @@ export interface PracticeSession {
 }
 
 interface ExamState {
+  examType: ExamType;
   examMode: ExamMode;
   currentQuestionIndex: number;
   timeLeft: number;
@@ -24,6 +26,7 @@ interface ExamState {
   practiceSession: PracticeSession | null;
   mockExamId: string | null;
 
+  setExamType: (type: ExamType) => void;
   setExamMode: (mode: ExamMode) => void;
   switchExamMode: (mode: ExamMode) => Promise<void>;
   setQuestionIndex: (index: number) => void;
@@ -50,6 +53,7 @@ const REAL_TOTAL_TIME = 40 * 60;
 export const useExamStore = create<ExamState>()(
   persist(
     (set, get) => ({
+      examType: "opic" as ExamType,
       examMode: "real",
       currentQuestionIndex: 0,
       timeLeft: REAL_TOTAL_TIME,
@@ -61,6 +65,8 @@ export const useExamStore = create<ExamState>()(
       questionAnalyses: {},
       practiceSession: null,
       mockExamId: null,
+
+      setExamType: (type) => set({ examType: type }),
 
       setExamMode: (mode) => set({ examMode: mode }),
 
@@ -162,6 +168,7 @@ export const useExamStore = create<ExamState>()(
       name: "opic-exam-storage",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
+        examType: state.examType,
         examMode: state.examMode,
         currentQuestionIndex: state.currentQuestionIndex,
         timeLeft: state.timeLeft,

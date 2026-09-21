@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Opic Exam",
-  description: "AI Opics Simulator",
+  title: "Speaking Exam Simulator",
+  description: "AI Speaking Exam Simulator — OPIc & TOEIC Speaking",
 };
 
 export default async function RootLayout({

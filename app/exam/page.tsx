@@ -18,8 +18,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
-import { EXAM_MODE_CONFIG, parseExamMode, type ExamMode } from "@/lib/exam-mode";
+import { EXAM_MODE_CONFIG, parseExamMode, parseExamType, type ExamMode } from "@/lib/exam-mode";
 import { getDifficultyLabel, getQuestionTypeLabel, getTopicLabel } from "@/lib/opic-constants";
+import { getToeicSpeakingPartLabel } from "@/lib/toeic-speaking-constants";
+import { generateToeicSpeakingExam } from "@/lib/toeic-speaking-question-generator";
 import { useTranslation } from "@/components/i18n-provider";
 import type { TranslationKey } from "@/lib/i18n/dictionaries";
 
@@ -28,6 +30,8 @@ function ExamPageContent() {
   const { t, locale } = useTranslation();
   const searchParams = useSearchParams();
   const urlMode = parseExamMode(searchParams.get("mode"));
+  const urlExamType = parseExamType(searchParams.get("examType"));
+  const isToeicSpeaking = urlExamType === "toeic-speaking";
 
   const hasHydrated = useExamStoreHydrated();
   const {
